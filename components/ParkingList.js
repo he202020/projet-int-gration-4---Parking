@@ -7,7 +7,7 @@ export default function ParkingList() {
 
     const getParkings = async () => {
         try {
-            const response = await fetch('https://c028-2a02-a03f-636c-fd00-54e4-6c91-16a6-7fad.eu.ngrok.io/parking');
+            const response = await fetch('https://bdc8-2a02-a03f-636c-fd00-c000-643d-96b1-8418.eu.ngrok.io/parking');
             const json = await response.json();
             setData(json);
         } catch (error) {
@@ -55,8 +55,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#151515',
         paddingLeft: 15,
         paddingRight: 15,
-        paddingTop: 50,
-        paddingBottom: 15
     },
     text: {
         textAlign: 'center',
