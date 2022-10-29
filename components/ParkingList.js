@@ -7,7 +7,7 @@ export default function ParkingList() {
 
     const getParkings = async () => {
         try {
-            const response = await fetch('https://bdc8-2a02-a03f-636c-fd00-c000-643d-96b1-8418.eu.ngrok.io/parking');
+            const response = await fetch('https://347e-2a02-a03f-c0ba-ac00-430-f144-ee03-5298.eu.ngrok.io/parking');
             const json = await response.json();
             setData(json);
         } catch (error) {
@@ -26,13 +26,15 @@ export default function ParkingList() {
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
                     data={data}
-                    numColumns={2}
+                    numColumns={1}
                     renderItem={({ item }) => (
                         <Fragment>
                             <Pressable style={styles.button}>
                                 <Text style={styles.text}>
-                                    Parking {item.name}{'\n'}
-                                    {item.owner}
+                                    Parking {item.parking_name}{'\n\n'}
+                                    Ouvert de {item.parking_opening_hour} à {item.parking_closure_hour}{'\n\n'}
+                                    Adresse : {item.parking_adress}{'\n\n'}
+                                    {item.parking_maximum_place} places max
                                 </Text>
                             </Pressable>
                         </Fragment>
@@ -52,13 +54,13 @@ const styles = StyleSheet.create({
         flex: 1
     },
     buttonList: {
-        backgroundColor: '#151515',
+        backgroundColor: '#171717',
         paddingLeft: 15,
         paddingRight: 15,
     },
     text: {
         textAlign: 'center',
         fontWeight: '800',
-        color: '#1ccc5b',
+        color: '#eedddd',
     }
 });
