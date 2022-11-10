@@ -3,6 +3,7 @@ import {FontAwesome5} from "@expo/vector-icons";
 import HomeScreen from "./screens/HomeScreen";
 import ParkingScreen from "./screens/ParkingScreen";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import Map from "./screens/Map"
 
 const Tab = createBottomTabNavigator();
 
@@ -38,6 +39,7 @@ export default function Navigator() {
         >
             <Tab.Screen name="Accueil" component={HomeScreen} options={styles} />
             <Tab.Screen name="Liste des parkings" component={ParkingScreen} options={styles} />
+            <Tab.Screen name = "Map" component={Map} />
         </Tab.Navigator>
     )
 }
