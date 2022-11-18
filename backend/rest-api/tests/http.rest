@@ -1,5 +1,5 @@
-// Liste routes api //
-
+<<// Liste routes api //
+###
 GET http://localhost:8080/parking
 // affiche l'id, le nom, l'heure d'ouverture, l'heure de fermeture, l'adresse et le nombre de places de tous les parkings
 ###
