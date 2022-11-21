@@ -1,11 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import ParkingDetails from "./ParkingDetails";
 
 export default function ParkingList() {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [visible, setVisible] = useState(false);
 
-    const getParkings = async () => {
+    const getParking = async () => {
         try {
             const response = await fetch('localhost:8080/parking');
             const json = await response.json();
@@ -18,23 +20,28 @@ export default function ParkingList() {
     }
 
     useEffect(() => {
-        getParkings();
+        getParking();
     }, []);
 
     return (
         <View style={styles.buttonList}>
+            <ParkingDetails visible={visible}>
+                <View>
+                    <Text style={styles.text.head}>Détails</Text>
+                </View>
+            </ParkingDetails>
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
                     data={data}
                     numColumns={1}
                     renderItem={({ item }) => (
                         <Fragment>
-                            <Pressable style={styles.button}>
-                                <Text style={styles.text}>
-                                    Parking {item.parking_name}{'\n\n'}
-                                    Ouvert de {item.parking_opening_hour} à {item.parking_closure_hour}{'\n\n'}
-                                    Adresse : {item.parking_adress}{'\n\n'}
-                                    {item.parking_maximum_place} places max
+                            <Pressable style={styles.button} onPress={() => setVisible(true)}>
+                                <Text style={styles.text.head}>
+                                    Parking {item.parking_name}
+                                </Text>
+                                <Text style={styles.text.body}>
+                                    {item.parking_adress}{'\n'}
                                 </Text>
                             </Pressable>
                         </Fragment>
@@ -59,8 +66,13 @@ const styles = StyleSheet.create({
         paddingRight: 15,
     },
     text: {
-        textAlign: 'center',
-        fontWeight: '800',
-        color: '#eedddd',
+        head: {
+            fontWeight: '800',
+            color: '#eedddd'
+        },
+        body: {
+            fontWeight: '600',
+            color: '#bbaaaa'
+        }
     }
 });
