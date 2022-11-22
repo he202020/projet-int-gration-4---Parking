@@ -24,16 +24,19 @@ export default function Navigator() {
                         iconName = 'parking';
                     }
                     if (focused) {
-                        color = '#1ccc5b';
+                        color = '#286ec3';
                         size = 30;
                     }
                     else {
-                        color = '#eedddd';
+                        color = '#666666';
                         size = 25;
                     }
                     return <FontAwesome5 name={iconName} color={color} size={size} />
                 },
-                tabBarShowLabel: false,
+                tabBarLabelStyle: {
+                    color: '#eedddd',
+                    fontWeight: '600'
+                },
                 tabBarStyle: {
                     height: 60,
                     backgroundColor: '#151515',

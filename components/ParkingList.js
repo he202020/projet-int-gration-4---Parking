@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ParkingDetails from "./ParkingDetails";
+import {FontAwesome5} from "@expo/vector-icons";
 
 export default function ParkingList() {
     const [isLoading, setLoading] = useState(true);
@@ -25,25 +26,32 @@ export default function ParkingList() {
 
     return (
         <View style={styles.buttonList}>
-            <ParkingDetails visible={visible}>
-                <View>
-                    <Text style={styles.text.head}>Détails</Text>
-                </View>
-            </ParkingDetails>
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
                     data={data}
                     numColumns={1}
                     renderItem={({ item }) => (
                         <Fragment>
-                            <Pressable style={styles.button} onPress={() => setVisible(true)}>
-                                <Text style={styles.text.head}>
-                                    Parking {item.parking_name}
-                                </Text>
-                                <Text style={styles.text.body}>
-                                    {item.parking_adress}{'\n'}
-                                </Text>
-                            </Pressable>
+                            <TouchableOpacity onPress={() => setVisible(true)}>
+                                <View style={styles.button}>
+                                    <Text style={styles.text.head}>
+                                        Parking {item.parking_name}
+                                    </Text>
+                                    <Text style={styles.text.body}>
+                                        {item.parking_adress}{'\n'}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                            <ParkingDetails visible={visible}>
+                                <View>
+                                    <TouchableOpacity onPress={() => setVisible(false)}>
+                                        <FontAwesome5 name="times" size={30} color={styles.text.head.color} />
+                                    </TouchableOpacity>
+                                    <Text style={styles.text.body}>
+                                        {'\n'}{item.parking_maximum_place} places
+                                    </Text>
+                                </View>
+                            </ParkingDetails>
                         </Fragment>
                     )}
                 />
@@ -74,5 +82,8 @@ const styles = StyleSheet.create({
             fontWeight: '600',
             color: '#bbaaaa'
         }
+    },
+    touchableOpacity: {
+        padding: 10
     }
 });
