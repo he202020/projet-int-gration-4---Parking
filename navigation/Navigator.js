@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
         height: 125
     },
     headerTitleStyle: {
+        fontSize: 30,
         color: '#eedddd',
         fontWeight: 'bold'
     }

@@ -3,6 +3,8 @@ import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} f
 import ParkingDetails from "./ParkingDetails";
 import {FontAwesome5} from "@expo/vector-icons";
 
+let parkingInfo = {};
+
 export default function ParkingList() {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
@@ -20,6 +22,13 @@ export default function ParkingList() {
         }
     }
 
+    const getParkingInfo = (data) => {
+        parkingInfo = data;
+        parkingInfo.parking_opening_hour = parkingInfo.parking_opening_hour.slice(0, 2) + 'h' + parkingInfo.parking_opening_hour.slice(3, 5);
+        parkingInfo.parking_closure_hour = parkingInfo.parking_closure_hour.slice(0, 2) + 'h' + parkingInfo.parking_closure_hour.slice(3, 5);
+        setVisible(true);
+    }
+
     useEffect(() => {
         getParking();
     }, []);
@@ -32,23 +41,27 @@ export default function ParkingList() {
                     numColumns={1}
                     renderItem={({ item }) => (
                         <Fragment>
-                            <TouchableOpacity onPress={() => setVisible(true)}>
+                            <TouchableOpacity onPress={() => getParkingInfo(item)}>
                                 <View style={styles.button}>
                                     <Text style={styles.text.head}>
                                         Parking {item.parking_name}
                                     </Text>
                                     <Text style={styles.text.body}>
-                                        {item.parking_adress}{'\n'}
+                                        {item.parking_address}{'\n'}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
                             <ParkingDetails visible={visible}>
                                 <View>
-                                    <TouchableOpacity onPress={() => setVisible(false)}>
-                                        <FontAwesome5 name="times" size={30} color={styles.text.head.color} />
-                                    </TouchableOpacity>
+                                    <View style={styles.modalHeader}>
+                                        <TouchableOpacity onPress={() => setVisible(false)} style={{alignItems: 'flex-end'}}>
+                                            <FontAwesome5 name="times" size={50} color={styles.modalHeader.color} />
+                                        </TouchableOpacity>
+                                        <Text style={styles.text.head}>Parking {parkingInfo.parking_name}</Text>
+                                    </View>
                                     <Text style={styles.text.body}>
-                                        {'\n'}{item.parking_maximum_place} places
+                                        {'\n'}{parkingInfo.parking_maximum_place} places max,
+                                        {'\n'}ouvert de {parkingInfo.parking_opening_hour} à {parkingInfo.parking_closure_hour}
                                     </Text>
                                 </View>
                             </ParkingDetails>
@@ -75,15 +88,18 @@ const styles = StyleSheet.create({
     },
     text: {
         head: {
-            fontWeight: '800',
+            fontSize: 20,
+            fontWeight: '900',
             color: '#eedddd'
         },
         body: {
+            fontSize: 15,
             fontWeight: '600',
             color: '#bbaaaa'
         }
     },
-    touchableOpacity: {
-        padding: 10
+    modalHeader: {
+        fontWeight: '800',
+        color: '#eedddd'
     }
 });
