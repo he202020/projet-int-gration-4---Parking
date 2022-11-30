@@ -1,11 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import ParkingDetails from "./ParkingDetails";
+import {FontAwesome5} from "@expo/vector-icons";
+
+let parkingInfo = {};
 
 export default function ParkingList() {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [visible, setVisible] = useState(false);
 
-    const getParkings = async () => {
+    const getParking = async () => {
         try {
             const response = await fetch('localhost:8080/parking');
             const json = await response.json();
@@ -17,8 +22,15 @@ export default function ParkingList() {
         }
     }
 
+    const getParkingInfo = (data) => {
+        parkingInfo = data;
+        parkingInfo.parking_opening_hour = parkingInfo.parking_opening_hour.slice(0, 2) + 'h' + parkingInfo.parking_opening_hour.slice(3, 5);
+        parkingInfo.parking_closure_hour = parkingInfo.parking_closure_hour.slice(0, 2) + 'h' + parkingInfo.parking_closure_hour.slice(3, 5);
+        setVisible(true);
+    }
+
     useEffect(() => {
-        getParkings();
+        getParking();
     }, []);
 
     return (
@@ -29,14 +41,30 @@ export default function ParkingList() {
                     numColumns={1}
                     renderItem={({ item }) => (
                         <Fragment>
-                            <Pressable style={styles.button}>
-                                <Text style={styles.text}>
-                                    Parking {item.parking_name}{'\n\n'}
-                                    Ouvert de {item.parking_opening_hour} à {item.parking_closure_hour}{'\n\n'}
-                                    Adresse : {item.parking_adress}{'\n\n'}
-                                    {item.parking_maximum_place} places max
-                                </Text>
-                            </Pressable>
+                            <TouchableOpacity onPress={() => getParkingInfo(item)}>
+                                <View style={styles.button}>
+                                    <Text style={styles.text.head}>
+                                        Parking {item.parking_name}
+                                    </Text>
+                                    <Text style={styles.text.body}>
+                                        {item.parking_address}{'\n'}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                            <ParkingDetails visible={visible}>
+                                <View>
+                                    <View style={styles.modalHeader}>
+                                        <TouchableOpacity onPress={() => setVisible(false)} style={{alignItems: 'flex-end'}}>
+                                            <FontAwesome5 name="times" size={50} color={styles.modalHeader.color} />
+                                        </TouchableOpacity>
+                                        <Text style={styles.text.head}>Parking {parkingInfo.parking_name}</Text>
+                                    </View>
+                                    <Text style={styles.text.body}>
+                                        {'\n'}{parkingInfo.parking_maximum_place} places max,
+                                        {'\n'}ouvert de {parkingInfo.parking_opening_hour} à {parkingInfo.parking_closure_hour}
+                                    </Text>
+                                </View>
+                            </ParkingDetails>
                         </Fragment>
                     )}
                 />
@@ -59,8 +87,19 @@ const styles = StyleSheet.create({
         paddingRight: 15,
     },
     text: {
-        textAlign: 'center',
+        head: {
+            fontSize: 20,
+            fontWeight: '900',
+            color: '#eedddd'
+        },
+        body: {
+            fontSize: 15,
+            fontWeight: '600',
+            color: '#bbaaaa'
+        }
+    },
+    modalHeader: {
         fontWeight: '800',
-        color: '#eedddd',
+        color: '#eedddd'
     }
 });
