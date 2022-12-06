@@ -4,7 +4,8 @@ import HomeScreen from "./screens/HomeScreen";
 import ParkingScreen from "./screens/ParkingScreen";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Map from "./screens/Map"
-
+import StatisticsUsingDay from "../components/StatisticsUsingDay"
+import AvailablePlace from "../components/AvailablePlace";
 const Tab = createBottomTabNavigator();
 
 export default function Navigator() {
@@ -43,6 +44,8 @@ export default function Navigator() {
             <Tab.Screen name="Accueil" component={HomeScreen} options={styles} />
             <Tab.Screen name="Liste des parkings" component={ParkingScreen} options={styles} />
             <Tab.Screen name = "Map" component={Map} options={styles} />
+            <Tab.Screen name="Horaire d'affluence" component={StatisticsUsingDay}/>
+            <Tab.Screen name="Place Libre" component={AvailablePlace}/>
         </Tab.Navigator>
     )
 }

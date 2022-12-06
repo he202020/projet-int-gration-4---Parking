@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-export default function ParkingList() {
+export default function AvailablePlace() {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
-    const getParkings = async () => {
+    const getAvailablePlace = async () => {
         try {
-            const response = await fetch('https://f3ea-193-190-65-65.eu.ngrok.io/parking');
+            const response = await fetch('https://03e3-193-190-65-64.eu.ngrok.io/AvailablePlace');
             const json = await response.json();
             setData(json);
         } catch (error) {
@@ -18,7 +18,7 @@ export default function ParkingList() {
     }
 
     useEffect(() => {
-        getParkings();
+        getAvailablePlace();
     }, []);
 
     return (
@@ -32,9 +32,7 @@ export default function ParkingList() {
                             <Pressable style={styles.button}>
                                 <Text style={styles.text}>
                                     Parking {item.parking_name}{'\n\n'}
-                                    Ouvert de {item.parking_opening_hour} à {item.parking_closure_hour}{'\n\n'}
-                                    Adresse : {item.parking_adress}{'\n\n'}
-                                    {item.parking_maximum_place} places max
+                                    {item.place}
                                 </Text>
                             </Pressable>
                         </Fragment>
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
     button: {
         margin: 7,
         padding: 15,
-        backgroundColor: '#252528',
+        backgroundColor: '#777777',
         borderRadius: 5,
         flex: 1
     },
@@ -61,6 +59,6 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center',
         fontWeight: '800',
-        color: '#eedddd',
+        color: '#aadddd',
     }
 });
