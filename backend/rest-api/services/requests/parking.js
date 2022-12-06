@@ -17,7 +17,7 @@ exports.searchParking = async function (request, response) {
         const result = await sqlConnection`
             select * from parking
             where parking_name ilike ${'%' + request.params.query + '%'}
-            or parking_adress ilike ${'%' + request.params.query + '%'}
+            or parking_address ilike ${'%' + request.params.query + '%'}
         `;
         response.status(200).json(result);
     }

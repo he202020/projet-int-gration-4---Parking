@@ -1,7 +1,15 @@
-// Liste routes api //
-
-GET http://localhost:8080/parking
-// affiche l'id, le nom, l'heure d'ouverture, l'heure de fermeture, l'adresse et le nombre de places de tous les parkings
+<<// Liste routes api //
 ###
-GET http://localhost:8080/parking/mag
+// affiche l'id, le nom, l'heure d'ouverture, l'heure de fermeture, l'adresse et le nombre de places de tous les parkings
+GET  https://03e3-193-190-65-64.eu.ngrok.io/parking
+
+###
 // idem mais uniquement pour les parkings qui ont leur nom ou leur adresse qui correspondent à la recherche
+GET  https://03e3-193-190-65-64.eu.ngrok.io/parking/mag
+###
+// Liste des utilisateurs
+GET  https://03e3-193-190-65-64.eu.ngrok.io/NumberCars
+###
+//Nombre de places disponibles
+GET  https://03e3-193-190-65-64.eu.ngrok.io/AvailablePlace
+
