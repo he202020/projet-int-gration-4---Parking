@@ -15,3 +15,5 @@ throw er; // Unhandled 'error' event
 
 Fix : ```taskkill /im node.exe /F```
 then : ``` npm start ```
+
+If this still does not fix the issue, you can delete the `node_module` folder located at the root of the project and run `npm install` to reinstall dependencies
