@@ -12,7 +12,7 @@ export default function ParkingList() {
 
     const getParking = async () => {
         try {
-            const response = await fetch('https://f3ea-193-190-65-65.eu.ngrok.io/parking');
+            const response = await fetch('https://49c0-37-19-9-98.eu.ngrok.io/parking');
             const json = await response.json();
             setData(json);
         } catch (error) {

@@ -1,10 +1,33 @@
-import { NavigationContainer } from '@react-navigation/native';
-import Navigator from "./navigation/Navigator";
+//import { NavigationContainer } from '@react-navigation/native';
+//import Navigator from "./navigation/Navigator";
+//import { relativeTimeRounding } from "moment";
+import React from "react";
+import { SafeAreaView, StyleSheet, Text } from "react-native";
+import SignInScreen from "./screens/SignInScreen/SignInScreen.js";
 
-export default function App() {
+// export default function App() {
+//     return (
+
+//          <NavigationContainer>
+//              <Navigator />
+//          </NavigationContainer>
+//      );
+// }
+
+//<SignInScreen />
+
+const App = () => {
     return (
-        <NavigationContainer>
-            <Navigator />
-        </NavigationContainer>
+        <SafeAreaView style={styles.root}>
+             <SignInScreen />
+        </SafeAreaView>
     );
-}
+};
+
+ const styles = StyleSheet.create({
+     root:{
+         flex: 1,
+     },
+});
+
+export default App;
