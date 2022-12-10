@@ -10,8 +10,8 @@ npm-debug.*
 *.orig.*
 web-build/
 .idea/
+backend/rest-api/.env
+backend/rest-api/node_modules/
 
 # macOS
 .DS_Store
-backend/rest-api/.env
-backend/rest-api/.env
