@@ -42,9 +42,8 @@ const styles = StyleSheet.create({
     },
     input: {
         paddingTop: 10,
-        borderstyle: 'solid',
         paddingBottom: 10,
-        //textAlign: "center",
+        borderstyle: 'solid',
         width: '50%',
     },
 });

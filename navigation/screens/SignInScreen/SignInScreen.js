@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import { View, Text, StyleSheet, useWindowDimensions, Image } from 'react-native';
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton/CustomButton';
-//<Image source={Logo} style={[styles.logo, {height: height * 0.3}]} />
-
 
 const SignInScreen = () => {
     const {username, setUsername} = useState('');
@@ -11,7 +9,13 @@ const SignInScreen = () => {
     const {height} = useWindowDimensions();
 
     const onSignInPressed = () => {
-        console.warn("Sign in");
+        console.warn("onSignInPressed()");
+    };
+    const onForgotPasswordPressed = () => {
+        console.warn("onForgotPasswordPressed()");
+    };
+    const onSignUpPressed = () => {
+        console.warn("onSignUpPressed()");
     };
 
     return (
@@ -23,10 +27,8 @@ const SignInScreen = () => {
                 resizeMode="contain"
             />
 
-            <Text style={styles.title}>Identifie toi !</Text>
-            <Text> </Text>
-
             <CustomInput placeholder="Username" value={username} setValue={setUsername}/>
+            
             <CustomInput 
             placeholder="Password" 
             value={password} 
@@ -34,15 +36,35 @@ const SignInScreen = () => {
             secureTextEntry={true}
             />
 
-            <CustomButton text="S'identifier" onPress={onSignInPressed}/>
-            
-            <Text> </Text>
-            <Text style={styles.title}>Pas encore de compte?</Text>
+            <CustomButton 
+            text="S'identifier" 
+            onPress={onSignInPressed}
+            type="PRIMARY"
+            />
+
+            <CustomButton 
+            text="Mot de passe oublié??" 
+            onPress={onForgotPasswordPressed}
+            type="TERTIARY"
+            />
+
+            <CustomButton 
+            text="Pas encore de compte?" 
+            onPress={onSignUpPressed}
+            type="SECONDARY"
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    logo:{
+        marginTop: 15,
+        height: 300,
+        width: 300,
+        maxHeight: 300,
+        maxWidth: 300,
+    },
     root:{
         alignItems: 'center',
         padding: 20,
@@ -50,6 +72,9 @@ const styles = StyleSheet.create({
     },
     title:{
         color: 'white',
+        textDecorationLine: 'underline',
+        fontStyle: 'italic',
+        padding: 20,
     }
 });
 
