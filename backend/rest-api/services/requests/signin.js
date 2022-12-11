@@ -4,8 +4,8 @@ const token = require('../token');
 exports.login = async function (request, response) {
     try {
         const result = await sqlConnection`
-            select person_id from person
-            where person_email=${request.body.person_email} and person_password=${request.body.person_password}
+            select id, is_admin from app_user
+            where email=${request.body.email} and password=${request.body.password}
         `;
         if (!result.length) {
             response.status(401).send('votre email ou votre mot de passe est incorrect');
