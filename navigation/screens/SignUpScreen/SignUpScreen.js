@@ -7,21 +7,24 @@ const SignUpScreen = () => {
     const {firstName, setFirstName} = useState('');
     const {lastName, setLastName} = useState('');
     const {email, setEmail} = useState('');
-    const {verifyEmail, setVerifyEmail} = useState('');
+    const {emailRepeat, setEmailRepeat} = useState('');
     const {companyName, setCompanyName} = useState('');
 
-    // const {height} = useWindowDimensions();
 
-    // const onForgotPasswordPressed = () => {
-    //     console.warn("onForgotPasswordPressed()");
-    // };
-    // const onSignUpPressed = () => {
-    //     console.warn("onSignUpPressed()");
-    // };
+    //SignUp button pressed
     const onSignUpPressed = () => {
         console.warn("onSignUpPressed()");
     };
 
+    //Hyperlinks
+    const onTermsOfUsePressed = () => {
+        console.warn("onTermsOfUsePressed()");
+    };
+    const onPrivacyPressed = () => {
+        console.warn("onPrivacyPressed()");
+    };
+
+    
     return (
         <View style={styles.root}>
 
@@ -43,26 +46,32 @@ const SignUpScreen = () => {
             setValue={setEmail}
             />
             <CustomInput 
-            placeholder="* Verification Email" 
-            value={verifyEmail} 
-            setValue={setVerifyEmail}
+            placeholder="* Vérification Email"
+            value={emailRepeat}
+            setValue={setEmailRepeat}
             />
             <CustomInput 
             placeholder="* Société" 
             value={companyName} 
             setValue={setCompanyName}
             />
-            <Text style={styles.comment}>Optionnel</Text>
+            {/* <Text style={styles.comment}>Optionnel</Text> */}
             <CustomInput 
             placeholder="Commentaire" 
             value={companyName} 
             setValue={setCompanyName}
             />
             <CustomButton 
-            text="S'identifier" 
+            text="S'inscrire" 
             onPress={onSignUpPressed}
             type="PRIMARY"
             />
+                        <Text style={styles.RGPD}>En créant un compte, vous accepter les{' '}
+                        <Text style={styles.hyperlink} onPress={onTermsOfUsePressed}> Termes et Conditions d'utilisation</Text> 
+                        ainsi que la{' '}
+                        <Text style={styles.hyperlink} onPress={onPrivacyPressed}> Politique de Confidentialité </Text> 
+                        de l'entreprise
+                        </Text>
             <Text style={styles.comment}>Un mot de passe temporaire vous sera envoyer séparément</Text>
 
         </View>
@@ -85,15 +94,26 @@ const styles = StyleSheet.create({
     title:{
         fontSize: 24,
         textAlign: 'center',
-        color: '#000000',
-        padding: 20,
+        color: 'white',
+        margin: 10,
     },
     comment:{
         marginTop: 10,
+        marginBottom: 10,
         // marginBottom: 20,
         width: '70%',
         textAlign: 'center',
         color: 'white',
+    },
+    RGPD:{
+        marginTop: 20,
+        fontStyle: 'italic',
+        textAlign:'justify',
+        color:'grey',
+        fontSize: 12,
+    },
+    hyperlink:{
+        color:'#0096FF'
     },
 });
 

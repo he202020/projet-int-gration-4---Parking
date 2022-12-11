@@ -3,64 +3,52 @@ import { View, Text, StyleSheet, useWindowDimensions, Image } from 'react-native
 import CustomInput from '../CustomInput';
 import CustomButton from '../CustomButton/CustomButton';
 
-const SignInScreen = () => {
+const ForgotPasswordScreen = () => {
     const {username, setUsername} = useState('');
-    const {password, setPassword} = useState('');
+    const {code, setCode} = useState('');
     const {height} = useWindowDimensions();
 
-    const onSignInPressed = () => {
-        console.warn("onSignInPressed()");
-    };
-    const onForgotPasswordPressed = () => {
+    const onSendCodePressed = () => {
         console.warn("onForgotPasswordPressed()");
     };
-    const onSignUpPressed = () => {
-        console.warn("onSignUpPressed()");
+    const onVerificationPressed = () => {
+        console.warn("onVerificationPressed()");
     };
 
     return (
         <View style={styles.root}>
-
+            {/* LOGO */}
             <Image
                 source={require('../../../assets/ParkNRide.png')}
                 style={[styles.logo, {height: height * 0.3}]}
                 resizeMode="contain"
             />
-
             {/* USERNAME */}
             <CustomInput 
-            placeholder="Email" 
+            placeholder="Username" 
             value={username} 
             setValue={setUsername}/>
             
-            {/* PASSWORD */}
-            <CustomInput 
-            placeholder="Password" 
-            value={password} 
-            setValue={setPassword}
-            secureTextEntry={true}
-            />
-
-            {/* Sign In button */}
+            {/* SEND CODE BUTTON */}
             <CustomButton 
-            text="S'identifier" 
-            onPress={onSignInPressed}
+            text="Envoyer le code" 
+            onPress={onSendCodePressed}
+            type="PRIMARY"
+            />
+                        
+            {/* CODE */}
+            <CustomInput 
+            placeholder="Code de vérification" 
+            value={code} 
+            setValue={setCode}/>
+
+            {/* VERIFICATION BUTTON */}
+            <CustomButton 
+            text="Vérifier" 
+            onPress={onVerificationPressed}
             type="PRIMARY"
             />
 
-            {/* FORGOT PASSWORD BUTTON */}
-            <CustomButton 
-            text="Mot de passe oublié?" 
-            onPress={onForgotPasswordPressed}
-            type="TERTIARY"
-            />
-
-            {/* CREATE AN ACCOUNT */}
-            <CustomButton 
-            text="Pas encore de compte?" 
-            onPress={onSignUpPressed}
-            type="SECONDARY"
-            />
         </View>
     );
 };
@@ -86,4 +74,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SignInScreen;
+export default ForgotPasswordScreen;
