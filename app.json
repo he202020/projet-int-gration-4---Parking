@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "integration",
-    "slug": "integration",
+    "name": "Park N Ride",
+    "slug": "ParkNRide-slug",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

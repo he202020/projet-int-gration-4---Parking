@@ -29,7 +29,7 @@ const SignUpScreen = () => {
         <View style={styles.root}>
 
             <Text style={styles.title}>S'incscrire</Text>
-            <Text style={styles.comment}>Votre demande sera envoyer à un administrateur afin de verifier votre admissibilité </Text>
+            <Text style={styles.comment}>Ceci est une demande, elle sera envoyer à un administrateur afin de verifier votre admissibilité </Text>
             <CustomInput 
             placeholder="* Prénom" 
             value={firstName} 

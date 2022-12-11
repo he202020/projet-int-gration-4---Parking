@@ -17,12 +17,14 @@ const ForgotPasswordScreen = () => {
 
     return (
         <View style={styles.root}>
+
             {/* LOGO */}
             <Image
                 source={require('../../../assets/ParkNRide.png')}
                 style={[styles.logo, {height: height * 0.3}]}
                 resizeMode="contain"
             />
+            
             {/* USERNAME */}
             <CustomInput 
             placeholder="Username" 
