@@ -1,7 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import ParkingDetails from "./ParkingDetails";
 import {FontAwesome5} from "@expo/vector-icons";
+import * as Location from 'expo-location';
 
 let parkingInfo = {};
 
@@ -9,11 +10,45 @@ export default function ParkingList() {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [visible, setVisible] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [items, setItems] = useState([]);
+    let location = null;
+
+    useEffect(() => {
+        (async () => {
+
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            Location.getCurrentPositionAsync({})
+                .then(res => postDistance(res))
+                .then(res => {
+                    location = res;
+                    console.log(location);
+                    getParking();
+                });
+        })();
+    }, []);
 
     const getParking = async () => {
         try {
-            const response = await fetch('localhost:8080/parking');
+            const response = await fetch('https://20a2-2a02-a03f-c0b2-5a00-dd19-c7f0-4f7b-6caf.eu.ngrok.io/parking');
             const json = await response.json();
+
+            for (let x of location) {
+                json.find((o, i) => {
+                    if (o.parking_id === x.parking_id) {
+                        json[i].distance = x.distance / 1000;
+                        return true;
+                    }
+                });
+            }
+            json.sort((a, b) => {
+                return a.distance - b.distance;
+            });
             setData(json);
         } catch (error) {
             console.error(error);
@@ -22,16 +57,30 @@ export default function ParkingList() {
         }
     }
 
+    const postDistance = async (location) => {
+        try {
+            const response = await fetch(
+                'https://20a2-2a02-a03f-c0b2-5a00-dd19-c7f0-4f7b-6caf.eu.ngrok.io/geolocation',
+                {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({latitude: location.coords.latitude, longitude: location.coords.longitude})
+                });
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const getParkingInfo = (data) => {
         parkingInfo = data;
         parkingInfo.parking_opening_hour = parkingInfo.parking_opening_hour.slice(0, 2) + 'h' + parkingInfo.parking_opening_hour.slice(3, 5);
         parkingInfo.parking_closure_hour = parkingInfo.parking_closure_hour.slice(0, 2) + 'h' + parkingInfo.parking_closure_hour.slice(3, 5);
         setVisible(true);
     }
-
-    useEffect(() => {
-        getParking();
-    }, []);
 
     return (
         <View style={styles.buttonList}>
@@ -45,6 +94,7 @@ export default function ParkingList() {
                                 <View style={styles.button}>
                                     <Text style={styles.text.head}>
                                         Parking {item.parking_name}
+                                        Distance: {item.distance}
                                     </Text>
                                     <Text style={styles.text.body}>
                                         {item.parking_address}{'\n'}
