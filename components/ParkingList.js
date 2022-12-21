@@ -12,7 +12,7 @@ export default function ParkingList() {
 
     const getParking = async () => {
         try {
-            const response = await fetch('https://352c-2a02-a03f-635e-3f00-9c1a-ce59-d212-95f1.eu.ngrok.io/parking');
+            const response = await fetch('https://5545-2a02-a03f-c0b4-e600-34b6-b0f0-508d-a3e6.eu.ngrok.io/parking');
             const json = await response.json();
             setData(json);
         } catch (error) {
@@ -33,7 +33,7 @@ export default function ParkingList() {
             setData(searchData)
         }
         else{
-           getParking()
+            getParking()
         }
     };
 
@@ -48,60 +48,58 @@ export default function ParkingList() {
         getParking();
     }, []);
 
-    const triMaxPlace = (data) => {
-        getParking().sort((a, b) => a.parking_maximum_place - b.parking_maximum_place);
-    }
+
 
     return (
         <Fragment>
-        <View>
-            <TextInput style={styles.search}
-            placeholder= "Rechercher"
-            onChangeText= {(input)=> {
-                searchName(input);
-            }}
-        />
-        </View>
-
-        <View style={styles.buttonList}>
-
-            {isLoading ? <ActivityIndicator/> : (
-
-                <FlatList
-                    data={data}
-                    numColumns={1}
-                    renderItem={({ item }) => (
-                        <Fragment>
-                            <TouchableOpacity onPress={() => getParkingInfo(item)}>
-                                <View style={styles.button}>
-
-                                    <Text style={styles.text.head}>
-                                        Parking {item.parking_name}
-                                    </Text>
-                                    <Text style={styles.text.body}>
-                                        {item.parking_address}{'\n'}
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                            <ParkingDetails visible={visible}>
-                                <View>
-                                    <View style={styles.modalHeader}>
-                                        <TouchableOpacity onPress={() => setVisible(false)} style={{alignItems: 'flex-end'}}>
-                                            <FontAwesome5 name="times" size={50} color={styles.modalHeader.color} />
-                                        </TouchableOpacity>
-                                        <Text style={styles.text.head}>Parking {parkingInfo.parking_name}</Text>
-                                    </View>
-                                    <Text style={styles.text.body}>
-                                        {'\n'}{parkingInfo.parking_maximum_place} places max,
-                                        {'\n'}ouvert de {parkingInfo.parking_opening_hour} à {parkingInfo.parking_closure_hour}
-                                    </Text>
-                                </View>
-                            </ParkingDetails>
-                        </Fragment>
-                    )}
+            <View>
+                <TextInput style={styles.search}
+                           placeholder= "Search Name"
+                           onChangeText= {(input)=> {
+                               searchName(input);
+                           }}
                 />
-            )}
-        </View>
+            </View>
+
+            <View style={styles.buttonList}>
+
+                {isLoading ? <ActivityIndicator/> : (
+
+                    <FlatList
+                        data={data}
+                        numColumns={1}
+                        renderItem={({ item }) => (
+                            <Fragment>
+                                <TouchableOpacity onPress={() => getParkingInfo(item)}>
+                                    <View style={styles.button}>
+
+                                        <Text style={styles.text.head}>
+                                            Parking {item.parking_name}
+                                        </Text>
+                                        <Text style={styles.text.body}>
+                                            {item.parking_address}{'\n'}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <ParkingDetails visible={visible}>
+                                    <View>
+                                        <View style={styles.modalHeader}>
+                                            <TouchableOpacity onPress={() => setVisible(false)} style={{alignItems: 'flex-end'}}>
+                                                <FontAwesome5 name="times" size={50} color={styles.modalHeader.color} />
+                                            </TouchableOpacity>
+                                            <Text style={styles.text.head}>Parking {parkingInfo.parking_name}</Text>
+                                        </View>
+                                        <Text style={styles.text.body}>
+                                            {'\n'}{parkingInfo.parking_maximum_place} places max,
+                                            {'\n'}ouvert de {parkingInfo.parking_opening_hour} à {parkingInfo.parking_closure_hour}
+                                        </Text>
+                                    </View>
+                                </ParkingDetails>
+                            </Fragment>
+                        )}
+                    />
+                )}
+            </View>
         </Fragment>
     );
 }
@@ -128,8 +126,7 @@ const styles = StyleSheet.create({
         body: {
             fontSize: 15,
             fontWeight: '600',
-            color: '#bbaaaa',
-            text : 'black'
+            color: '#bbaaaa'
         }
     },
     modalHeader: {
@@ -139,9 +136,9 @@ const styles = StyleSheet.create({
     search: {
         textAlign: 'center',
         fontWeight: '800',
-        color: 'black',
+        color: '#eedddd',
         backgroundColor : 'lightblue',
-        padding: 20
+        padding: 12
 
 
     }
