@@ -4,6 +4,18 @@
 GET  https://03e3-193-190-65-64.eu.ngrok.io/parking
 
 ###
+
+GET http://localhost:8080/parking/mag
+// idem mais uniquement pour les parkings qui ont leur nom ou leur adresse qui correspondent à la recherche
+###
+POST http://localhost:8080/geolocation
+Content-Type: application/json
+
+  {
+    "latitude": 50.668460589307806,
+    "longitude": 4.611961217774349
+  }
+
 // idem mais uniquement pour les parkings qui ont leur nom ou leur adresse qui correspondent à la recherche
 GET  https://03e3-193-190-65-64.eu.ngrok.io/parking/mag
 ###
@@ -12,4 +24,3 @@ GET  https://03e3-193-190-65-64.eu.ngrok.io/NumberCars
 ###
 //Nombre de places disponibles
 GET  https://03e3-193-190-65-64.eu.ngrok.io/AvailablePlace
-

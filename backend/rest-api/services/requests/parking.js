@@ -1,4 +1,5 @@
 const sqlConnection = require("../index");
+const {json} = require("express");
 
 exports.getParking = async function (request, response) {
     try {
