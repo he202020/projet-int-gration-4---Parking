@@ -12,7 +12,7 @@ export default function ParkingList() {
 
     const getParking = async () => {
         try {
-            const response = await fetch('https://5545-2a02-a03f-c0b4-e600-34b6-b0f0-508d-a3e6.eu.ngrok.io/parking');
+            const response = await fetch('https://352c-2a02-a03f-635e-3f00-9c1a-ce59-d212-95f1.eu.ngrok.io/parking');
             const json = await response.json();
             setData(json);
         } catch (error) {
@@ -48,13 +48,15 @@ export default function ParkingList() {
         getParking();
     }, []);
 
-
+    const triMaxPlace = (data) => {
+        getParking().sort((a, b) => a.parking_maximum_place - b.parking_maximum_place);
+    }
 
     return (
         <Fragment>
         <View>
             <TextInput style={styles.search}
-            placeholder= "Search Name"
+            placeholder= "Rechercher"
             onChangeText= {(input)=> {
                 searchName(input);
             }}
@@ -126,7 +128,8 @@ const styles = StyleSheet.create({
         body: {
             fontSize: 15,
             fontWeight: '600',
-            color: '#bbaaaa'
+            color: '#bbaaaa',
+            text : 'black'
         }
     },
     modalHeader: {
@@ -136,9 +139,9 @@ const styles = StyleSheet.create({
     search: {
         textAlign: 'center',
         fontWeight: '800',
-        color: '#eedddd',
+        color: 'black',
         backgroundColor : 'lightblue',
-        padding: 12
+        padding: 20
 
 
     }
