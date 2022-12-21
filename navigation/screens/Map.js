@@ -9,8 +9,8 @@ export default class App extends React.Component {
                 style={{ flex: 1 }}
                 provider={PROVIDER_GOOGLE}
                 showsUserLocation initialRegion={{
-                latitude: 50.8333,
-                longitude: 4.351710,
+                latitude: 50.668081,
+                longitude: 4.6118324,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421}} />
 

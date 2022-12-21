@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const parkingRouter = require('./routes/parking');
 const geolocationRouter = require('./routes/geolocation');
+const NumberCars = require('./routes/StatisticsUsingDay')
+const AvailablePlace = require('./routes/AvailablePlace')
+
 app.use(express.json());
 require('dotenv').config();
 
@@ -14,4 +17,9 @@ app.get('/', async (request, response) => {
 });
 
 app.use('/parking', parkingRouter);
+
 app.use('/geolocation', geolocationRouter);
+
+app.use('/NumberCars', NumberCars);
+app.use('/AvailablePlace', AvailablePlace);
+

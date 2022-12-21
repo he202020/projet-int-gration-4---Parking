@@ -4,6 +4,9 @@ import HomeScreen from "./screens/HomeScreen";
 import ParkingScreen from "./screens/ParkingScreen";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Map from "./screens/Map"
+import SearchBar from "./screens/SearchBar";
+
+
 
 const Tab = createBottomTabNavigator();
 
@@ -17,26 +20,20 @@ export default function Navigator() {
                     if (route.name === 'Accueil') {
                         iconName = 'home';
                     }
-                    else if (route.name === 'Map') {
-                        iconName = 'map-marker-alt';
-                    }
                     else {
                         iconName = 'parking';
                     }
                     if (focused) {
-                        color = '#286ec3';
+                        color = '#1ccc5b';
                         size = 30;
                     }
                     else {
-                        color = '#666666';
+                        color = '#eedddd';
                         size = 25;
                     }
                     return <FontAwesome5 name={iconName} color={color} size={size} />
                 },
-                tabBarLabelStyle: {
-                    color: '#eedddd',
-                    fontWeight: '600'
-                },
+                tabBarShowLabel: false,
                 tabBarStyle: {
                     height: 60,
                     backgroundColor: '#151515',
@@ -45,7 +42,10 @@ export default function Navigator() {
         >
             <Tab.Screen name="Accueil" component={HomeScreen} options={styles} />
             <Tab.Screen name="Liste des parkings" component={ParkingScreen} options={styles} />
-            <Tab.Screen name = "Map" component={Map} options={styles} />
+            <Tab.Screen name = "Map" component={Map} />
+            <Tab.Screen name = "SearchBar" component={SearchBar} />
+
+
         </Tab.Navigator>
     )
 }
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
         height: 125
     },
     headerTitleStyle: {
-        fontSize: 30,
         color: '#eedddd',
         fontWeight: 'bold'
     }

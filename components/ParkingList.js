@@ -1,5 +1,5 @@
-import React, {Fragment, useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { Fragment, useEffect, useState } from 'react';
+import {ActivityIndicator, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import ParkingDetails from "./ParkingDetails";
 import {FontAwesome5} from "@expo/vector-icons";
 import * as Location from 'expo-location';
@@ -36,6 +36,7 @@ export default function ParkingList() {
     const getParking = async () => {
         try {
             const response = await fetch('https://20a2-2a02-a03f-c0b2-5a00-dd19-c7f0-4f7b-6caf.eu.ngrok.io/parking');
+
             const json = await response.json();
 
             for (let x of location) {
@@ -55,8 +56,8 @@ export default function ParkingList() {
         } finally {
             setLoading(false);
         }
-    }
 
+    }
     const postDistance = async (location) => {
         try {
             const response = await fetch(
@@ -75,6 +76,19 @@ export default function ParkingList() {
         }
     };
 
+    const searchName = (input) => {
+
+        if (input){
+            let searchData = data.filter((item)=>{
+                return item.parking_name.toLowerCase().includes(input.toLowerCase())
+            });
+            setData(searchData)
+        }
+        else{
+            getParking()
+        }
+    };
+
     const getParkingInfo = (data) => {
         parkingInfo = data;
         parkingInfo.parking_opening_hour = parkingInfo.parking_opening_hour.slice(0, 2) + 'h' + parkingInfo.parking_opening_hour.slice(3, 5);
@@ -83,6 +97,15 @@ export default function ParkingList() {
     }
 
     return (
+        <Fragment>
+          <View>
+                <TextInput style={styles.search}
+                           placeholder= "Search Name"
+                           onChangeText= {(input)=> {
+                               searchName(input);
+                           }}
+                />
+          </View>
         <View style={styles.buttonList}>
             {isLoading ? <ActivityIndicator/> : (
                 <FlatList
@@ -116,10 +139,11 @@ export default function ParkingList() {
                                 </View>
                             </ParkingDetails>
                         </Fragment>
-                    )}
-                />
-            )}
-        </View>
+                        )}
+                    />
+                )}
+            </View>
+        </Fragment>
     );
 }
 
@@ -151,5 +175,15 @@ const styles = StyleSheet.create({
     modalHeader: {
         fontWeight: '800',
         color: '#eedddd'
+    },
+    search: {
+        textAlign: 'center',
+        fontWeight: '800',
+        color: '#eedddd',
+        backgroundColor : 'lightblue',
+        padding: 12
+
+
     }
+
 });
