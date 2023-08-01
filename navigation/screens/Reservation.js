@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: '#333', // Dark background color for each item
     borderRadius: 10, // Rounded borders
-    padding: 16
+    padding: 16,
     marginBottom: 12,
   },
-  itemText:
+  itemText: {
     color: '#fff', // White text color
     fontSize: 16,
   },
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333', // Dark background color for the search bar
     borderRadius: 10, // Rounded borders for the search bar
     paddingHorizontal: 10,
-    marginBottom: 12,
+    marginBottom: 20,
   },
   searchInput: {
     color: '#fff', // White text color for the search input
