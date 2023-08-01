@@ -43,7 +43,7 @@ export default function Navigator() {
             <Tab.Screen name = "Reservation" component={Reservation} options={styles}/>
             <Tab.Screen name="Liste des parkings" component={ParkingScreen} options={styles} />
             <Tab.Screen name = "Map" component={Map} options={styles}/>
-            <Tab.Screen name = "SearchBar" component={SearchBar} options={styles} />
+            <Tab.Screen name = "Liste Parking" component={SearchBar} options={styles} />
            
         </Tab.Navigator>
     )

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TextInput, StyleSheet, FlatList , TouchableOpacity} from 'react-native';
 
 const data = [
   { parking_id: '1', parking_name: 'Magritte', parking_opening_hour: '08:30:00', parking_closure_hour: '18:00:00', parking_address: 'Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 50 },
@@ -12,12 +12,16 @@ const HomeScreen = () => {
   const [parkingData, setParkingData] = useState(data);
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>
-        Parking: {item.parking_name} {'\n\n'}
-        {item.parking_maximum_place} places max {'\n\n'}{'\n\n'}
-      </Text>
-    </View>
+
+      <View style={styles.itemContainer}>
+        <Text style={styles.itemText}>
+          Parking: {item.parking_name} {'\n\n'}
+          {item.parking_maximum_place} places max {'\n\n'}
+        </Text>
+        <TouchableOpacity style={styles.button} onPress={() => GoParking(item)}>
+          <Text style={styles.buttonText}>Aller au parking</Text>
+        </TouchableOpacity>
+      </View>
   );
 
   const searchName = (input) => {
@@ -26,6 +30,12 @@ const HomeScreen = () => {
     );
     setParkingData(searchData);
   };
+
+  const GoParking = (parking) => {
+      // Implement the logic to navigate to the parking screen here
+      // You can use navigation libraries like react-navigation or react-native-navigation
+    console.log('Aller au parking : ', parking.parking_name);
+    };
 
   return (
     <View style={styles.container}>
@@ -36,7 +46,7 @@ const HomeScreen = () => {
           onChangeText={(input) => {
             searchName(input);
           }}
-        />
+      />
       </View>
 
       <FlatList
@@ -46,59 +56,48 @@ const HomeScreen = () => {
       />
     </View>
   );
-};
+  };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#333', // Darker background color
     padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2', // Light gray background color
   },
   searchContainer: {
-    paddingVertical: 10,
-    width: '100%',
-    marginBottom: 16, // Add spacing at the bottom
+    marginBottom: 16,
   },
   searchInput: {
-    paddingHorizontal: 16, // Increased horizontal padding
-    height: 48, // Increased height
-    borderColor: '#ccc', // Light gray border color
     borderWidth: 1,
-    borderRadius: 24, // Rounder input box
-    backgroundColor: '#ffffff',
-    fontSize: 16,
-    width: '100%',
-    shadowColor: '#000', // Add shadow
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3, // For Android shadow
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 8,
+    color: '#fff', // White text color
+    backgroundColor: '#444', // Darker input background color
   },
   itemContainer: {
-    backgroundColor: '#222', // Darker background color
-    padding: 16, // Increased padding
-    marginBottom: 16, // Add spacing at the bottom
-    borderRadius: 10,
-    width: '100%',
-    shadowColor: '#000', // Add shadow
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 5, // For Android shadow
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#555', // Slightly lighter border color
+    paddingVertical: 12,
+    borderRadius: 8, // Border radius for item container
+    marginBottom: 8,
   },
   itemText: {
-    textAlign: 'center',
-    fontWeight: 'bold', // Use bold font weight
-    color: 'white',
-    fontSize: 18, // Increase font size
+    fontSize: 16,
+    color: '#fff', // White text color
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
 
