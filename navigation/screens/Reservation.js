@@ -1,101 +1,87 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList , TouchableOpacity} from 'react-native';
+import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
 
-const data = [
-  { parking_id: '1', parking_name: 'Magritte', parking_opening_hour: '08:30:00', parking_closure_hour: '18:00:00', parking_address: 'Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 50 },
-  { parking_id: '2', parking_name: 'Leclercq', parking_opening_hour: '09:00:00', parking_closure_hour: '19:00:00', parking_address: 'Bd du S, 1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 60 },
-  { parking_id: '3', parking_name: 'Wallons', parking_opening_hour: '07:00:00', parking_closure_hour: '16:30:00', parking_address: '1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 55 },
-  { parking_id: '4', parking_name: 'Brol', parking_opening_hour: '08:00:00', parking_closure_hour: '16:00:00', parking_address: 'hgjhfjhgfjf', parking_maximum_place: 120 },
-];
+const ReservationForm = () => {
+  const [PlaqueImmatriculation, setPlaqueImmatriculation] = useState('');
+  const [Nom, setNom] = useState('');
+  const [Duree, setDuree] = useState('');
 
-const Reservation = () => {
-  const [parkingData, setParkingData] = useState(data);
+  const handleSubmit = () => {
+    if (PlaqueImmatriculation === '' || Nom === '' || Duree === '') {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+      return;
+    }
 
-  const renderItem = ({ item }) => (
+// Appeler l'API backend pour enregistrer la réservation
+    // Ici, vous pouvez utiliser la fonction fetch() pour envoyer les données au backend
+    // Assurez-vous que l'API backend est correctement configurée pour gérer les réservations.
 
-      <View style={styles.itemContainer}>
-        <Text style={styles.itemText}>
-          Parking: {item.parking_name} {'\n\n'}
-          {item.parking_maximum_place} places max {'\n\n'}
-        </Text>
-        <TouchableOpacity style={styles.button} onPress={() => GoParking(item)}>
-          <Text style={styles.buttonText}>Aller au parking</Text>
-        </TouchableOpacity>
-      </View>
-  );
-
-  const searchName = (input) => {
-    const searchData = data.filter((item) =>
-      item.parking_name.toLowerCase().includes(input.toLowerCase())
-    );
-    setParkingData(searchData);
+    // Remplacer "http://votre-serveur-backend.com/reservations" par l'URL de votre API backend
+    fetch('http://votre-serveur-backend.com/reservations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        PlaqueImmatriculation,
+        Nom,
+        Duree,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Si la réservation est réussie, vous pouvez afficher un message de succès.
+        Alert.alert('Success', 'Reservation successful!');
+        // Réinitialiser les champs du formulaire après la réservation réussie.
+        setPlaqueImmatriculation('');
+        setNom('');
+        setDuree('');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Alert.alert("Erreur', 'Une erreur s'est produite. Veuillez réessayer plus tard.");
+      });
   };
-
-  const GoParking = (parking) => {
-      // Implement the logic to navigate to the parking screen here
-      // You can use navigation libraries like react-navigation or react-native-navigation
-    console.log('Aller au parking : ', parking.parking_name);
-    };
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Rechercher"
-          onChangeText={(input) => {
-            searchName(input);
-          }}
+      <TextInput
+        style={styles.input}
+        placeholder="Plaque d'immatriculation"
+        value={PlaqueImmatriculation}
+        onChangeText={text => setPlaqueImmatriculation(text)}
       />
-      </View>
-
-      <FlatList
-        data={parkingData}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+      <TextInput
+        style={styles.input}
+        placeholder="Nom"
+        value={Nom}
+        onChangeText={text => setNom(text)}
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Durée"
+        value={Duree}
+        onChangeText={text => setDuree(text)}
+        keyboardType="numeric"
+      />
+      <Button title="Réserver" onPress={handleSubmit} />
     </View>
   );
-  };
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#1a1a1a', // Dark background color
     padding: 16,
+    backgroundColor: '#f9f9f9',
   },
-  itemContainer: {
-    backgroundColor: '#333', // Dark background color for each item
-    borderRadius: 10, // Rounded borders
-    padding: 16,
-    marginBottom: 12,
-  },
-  itemText: {
-    color: '#fff', // White text color
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: '#ff6600', // Orange button background color
-    borderRadius: 5,
-    paddingVertical: 8,
+  input: {
+    marginBottom: 10,
     paddingHorizontal: 12,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: '#fff', // White text color for the button
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  searchContainer: {
-    backgroundColor: '#333', // Dark background color for the search bar
-    borderRadius: 10, // Rounded borders for the search bar
-    paddingHorizontal: 10,
-    marginBottom: 20,
-  },
-  searchInput: {
-    color: '#fff', // White text color for the search input
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
   },
 });
 
-
-export default Reservation;
+export default ReservationForm;
