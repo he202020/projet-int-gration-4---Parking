@@ -7,12 +7,14 @@ import Map from "./screens/Map"
 import ListParking from "./screens/ListParking";
 import Reservation from "./screens/Reservation";
 import GoogleMap from "./screens/GoogleMap";
+import { NavigationContainer } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 export default function Navigator() {
 
     return (
+
         <Tab.Navigator
             screenOptions={({route}) => ({
                 tabBarIcon: ({focused, color, size}) => {
@@ -49,7 +51,8 @@ export default function Navigator() {
 
 
         </Tab.Navigator>
-    )
+
+    );
 }
 
 const styles = StyleSheet.create({

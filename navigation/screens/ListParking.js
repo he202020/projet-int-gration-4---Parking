@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList , TouchableOpacity} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const data = [
    { parking_id: '1', parking_name: 'Magritte', parking_opening_hour: '08:30:00', parking_closure_hour: '18:00:00', parking_address: 'Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 50, longitude: 4.611498, latitude: 50.665886 },
@@ -8,6 +9,7 @@ const data = [
 ];
 
 const ListParking = () => {
+  const navigation = useNavigation();
   const [parkingData, setParkingData] = useState(data);
 
   const renderItem = ({ item }) => (
@@ -34,6 +36,7 @@ const ListParking = () => {
       // Implement the logic to navigate to the parking screen here
       // You can use navigation libraries like react-navigation or react-native-navigation
     console.log('Aller au parking : ', parking.parking_name);
+    navigation.navigate('GoogleMap', { selectedParking: parking });
     };
 
   return (
