@@ -11,6 +11,8 @@ const data = [
 const ListParking = () => {
   const navigation = useNavigation();
   const [parkingData, setParkingData] = useState(data);
+  // Ajoute l'état sélectionnéParking
+  const [selectedParking, setSelectedParking] = useState(null);
 
   const renderItem = ({ item }) => (
 
@@ -36,6 +38,8 @@ const ListParking = () => {
       // Implement the logic to navigate to the parking screen here
       // You can use navigation libraries like react-navigation or react-native-navigation
     console.log('Aller au parking : ', parking.parking_name);
+    // Définit l'état sélectionnéParking
+    setSelectedParking(parking);
     navigation.navigate('GoogleMap', { selectedParking: parking });
     };
 
