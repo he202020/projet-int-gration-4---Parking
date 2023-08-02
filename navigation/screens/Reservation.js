@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View,Text, TextInput, Button, Alert, StyleSheet,TouchableOpacity } from 'react-native';
 
 const ReservationForm = () => {
   const [PlaqueImmatriculation, setPlaqueImmatriculation] = useState('');
@@ -64,7 +64,9 @@ const ReservationForm = () => {
         onChangeText={text => setDuree(text)}
         keyboardType="numeric"
       />
-      <Button title="Réserver" onPress={handleSubmit} />
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+               <Text style={styles.buttonText}>Réserver</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -73,8 +75,10 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     backgroundColor: '#f9f9f9',
+
   },
   input: {
+
     marginBottom: 10,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -82,6 +86,18 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 4,
   },
+  button: {
+    backgroundColor: '#ff6600', // Orange button background color
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginTop: 10,
+    },
+  buttonText: {
+    color: '#fff', // White text color for the button
+    fontSize: 16,
+    textAlign: 'center',
+    },
 });
 
 export default ReservationForm;
