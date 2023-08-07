@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View,Text, TextInput, Button, Alert, StyleSheet,TouchableOpacity } from 'react-native';
 
 const ReservationForm = () => {
-  const [PlaqueImmatriculation, setPlaqueImmatriculation] = useState('');
-  const [Nom, setNom] = useState('');
-  const [Duree, setDuree] = useState('');
+  const [numberplate, setnumberplate] = useState('');
+  //const [person_name, setperson_name] = useState('');
+  const [time, settime] = useState('');
+  
 
   const handleSubmit = () => {
-    if (PlaqueImmatriculation === '' || Nom === '' || Duree === '') {
+    if (numberplate === '' || time === '') {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
     }
@@ -23,9 +24,8 @@ const ReservationForm = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        PlaqueImmatriculation,
-        Nom,
-        Duree,
+        numberplate,
+        time,
       }),
     })
       .then(response => response.json())
@@ -33,9 +33,9 @@ const ReservationForm = () => {
         // Si la réservation est réussie, vous pouvez afficher un message de succès.
         Alert.alert('Success', 'Reservation successful!');
         // Réinitialiser les champs du formulaire après la réservation réussie.
-        setPlaqueImmatriculation('');
-        setNom('');
-        setDuree('');
+        setnumberplate('');
+        
+        settime('');
       })
       .catch(error => {
         console.error('Error:', error);
@@ -48,20 +48,15 @@ const ReservationForm = () => {
       <TextInput
         style={styles.input}
         placeholder="Plaque d'immatriculation"
-        value={PlaqueImmatriculation}
-        onChangeText={text => setPlaqueImmatriculation(text)}
+        value={numberplate}
+        onChangeText={text => setnumberplate(text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Nom"
-        value={Nom}
-        onChangeText={text => setNom(text)}
-      />
+
       <TextInput
         style={styles.input}
         placeholder="Durée"
-        value={Duree}
-        onChangeText={text => setDuree(text)}
+        value={time}
+        onChangeText={text => settime(text)}
         keyboardType="numeric"
       />
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>

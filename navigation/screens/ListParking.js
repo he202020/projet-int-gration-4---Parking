@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#ff6600', // Orange button background color
+    backgroundColor: 'orange', // Orange button background color
     borderRadius: 5,
     paddingVertical: 8,
     paddingHorizontal: 12,
