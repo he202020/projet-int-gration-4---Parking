@@ -1,8 +1,8 @@
-INSERT INTO person (first_name, last_name, email, numberplate, is_admin)
+INSERT INTO person (first_name, last_name, company, email, hash, is_admin)
 VALUES
-    ('John', 'Doe', 'john@doe.be', '1-AAA-111', TRUE);
+    ('John', 'Doe', 'Ephec', 'john@doe.be', crypt('ephec456', gen_salt('md5')), TRUE);
 
-INSERT INTO person (first_name, last_name, email, numberplate)
+INSERT INTO person (first_name, last_name, company, email, hash)
 VALUES
-    ('Noé', 'Libon', 'noe@libon.be', '1-AAA-112'),
-    ('Pauline', 'Vanderhulst', 'pauline@vanderhulst.be', '1-AAA-113');
+    ('Noé', 'Libon', 'UCL', 'noe@libon.be', crypt('ucl456', gen_salt('md5'))),
+    ('Pauline', 'Vanderhulst', 'ULB', 'pauline@vanderhulst.be', crypt('ulb456', gen_salt('md5')));

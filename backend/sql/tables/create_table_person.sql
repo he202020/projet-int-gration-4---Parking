@@ -1,9 +1,9 @@
 CREATE TABLE person (
-    id UUID DEFAULT gen_random_uuid() NOT NULL,
+    id SERIAL PRIMARY KEY,
     first_name VARCHAR NOT NULL,
     last_name VARCHAR NOT NULL,
-    email VARCHAR NOT NULL,
-    phone_number VARCHAR NULL,
-    numberplate VARCHAR NOT NULL,
+    company VARCHAR NOT NULL,
+    email VARCHAR UNIQUE,
+    hash VARCHAR NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE NOT NULL
 );
