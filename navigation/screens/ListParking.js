@@ -3,9 +3,9 @@ import { View, Text, TextInput, StyleSheet, FlatList , TouchableOpacity} from 'r
 import { useNavigation } from '@react-navigation/native';
 
 const data = [
-   { id: '1', name: 'Magritte', opening: '08:30:00', closure: '18:00:00', address: 'Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 50, longitude: 4.611498, latitude: 50.665886 },
-  { id: '2', name: 'Leclercq', opening: '09:00:00', closure: '19:00:00', address: 'Bd du S, 1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 60,longitude:4.612858,latitude:50.666845 },
-  { id: '3', name: 'Wallons', opening: '07:00:00', closure: '16:30:00', address: '1348 Ottignies-Louvain-la-Neuve', parking_maximum_place: 55,longitude:4.617058,latitude: 50.669534},
+   { id: '1', name: 'Magritte', opening: '08:30:00', closure: '18:00:00', address: 'Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve', max: 50, longitude: 4.611498, latitude: 50.665886 },
+  { id: '2', name: 'Leclercq', opening: '09:00:00', closure: '19:00:00', address: 'Bd du S, 1348 Ottignies-Louvain-la-Neuve', max: 60,longitude:4.612858,latitude:50.666845 },
+  { id: '3', name: 'Wallons', opening: '07:00:00', closure: '16:30:00', address: '1348 Ottignies-Louvain-la-Neuve', max: 55,longitude:4.617058,latitude: 50.669534},
 ];
 
 const ListParking = () => {
@@ -19,7 +19,7 @@ const ListParking = () => {
       <View style={styles.itemContainer}>
         <Text style={styles.itemText}>
           Parking: {item.name} {'\n\n'}
-          {item.parking_maximum_place} places max {'\n\n'}
+          {item.max} places max {'\n\n'}
         </Text>
         <TouchableOpacity style={styles.button} onPress={() => GoParking(item)}>
           <Text style={styles.buttonText}>Aller au parking</Text>

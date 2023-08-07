@@ -7,32 +7,32 @@ import Reservation from "./Reservation";
 
 const data = [
   {
-    parking_id: "1",
-    parking_name: "Magritte",
-    parking_opening_hour: "08:30:00",
-    parking_closure_hour: "18:00:00",
-    parking_address: "Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve",
-    parking_maximum_place: 50,
+    id: "1",
+    name: "Magritte",
+    opening: "08:30:00",
+    closure: "18:00:00",
+    address: "Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve",
+    max: 50,
     longitude: 4.611498,
     latitude: 50.665886,
   },
   {
-    parking_id: "2",
-    parking_name: "Leclercq",
-    parking_opening_hour: "09:00:00",
-    parking_closure_hour: "19:00:00",
-    parking_address: "Bd du S, 1348 Ottignies-Louvain-la-Neuve",
-    parking_maximum_place: 60,
+    id: "2",
+    name: "Leclercq",
+    opening: "09:00:00",
+    closure: "19:00:00",
+    address: "Bd du S, 1348 Ottignies-Louvain-la-Neuve",
+    max: 60,
     longitude: 4.612858,
     latitude: 50.666845,
   },
   {
-    parking_id: "3",
-    parking_name: "Wallons",
-    parking_opening_hour: "07:00:00",
-    parking_closure_hour: "16:30:00",
-    parking_address: "1348 Ottignies-Louvain-la-Neuve",
-    parking_maximum_place: 55,
+    id: "3",
+    name: "Wallons",
+    opening: "07:00:00",
+    closure: "16:30:00",
+    address: "1348 Ottignies-Louvain-la-Neuve",
+    max: 55,
     longitude: 4.617058,
     latitude: 50.669534,
   },
@@ -41,9 +41,9 @@ const data = [
 const renderCallout = (parking, handleReservation) => (
   <Callout>
     <View style={styles.calloutContainer}>
-      <Text style={styles.parkingName}>{parking.parking_name}</Text>
+      <Text style={styles.parkingName}>{parking.name}</Text>
       <Text style={styles.availableSpaces}>
-        Places libres : {parking.parking_maximum_place}
+        Places libres : {parking.max}
       </Text>
       <TouchableOpacity
         style={styles.reserveButton}
@@ -83,12 +83,12 @@ const GoogleMap = () => {
         {showMarkers &&
           data.map((parking) => (
             <Marker
-              key={parking.parking_id}
+              key={parking.id}
               coordinate={{
                 latitude: parking.latitude,
                 longitude: parking.longitude,
               }}
-              title={parking.parking_name}
+              title={parking.name}
             >
               {renderCallout(parking, handleReservation)}
             </Marker>
@@ -99,7 +99,7 @@ const GoogleMap = () => {
               latitude: selectedParking.latitude,
               longitude: selectedParking.longitude,
             }}
-            title={selectedParking.parking_name}
+            title={selectedParking.name}
             pinColor="purple"
           >
             {renderCallout(selectedParking, handleReservation)}
