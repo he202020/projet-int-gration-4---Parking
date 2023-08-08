@@ -135,12 +135,12 @@ const styles = StyleSheet.create({
     maxWidth: 300,
   },
   root: {
-    alignItems: "center",
     padding: 40,
-    paddingBottom: 145,
-    paddingTop: 40,
-    textAlign: "center",
-    backgroundColor: "black",
+    paddingBottom: 180,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#171717",
   },
   title: {
     fontSize: 24,

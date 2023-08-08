@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model numberplate {
+  id          Int           @id @default(autoincrement())
+  str         String?       @unique @db.VarChar
+  person_id   Int
+  person      person        @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_numberplate")
+  reservation reservation[]
+}
+
+model parking {
+  id              Int           @id @default(autoincrement())
+  name            String        @db.VarChar
+  opening         DateTime?     @db.Time(6)
+  closure         DateTime?     @db.Time(6)
+  address         String        @db.VarChar
+  max             Int
+  nbr_free_spaces Int           @default(0)
+  longitude       Float
+  latitude        Float
+  reservation     reservation[]
+}
+
+model person {
+  id          Int           @id @default(autoincrement())
+  first_name  String        @db.VarChar
+  last_name   String        @db.VarChar
+  company     String        @db.VarChar
+  email       String?       @unique @db.VarChar
+  hash        String        @db.VarChar
+  is_admin    Boolean       @default(false)
+  numberplate numberplate[]
+}
+
+model reservation {
+  id             Int         @id @default(autoincrement())
+  numberplate_id Int
+  parking_id     Int
+  day            DateTime    @db.Date
+  start_time     DateTime    @db.Time(6)
+  end_time       DateTime    @db.Time(6)
+  numberplate    numberplate @relation(fields: [numberplate_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservation_numberplate")
+  parking        parking     @relation(fields: [parking_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reservation_parking")
+}

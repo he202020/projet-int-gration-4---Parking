@@ -12,10 +12,12 @@ const port = 3000; // Port sur lequel le serveur Express écoutera
 
 const addReservation = async function (request, response) {
   try {
-    await sqlConnection`INSERT INTO reservation (id, numberplate_id, parking_id, time) VALUES (${request.body.id},${request.body.numberplate_id},${request.body.parking_id},${request.body.time} )`;
 
-    response.status(201).send("The reservation has been successfully created.");
+    await sqlConnection `INSERT INTO reservation (numberplate_id, parking_id, day, start_time, end_time) VALUES (${request.body.numberplate_id},${request.body.parking_id},${request.body.day},${request.body.start_time},${request.body.end_time} )`;
+
+    response.status(201).send("Réservation réussie.");
   } catch (err) {
+    
     response.status(400).send(err.message);
   }
 };
@@ -31,4 +33,4 @@ const getReservation = async function (request, response) {
   }
 };
 
-module.exports = { addReservation, getReservation };
+module.exports = { addReservation,getReservation };

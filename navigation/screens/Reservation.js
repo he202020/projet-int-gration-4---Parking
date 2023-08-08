@@ -1,115 +1,170 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, Text } from "react-native";
+import { TextInput, Button, Snackbar } from "react-native-paper";
 
-
+import axios from "axios";
 
 const ReservationForm = () => {
-  const [data, setData] = useState(data); // Add this line to define and initialize the 'data' state
-  const [numberplate, setnumberplate] = useState("");
-  const [time, settime] = useState("");
+  const [numberplateId, setNumberplateId] = useState("");
+  const [parkingId, setParkingId] = useState("");
+  const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  
 
-  const addReservation = (numberplate, time) => {
-    const newId = data.length > 0 ? data[data.length - 1].id + 1 : 1;
-    const newReservation = {
-      id: newId,
-      numberplate,
-      parking_id: 5, // You can assign an appropriate value here if you have parking information
-      time,
-    };
-    setData([...data, newReservation]); // Update the state with the new reservation
+
+  const handleReservation = async () => {
+    try {
+      // Replace 'YOUR_BACKEND_API_URL' with the actual URL of your backend API
+      const response = await axios.post(
+        "https://d5a6-2a02-a03f-635e-3f00-b054-51dd-b92b-cfd.ngrok-free.app/reservation",
+        {
+          numberplate_id: numberplateId,
+          parking_id: parkingId,
+          day: date,
+          start_time: startTime,
+          end_time: endTime,
+        }
+      );
+
+      // Handle the success case (status code 201) here if needed
+      setSnackbarMessage(response.data);
+      setSnackbarVisible(true);
+    } catch (error) {
+      // Handle the error case (status code 400) here if needed
+      setSnackbarMessage(error.message);
+      setSnackbarVisible(true);
+    }
   };
 
-  const handleSubmit = () => {
-    if (numberplate === "" || time === "") {
-      Alert.alert("Erreur", "Veuillez remplir tous les champs.");
-      return;
+  const formatTimeInput = (input) => {
+    if (input.length === 3) {
+      return input.slice(0, 2) + ":" + input.slice(2);
+    } else if (input.length === 6) {
+      return input.slice(0, 5) + ":" + input.slice(5);
+    } else if (input.length > 8) {
+      return input.slice(0, 8);
+    } else {
+      return input;
     }
+  };
 
-    // Appeler l'API backend pour enregistrer la réservation
-    // Ici, vous pouvez utiliser la fonction fetch() pour envoyer les données au backend
-    // Assurez-vous que l'API backend est correctement configurée pour gérer les réservations.
-
-    // Remplacer "http://votre-serveur-backend.com/reservations" par l'URL de votre API backend
-    fetch("https://f603-2a02-a03f-635e-3f00-7459-6490-afad-74ea.ngrok-free.app/reservation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        numberplate,
-        time,
-      }),
-    })
-      .then((response) => response.json())
-      /*.then((data) => {
-        addReservation(numberplate, time); // Pass numberplate and time to addReservation function
-        // Si la réservation est réussie, vous pouvez afficher un message de succès.
-        Alert.alert("Succès", "Réservation réussie !");
-        // Réinitialiser les champs du formulaire après la réservation réussie.
-        setnumberplate("");
-        settime("");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        Alert.alert("Erreur", "Une erreur s'est produite. Veuillez réessayer plus tard.");
-      });*/
+  // Custom function to format the date input with "-"
+  const formatDateInput = (input) => {
+    if (input.length === 3) {
+      return input.slice(0, 2) + "-" + input.slice(2);
+    } else if (input.length === 6) {
+      return input.slice(0, 5) + "-" + input.slice(5);
+    } else if (input.length > 10) {
+      return input.slice(0, 10);
+    } else {
+      return input;
+    }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Plaque d'immatriculation"
-        value={numberplate}
-        onChangeText={(text) => setnumberplate(text)}
-      />
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Réserve ta place de parking</Text>
+        <TextInput
+          label="Numberplate ID"
+          value={numberplateId}
+          onChangeText={(text) => setNumberplateId(text)}
+          style={styles.input}
+        />
+        <TextInput
+          label="Parking ID"
+          value={parkingId}
+          onChangeText={(text) => setParkingId(text)}
+          style={styles.input}
+        />
+        <TextInput
+          label="Date de réservation"
+          value={formatDateInput(date)}
+          onChangeText={(text) => setDate(text)}
+          style={styles.input}
+          keyboardType="numeric" // Numeric keypad for date input
+          placeholder="JJ-MM-AAAA" // Example: 07-08-2023
+        />
+        <TextInput
+          label="Heure de début"
+          value={formatTimeInput(startTime)}
+          onChangeText={(text) => setStartTime(text)}
+          style={styles.input}
+          keyboardType="numeric" // Numeric keypad for time input
+          placeholder="HH:mm:ss" // Example: 14:30
+        />
+        <TextInput
+          label="Heure de fin"
+          value={formatTimeInput(endTime)}
+          onChangeText={(text) => setEndTime(text)}
+          style={styles.input}
+          keyboardType="numeric" // Numeric keypad for time input
+          placeholder="HH:mm:ss" // Example: 17:45
+        />
+        <Button
+          mode="contained"
+          onPress={handleReservation}
+          style={styles.reservationButton}
+          contentStyle={styles.buttonContent}
+          labelStyle={styles.buttonLabel}
+        >
+          Réserver
+        </Button>
+      </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Durée"
-        value={time}
-        onChangeText={(text) => settime(text)}
-        keyboardType="numeric"
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Réserver</Text>
-      </TouchableOpacity>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: "#f9f9f9",
+    flex: 1,
+    backgroundColor: "black",
+    alignItems: "center", // Center the content horizontally
+    justifyContent: "center", // Center the content vertically
+  },
+  formContainer: {
+    width: "80%", // Set the desired width of the form container
+    marginTop: -95, // Adjust the negative marginTop value to move the form higher
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 40,
+  },
+
+  reservationButton: {
+    backgroundColor: "orange",
+    marginTop: 20,
+  },
+  buttonContent: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  buttonLabel: {
+    color: "white",
+    fontSize: 18,
   },
   input: {
-    marginBottom: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    marginVertical: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-  },
-  button: {
-    backgroundColor: "#ff6600", // Orange button background color
-    borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff", // White text color for the button
-    fontSize: 16,
-    textAlign: "center",
+    borderColor: "white",
+    borderRadius: 7,
+    backgroundColor: "white",
+    color: "white",
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    color: "black", // Change the text color to black for better visibility
   },
 });
 

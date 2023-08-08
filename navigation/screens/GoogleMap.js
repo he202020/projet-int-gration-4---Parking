@@ -42,9 +42,7 @@ const renderCallout = (parking, handleReservation) => (
   <Callout>
     <View style={styles.calloutContainer}>
       <Text style={styles.parkingName}>{parking.name}</Text>
-      <Text style={styles.availableSpaces}>
-        Places libres : {parking.max}
-      </Text>
+      <Text style={styles.availableSpaces}>Places libres : {parking.max}</Text>
       <TouchableOpacity
         style={styles.reserveButton}
         onPress={() => handleReservation(parking)}
@@ -73,10 +71,14 @@ const GoogleMap = () => {
     setShowMarkers(!showMarkers);
   };
 
-  const handleReservation = (parking) => {
+  /*const handleReservation = (parking) => {
     navigation.navigate("Reservation", { parking });
-  };
+  };*/
 
+  const handleReservation = (parking) => {
+    navigation.navigate("Reservation", { parkingId: parking.id });
+  };
+  
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
