@@ -31,7 +31,7 @@ exports.postPerson = async function postPerson(req, res) {
         hash: hash,
       },
     });
-    res.json({ statusCode: 200 });
+    res.json({ statusCode: 201});
   } catch (err) {
     console.log(err);
     res.statusCode(500);

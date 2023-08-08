@@ -4,6 +4,7 @@ import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Navigatore from "../../Navigatore";
+import axios from "axios"; // Import Axios
 
 const SignUpScreen = ({ navigation, route }) => {
   const { onSignUpSuccess, isLoggedIn } = route.params || {};
@@ -12,26 +13,36 @@ const SignUpScreen = ({ navigation, route }) => {
   const [last_name, setlast_name] = useState("");
   const [email, setEmail] = useState("");
   const [company, setcompany] = useState("");
-  const [password, setpassword] = useState("");
+  const [hash, setpassword] = useState("");
   const [gdprAccepted, setGdprAccepted] = useState(false); // State for the checkbox
 
   //SignUp button pressed
-  const onSignUpPressed = () => {
+  const onSignUpPressed = async () => {
     console.warn("onSignUpPressed()");
     if (first_name === "" || last_name === "" || email === "") {
       Alert.alert("Erreur", "Veuillez remplir tous les champs.");
       return;
     }
     if (gdprAccepted) {
-      // Perform signup logic
-      console.log("Prénom :", first_name);
-      console.log("Nom:", last_name);
-      console.log("Email:", email);
-
-      console.log("société:", company);
-      console.log("Mot de passe:", password);
-
-      onSignUpSuccess();
+      try {
+        const response = await axios
+          .post(
+            "https://d5a6-2a02-a03f-635e-3f00-b054-51dd-b92b-cfd.ngrok-free.app/person",
+            {
+              first_name,
+              last_name,
+              company,
+              email,
+              hash: hash,
+            }
+          )
+          .then(() => {
+            console.log("Inscription réussie");
+            onSignUpSuccess();
+          });
+      } catch (error) {
+        console.error("Erreur lors de la requête:", error);
+      }
     } else {
       console.log("Vous n'avez pas rempli tous les champs");
     }
@@ -86,7 +97,7 @@ const SignUpScreen = ({ navigation, route }) => {
         placeholder="* Mot de passe"
         secureTextEntry={true}
         inputStyle={styles.input}
-        value={password}
+        value={hash}
         setValue={setpassword}
       />
       <TouchableOpacity
