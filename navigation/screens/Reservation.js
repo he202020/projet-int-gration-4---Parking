@@ -4,7 +4,8 @@ import { TextInput, Button, Snackbar } from "react-native-paper";
 
 import axios from "axios";
 
-const ReservationForm = () => {
+const ReservationForm = ({ route }) => {
+  const { id } = route.params;
   const [numberplateId, setNumberplateId] = useState("");
   const [parkingId, setParkingId] = useState("");
   const [date, setDate] = useState("");
