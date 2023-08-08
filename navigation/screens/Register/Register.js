@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity,Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -18,16 +18,16 @@ const SignUpScreen = ({ navigation, route }) => {
   //SignUp button pressed
   const onSignUpPressed = () => {
     console.warn("onSignUpPressed()");
-    if (first_name === '' || last_name === '' || email === '') {
-        Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
-        return;
-      }
+    if (first_name === "" || last_name === "" || email === "") {
+      Alert.alert("Erreur", "Veuillez remplir tous les champs.");
+      return;
+    }
     if (gdprAccepted) {
       // Perform signup logic
       console.log("Prénom :", first_name);
       console.log("Nom:", last_name);
       console.log("Email:", email);
-      
+
       console.log("société:", company);
       console.log("Mot de passe:", password);
 
@@ -36,8 +36,6 @@ const SignUpScreen = ({ navigation, route }) => {
       console.log("Vous n'avez pas rempli tous les champs");
     }
   };
-
-
 
   // Handle checkbox state change
   const toggleGdprCheckbox = () => {
