@@ -37,15 +37,12 @@ const GoogleMap = () => {
     }
   };
 
-  const renderCallout = (parking, handleReservation) => (
-    <Callout>
+  const renderCallout = (parking) => (
+    <Callout tooltip={true} onPress={() => handleReservation(parking.id)}>
       <View style={styles.calloutContainer}>
         <Text style={styles.parkingName}>{parking.name}</Text>
         <Text style={styles.availableSpaces}>Places libres : {parking.max}</Text>
-        <TouchableOpacity
-          style={styles.reserveButton}
-          onPress={() => handleReservation(parking)}
-        >
+        <TouchableOpacity style={styles.reserveButton}>
           <Text style={styles.reserveButtonText}>Réserver une place</Text>
         </TouchableOpacity>
       </View>
@@ -65,9 +62,9 @@ const GoogleMap = () => {
     setShowMarkers(!showMarkers);
   };
 
-  const handleReservation = () => {
-    //console.log("Navigating to Reservation with parking:", parking);
-    navigation.navigate("Reservation");
+  const handleReservation = (parkingId) => {
+    console.log("Navigating to Reservation with parking:", parkingId);
+    navigation.navigate("Reservation", { id: parkingId });
   };
 
 
@@ -84,7 +81,7 @@ const GoogleMap = () => {
               }}
               title={parking.name}
             >
-              {renderCallout(parking, handleReservation)}
+              {renderCallout(parking)}
             </Marker>
           ))}
 

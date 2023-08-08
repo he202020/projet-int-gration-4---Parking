@@ -4,8 +4,9 @@ import { TextInput, Button, Snackbar } from "react-native-paper";
 
 import axios from "axios";
 
-const ReservationForm = () => {
-  const [numberplateId, setNumberplateId] = useState("");
+const ReservationForm = ({route}) => {
+  //const {id} = route.params;
+  const [numberplateStr, setnumberplateStr] = useState("");
   const [parkingId, setParkingId] = useState("");
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -16,12 +17,13 @@ const ReservationForm = () => {
 
 
   const handleReservation = async () => {
+
     try {
-      // Replace 'YOUR_BACKEND_API_URL' with the actual URL of your backend API
+      
       const response = await axios.post(
         "https://d5a6-2a02-a03f-635e-3f00-b054-51dd-b92b-cfd.ngrok-free.app/reservation",
         {
-          numberplate_id: numberplateId,
+          numberplateStr: numberplateStr,
           parking_id: parkingId,
           day: date,
           start_time: startTime,
@@ -70,8 +72,8 @@ const ReservationForm = () => {
         <Text style={styles.title}>Réserve ta place de parking</Text>
         <TextInput
           label="Numberplate ID"
-          value={numberplateId}
-          onChangeText={(text) => setNumberplateId(text)}
+          value={numberplateStr}
+          onChangeText={(text) => setnumberplateStr(text)}
           style={styles.input}
         />
         <TextInput

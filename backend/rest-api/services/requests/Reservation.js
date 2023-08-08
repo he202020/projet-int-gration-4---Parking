@@ -1,28 +1,59 @@
-const sqlConnection = require("../index");
-const { json } = require("express");
+const { PrismaClient } = require("@prisma/client");
+const { request } = require("express");
 
-const express = require("express");
-const router = express.Router();
+const prisma = new PrismaClient();
 //const fetch = require("node-fetch"); // Pour effectuer la requête POST
-
-
 
 //ajouter une reservation
 
-const addReservation = async function (request, response) {
+/*const addReservation = async function (request, response) {
   try {
-
-    await sqlConnection `INSERT INTO reservation (numberplate_id, parking_id, day, start_time, end_time) VALUES (${request.body.numberplate_id},${request.body.parking_id},${request.body.day},${request.body.start_time},${request.body.end_time} )`;
+    await sqlConnection`INSERT INTO reservation (numberplateStr, parking_id, day, start_time, end_time) VALUES (${request.body.numberplateStr},${request.body.parking_id},${request.body.day},${request.body.start_time},${request.body.end_time} )`;
 
     response.status(201).send("Réservation réussie.");
   } catch (err) {
-    
     response.status(400).send(err.message);
+  }
+};*/
+
+exports.addReservation = async function addReservation(req, res) {
+  const { numberplateStr, parking_id, day, start_time, end_time } = req.body;
+  let plateID = 0;
+  try {
+    plateID = await prisma.numberplate.findUnique({
+      where: {
+        str: numberplateStr,
+      },
+      select: {
+        id : true,
+      },
+    });
+    console.log(plateID);
+    
+  } catch (err) {
+    console.log(err);
+    res.statusCode(500);
+  }
+
+  try {
+    await prisma.reservation.create({
+      data: {
+        numberplate_id: plateID.id ,
+        parking_id: parking_id,
+        day: day,
+        start_time: start_time,
+        end_time: end_time,
+      },
+    });
+    res.json({ statusCode: 201 });
+  } catch (err) {
+    console.log(err);
+    res.statusCode(500);
   }
 };
 
-//afficher toutes les reservations 
-const getReservation = async function (request, response) {
+//afficher toutes les reservations
+exports.getReservation = async function (request, response) {
   try {
     const result = await sqlConnection`
             select * from reservation
@@ -33,4 +64,4 @@ const getReservation = async function (request, response) {
   }
 };
 
-module.exports = { addReservation,getReservation };
+
