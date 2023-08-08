@@ -87,18 +87,7 @@ const GoogleMap = () => {
               {renderCallout(parking, handleReservation)}
             </Marker>
           ))}
-        {selectedParking && showMarkers && (
-          <Marker
-            coordinate={{
-              latitude: selectedParking.latitude,
-              longitude: selectedParking.longitude,
-            }}
-            title={selectedParking.name}
-            pinColor="purple"
-          >
-            {renderCallout(selectedParking, handleReservation)}
-          </Marker>
-        )}
+
       </MapView>
       <TouchableOpacity
         style={styles.toggleButton}

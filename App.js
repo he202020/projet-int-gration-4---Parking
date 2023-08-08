@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const onSignUpSuccess = () => {
     setIsLoggedIn(true);
