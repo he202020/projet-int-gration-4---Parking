@@ -39,18 +39,5 @@ const getParking = async function (request, response) {
   }
 };
 
-/*exports.searchName = async function (request, response) {
-    try {
-        const result = await sqlConnection`
-            select * from parking
-            where parking_name ilike ${'%' + request.params.query + '%'}
-            or parking_address ilike ${'%' + request.params.query + '%'}
-        `;
-        response.status(200).json(result);
-    }
-    catch (error) {
-        response.status(400).send(error.message);
-    }
-};*/
 
 module.exports = { getParking };

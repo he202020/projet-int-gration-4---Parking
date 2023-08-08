@@ -14,6 +14,7 @@ const SignUpScreen = ({ navigation, route }) => {
   const [email, setEmail] = useState("");
   const [company, setcompany] = useState("");
   const [hash, setpassword] = useState("");
+  const [plate, setplate] = useState("");
   const [gdprAccepted, setGdprAccepted] = useState(false); // State for the checkbox
 
   //SignUp button pressed
@@ -34,6 +35,8 @@ const SignUpScreen = ({ navigation, route }) => {
               company,
               email,
               hash: hash,
+              plate
+              
             }
           )
           .then(() => {
@@ -99,6 +102,13 @@ const SignUpScreen = ({ navigation, route }) => {
         inputStyle={styles.input}
         value={hash}
         setValue={setpassword}
+      />
+      <CustomInput
+        placeholder="* Plaque d'immatriculation"
+        
+        inputStyle={styles.input}
+        value={plate}
+        setValue={setplate}
       />
       <TouchableOpacity
         style={styles.checkboxContainer}
