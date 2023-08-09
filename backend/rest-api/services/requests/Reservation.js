@@ -32,7 +32,7 @@ exports.addReservation = async function addReservation(req, res) {
     
   } catch (err) {
     console.log(err);
-    res.statusCode(500);
+    res.status(500).json({ error: 'An error occurred' });
   }
 
   try {
@@ -43,12 +43,14 @@ exports.addReservation = async function addReservation(req, res) {
         day: day,
         start_time: start_time,
         end_time: end_time,
+        
       },
     });
-    res.json({ statusCode: 201 });
+    //res.json({ statusCode: 201 });
+    res.status(201).json({ statusCode: 201 });
   } catch (err) {
     console.log(err);
-    res.statusCode(500);
+    res.status(500).json({ error: 'An error occurred' });
   }
 };
 

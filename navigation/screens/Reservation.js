@@ -1,33 +1,34 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
-
+import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 
-const ReservationForm = ({route}) => {
+const ReservationForm = ({ route }) => {
   //const {id} = route.params;
   const [numberplateStr, setnumberplateStr] = useState("");
-  const [parkingId, setParkingId] = useState("");
+  const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  
-
 
   const handleReservation = async () => {
-
     try {
-      
+      const formattedStartTime = moment(startTime, "HH:mm").toDate();
+      const formattedEndTime = moment(endTime, "HH:mm").toDate();
+
       const response = await axios.post(
-        "https://d5a6-2a02-a03f-635e-3f00-b054-51dd-b92b-cfd.ngrok-free.app/reservation",
+        "https://815a-2a02-a03f-635e-3f00-9154-f937-30e8-42b8.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
-          parking_id: parkingId,
-          day: date,
-          start_time: startTime,
-          end_time: endTime,
+          parking_id: parseInt(parkingId), // Convert to integer
+          day: new Date(date),
+          //start_time: startTime,
+          //end_time: endTime,
+          start_time: formattedStartTime,
+          end_time: formattedEndTime,
         }
       );
 
@@ -39,31 +40,14 @@ const ReservationForm = ({route}) => {
       setSnackbarMessage(error.message);
       setSnackbarVisible(true);
     }
-  };
-
-  const formatTimeInput = (input) => {
-    if (input.length === 3) {
-      return input.slice(0, 2) + ":" + input.slice(2);
-    } else if (input.length === 6) {
-      return input.slice(0, 5) + ":" + input.slice(5);
-    } else if (input.length > 8) {
-      return input.slice(0, 8);
-    } else {
-      return input;
-    }
-  };
-
-  // Custom function to format the date input with "-"
-  const formatDateInput = (input) => {
-    if (input.length === 3) {
-      return input.slice(0, 2) + "-" + input.slice(2);
-    } else if (input.length === 6) {
-      return input.slice(0, 5) + "-" + input.slice(5);
-    } else if (input.length > 10) {
-      return input.slice(0, 10);
-    } else {
-      return input;
-    }
+    console.log(
+      handleReservation,
+      numberplateStr,
+      parkingId,
+      date,
+      startTime,
+      endTime
+    );
   };
 
   return (
@@ -80,31 +64,32 @@ const ReservationForm = ({route}) => {
           label="Parking ID"
           value={parkingId}
           onChangeText={(text) => setParkingId(text)}
+          keyboardType="numeric"
           style={styles.input}
         />
         <TextInput
           label="Date de réservation"
-          value={formatDateInput(date)}
+          value={new Date()}
           onChangeText={(text) => setDate(text)}
           style={styles.input}
-          keyboardType="numeric" // Numeric keypad for date input
-          placeholder="JJ-MM-AAAA" // Example: 07-08-2023
+          //keyboardType="numeric" // Numeric keypad for date input
+          placeholder="AAAA-MM-JJ"
         />
         <TextInput
           label="Heure de début"
-          value={formatTimeInput(startTime)}
+          value={new Date()}
           onChangeText={(text) => setStartTime(text)}
           style={styles.input}
-          keyboardType="numeric" // Numeric keypad for time input
-          placeholder="HH:mm:ss" // Example: 14:30
+          //keyboardType="numeric" // Numeric keypad for time input
+          placeholder="HH:mm" // Example: 14:30
         />
         <TextInput
           label="Heure de fin"
-          value={formatTimeInput(endTime)}
+          value={new Date()}
           onChangeText={(text) => setEndTime(text)}
           style={styles.input}
-          keyboardType="numeric" // Numeric keypad for time input
-          placeholder="HH:mm:ss" // Example: 17:45
+          //keyboardType="numeric" // Numeric keypad for time input
+          placeholder="HH:mm" // Example: 17:45
         />
         <Button
           mode="contained"

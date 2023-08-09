@@ -28,7 +28,7 @@ const SignUpScreen = ({ navigation, route }) => {
       try {
         const response = await axios
           .post(
-            "https://d5a6-2a02-a03f-635e-3f00-b054-51dd-b92b-cfd.ngrok-free.app/person",
+            "https://815a-2a02-a03f-635e-3f00-9154-f937-30e8-42b8.ngrok-free.app/person",
             {
               first_name,
               last_name,
