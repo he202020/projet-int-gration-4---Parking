@@ -4,10 +4,9 @@ import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 
-const ReservationForm = ({ route }) => {
-  //const {id} = route.params;
-  const [numberplateStr, setnumberplateStr] = useState("");
-  const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
+const ReservationForm = () => {
+  const [numberplateId, setNumberplateId] = useState("");
+  const [parkingId, setParkingId] = useState("");
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
