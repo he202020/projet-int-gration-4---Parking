@@ -8,7 +8,7 @@ const data = [
   { parking_id: '4', parking_name: 'Brol', parking_opening_hour: '08:00:00', parking_closure_hour: '16:00:00', parking_address: 'hgjhfjhgfjf', parking_maximum_place: 120 },
 ];
 
-const HomeScreen = () => {
+const Reservation = () => {
   const [parkingData, setParkingData] = useState(data);
 
   const renderItem = ({ item }) => (
@@ -61,45 +61,41 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#333', // Darker background color
+    backgroundColor: '#1a1a1a', // Dark background color
     padding: 16,
   },
-  searchContainer: {
-    marginBottom: 16,
-  },
-  searchInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 8,
-    color: '#fff', // White text color
-    backgroundColor: '#444', // Darker input background color
-  },
   itemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#555', // Slightly lighter border color
-    paddingVertical: 12,
-    borderRadius: 8, // Border radius for item container
-    marginBottom: 8,
+    backgroundColor: '#333', // Dark background color for each item
+    borderRadius: 10, // Rounded borders
+    padding: 16,
+    marginBottom: 12,
   },
   itemText: {
-    fontSize: 16,
     color: '#fff', // White text color
+    fontSize: 16,
   },
   button: {
-    backgroundColor: '#007BFF',
-    paddingHorizontal: 16,
+    backgroundColor: '#ff6600', // Orange button background color
+    borderRadius: 5,
     paddingVertical: 8,
-    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: '#fff', // White text color for the button
     fontSize: 16,
+    textAlign: 'center',
+  },
+  searchContainer: {
+    backgroundColor: '#333', // Dark background color for the search bar
+    borderRadius: 10, // Rounded borders for the search bar
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
+  searchInput: {
+    color: '#fff', // White text color for the search input
   },
 });
 
 
-export default HomeScreen;
+export default Reservation;

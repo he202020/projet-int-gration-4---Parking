@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function HomeScreen() {
     return (
         <View style={styles.screen}>
-            <Text style={styles.text}>Click ' n ' Park</Text>
+            <Text style={styles.text}>Click ' n ' Park ! </Text>
         </View>
     );
 }
