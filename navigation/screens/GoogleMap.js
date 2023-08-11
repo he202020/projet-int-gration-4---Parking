@@ -13,12 +13,11 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
 
-
-
 const GoogleMap = () => {
   const [parkingData, setParkingData] = useState([]);
+  const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
-  const { selectedParking } = params || {};
+  //const { selectedParking } = params || {};
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -28,7 +27,7 @@ const GoogleMap = () => {
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://815a-2a02-a03f-635e-3f00-9154-f937-30e8-42b8.ngrok-free.app/parking"
+        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/parking"
       );
       const parkingData = await response.json();
       setParkingData(parkingData);
@@ -38,16 +37,20 @@ const GoogleMap = () => {
   };
 
   const renderCallout = (parking) => (
-    <Callout tooltip={true} onPress={() => handleReservation(parking.id)}>
+    <Callout tooltip={true} onPress={() => handleReservation(parking.id, parking.name)}>
       <View style={styles.calloutContainer}>
         <Text style={styles.parkingName}>{parking.name}</Text>
         <Text style={styles.availableSpaces}>Places libres : {parking.max}</Text>
-        <TouchableOpacity style={styles.reserveButton}>
+        <TouchableOpacity
+          style={styles.reserveButton}
+          onPress={() => handleReservation(parking.id, parking.name)}
+        >
           <Text style={styles.reserveButtonText}>Réserver une place</Text>
         </TouchableOpacity>
       </View>
     </Callout>
   );
+  
 
   const initialRegion = {
     latitude: 50.668121,
@@ -62,11 +65,12 @@ const GoogleMap = () => {
     setShowMarkers(!showMarkers);
   };
 
-  const handleReservation = (parkingId) => {
+  const handleReservation = (parkingId,parkingName) => {
     console.log("Navigating to Reservation with parking:", parkingId);
-    navigation.navigate("Reservation", { id: parkingId });
+    setSelectedParking({ id: parkingId, name: parkingName });
+    //navigation.navigate("Reservation", { id: parkingId });
+    navigation.navigate("Reservation", { selectedParking: { id: parkingId, name: parkingName } });
   };
-
 
   return (
     <View style={styles.container}>
@@ -84,7 +88,6 @@ const GoogleMap = () => {
               {renderCallout(parking)}
             </Marker>
           ))}
-
       </MapView>
       <TouchableOpacity
         style={styles.toggleButton}

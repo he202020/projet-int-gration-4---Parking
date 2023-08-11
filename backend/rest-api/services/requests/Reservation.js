@@ -57,9 +57,7 @@ exports.addReservation = async function addReservation(req, res) {
 //afficher toutes les reservations
 exports.getReservation = async function (request, response) {
   try {
-    const result = await sqlConnection`
-            select * from reservation
-        `;
+    const result = await prisma.reservation.findMany()
     response.status(200).json(result);
   } catch (error) {
     response.status(400).send(error.message);

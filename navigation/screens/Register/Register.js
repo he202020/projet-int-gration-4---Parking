@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import Navigatore from "../../Navigatore";
+import HomeScreen from "../HomeScreen";
 import axios from "axios"; // Import Axios
 
 const SignUpScreen = ({ navigation, route }) => {
@@ -28,7 +28,7 @@ const SignUpScreen = ({ navigation, route }) => {
       try {
         const response = await axios
           .post(
-            "https://815a-2a02-a03f-635e-3f00-9154-f937-30e8-42b8.ngrok-free.app/person",
+            "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/person",
             {
               first_name,
               last_name,
@@ -41,6 +41,7 @@ const SignUpScreen = ({ navigation, route }) => {
           )
           .then(() => {
             console.log("Inscription réussie");
+            navigation.navigate("HomeScreen", { userName: `${first_name} ${last_name}` });
             onSignUpSuccess();
           });
       } catch (error) {

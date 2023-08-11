@@ -1,17 +1,32 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 
-const ReservationForm = () => {
-  const [numberplateId, setNumberplateId] = useState("");
-  const [parkingId, setParkingId] = useState("");
+const ReservationForm = ({ route }) => {
+  //const {id} = route.params;
+  const [numberplateStr, setnumberplateStr] = useState("");
+  const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [selectedParking, setSelectedParking] = useState(null);
+
+  useEffect(() => {
+    if (route.params && route.params.selectedParking) {
+      setSelectedParking(route.params.selectedParking);
+      setParkingId(route.params.selectedParking.id);
+    }
+  }, [route.params]);
+
+  function addTwoHoursToTime(originalDate) {
+    const newDate = new Date(originalDate);
+    newDate.setHours(newDate.getHours() + 2);
+    return newDate;
+  }
 
   const handleReservation = async () => {
     try {
@@ -19,21 +34,40 @@ const ReservationForm = () => {
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
 
       const response = await axios.post(
-        "https://815a-2a02-a03f-635e-3f00-9154-f937-30e8-42b8.ngrok-free.app/reservation",
+        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer
           day: new Date(date),
           //start_time: startTime,
           //end_time: endTime,
-          start_time: formattedStartTime,
-          end_time: formattedEndTime,
+          start_time: addTwoHoursToTime(formattedStartTime), // Add two heures to start time
+          end_time: addTwoHoursToTime(formattedEndTime),
         }
       );
+      const duréetotale = moment(formattedEndTime).diff(
+        formattedStartTime,
+        "minutes"
+      );
+      const heures = Math.floor(duréetotale / 60);
+      const minutes = duréetotale % 60;
 
+      const durationText =
+        heures > 0
+          ? `${heures} heure(s) et ${minutes} minute(s)`
+          : `${minutes} minute(s)`;
       // Handle the success case (status code 201) here if needed
-      setSnackbarMessage(response.data);
+      setSnackbarMessage(
+        `Merci d'avoir réservé une place de parking. Vous avez réservé pour une durée de : ${durationText}`
+      );
       setSnackbarVisible(true);
+
+      // Clear form fields after successful reservation
+      setnumberplateStr("");
+      setParkingId("");
+      setDate("");
+      setStartTime("");
+      setEndTime("");
     } catch (error) {
       // Handle the error case (status code 400) here if needed
       setSnackbarMessage(error.message);
@@ -54,42 +88,40 @@ const ReservationForm = () => {
       <View style={styles.formContainer}>
         <Text style={styles.title}>Réserve ta place de parking</Text>
         <TextInput
-          label="Numberplate ID"
+          label="Plaque d'immatriculation"
           value={numberplateStr}
           onChangeText={(text) => setnumberplateStr(text)}
           style={styles.input}
         />
         <TextInput
-          label="Parking ID"
-          value={parkingId}
+          label="Parking"
+          value={selectedParking ? selectedParking.name : ""}
           onChangeText={(text) => setParkingId(text)}
           keyboardType="numeric"
           style={styles.input}
         />
         <TextInput
           label="Date de réservation"
-          value={new Date()}
+          value={date}
           onChangeText={(text) => setDate(text)}
           style={styles.input}
-          //keyboardType="numeric" // Numeric keypad for date input
           placeholder="AAAA-MM-JJ"
         />
         <TextInput
           label="Heure de début"
-          value={new Date()}
+          value={startTime}
           onChangeText={(text) => setStartTime(text)}
           style={styles.input}
-          //keyboardType="numeric" // Numeric keypad for time input
-          placeholder="HH:mm" // Example: 14:30
+          placeholder="HH:mm"
         />
         <TextInput
           label="Heure de fin"
-          value={new Date()}
+          value={endTime}
           onChangeText={(text) => setEndTime(text)}
           style={styles.input}
-          //keyboardType="numeric" // Numeric keypad for time input
-          placeholder="HH:mm" // Example: 17:45
+          placeholder="HH:mm"
         />
+
         <Button
           mode="contained"
           onPress={handleReservation}
@@ -105,7 +137,9 @@ const ReservationForm = () => {
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
       >
-        {snackbarMessage}
+        {typeof snackbarMessage === "object"
+          ? snackbarMessage.statusCode
+          : snackbarMessage}
       </Snackbar>
     </View>
   );
