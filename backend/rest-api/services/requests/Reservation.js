@@ -28,7 +28,6 @@ exports.addReservation = async function addReservation(req, res) {
         id : true,
       },
     });
-    console.log(plateID);
     
   } catch (err) {
     console.log(err);
@@ -36,18 +35,39 @@ exports.addReservation = async function addReservation(req, res) {
   }
 
   try {
-    await prisma.reservation.create({
-      data: {
-        numberplate_id: plateID.id ,
-        parking_id: parking_id,
-        day: day,
-        start_time: start_time,
-        end_time: end_time,
-        
+    const parking = await prisma.parking.findUnique({
+      where: {
+        id: parking_id,
       },
     });
-    //res.json({ statusCode: 201 });
-    res.status(201).json({ statusCode: 201 });
+
+    if (parking.nbr_free_spaces > 0) {
+      await prisma.reservation.create({
+        data: {
+          numberplate_id: plateID.id,
+          parking_id: parking_id,
+          day: day,
+          start_time: start_time,
+          end_time: end_time,
+        },
+      });
+
+      // Decrement the available_spots in the parking
+      await prisma.parking.update({
+        data: {
+          nbr_free_spaces: {
+            decrement: 1,
+          },
+        },
+        where: {
+          id: parking_id,
+        },
+      });
+
+      res.status(201).json({ statusCode: 201 });
+    } else {
+      res.status(400).json({ error: 'No available spots in the parking' });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'An error occurred' });

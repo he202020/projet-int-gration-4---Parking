@@ -35,7 +35,7 @@ const ListParking = () => {
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>
         Parking: {item.name} {"\n\n"}
-        {item.max} places max {"\n\n"}
+        {item.nbr_free_spaces} places libres {"\n\n"}
       </Text>
       <TouchableOpacity style={styles.button} onPress={() => GoParking(item)}>
         <Text style={styles.buttonText}>Aller au parking</Text>

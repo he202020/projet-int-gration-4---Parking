@@ -34,7 +34,7 @@ const ReservationForm = ({ route }) => {
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
 
       const response = await axios.post(
-        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/reservation",
+        "https://812d-2a02-a03f-c09c-b00-34c1-4a16-a27e-e5b3.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer

@@ -40,7 +40,7 @@ const GoogleMap = () => {
     <Callout tooltip={true} onPress={() => handleReservation(parking.id, parking.name)}>
       <View style={styles.calloutContainer}>
         <Text style={styles.parkingName}>{parking.name}</Text>
-        <Text style={styles.availableSpaces}>Places libres : {parking.max}</Text>
+        <Text style={styles.availableSpaces}>Places libres : {parking.nbr_free_spaces}</Text>
         <TouchableOpacity
           style={styles.reserveButton}
           onPress={() => handleReservation(parking.id, parking.name)}
