@@ -1,68 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { useRoute, useNavigation } from "@react-navigation/native";
+
+import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
 
-const data = [
-  {
-    id: "1",
-    name: "Magritte",
-    opening: "08:30:00",
-    closure: "18:00:00",
-    address: "Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve",
-    max: 50,
-    longitude: 4.611498,
-    latitude: 50.665886,
-  },
-  {
-    id: "2",
-    name: "Leclercq",
-    opening: "09:00:00",
-    closure: "19:00:00",
-    address: "Bd du S, 1348 Ottignies-Louvain-la-Neuve",
-    max: 60,
-    longitude: 4.612858,
-    latitude: 50.666845,
-  },
-  {
-    id: "3",
-    name: "Wallons",
-    opening: "07:00:00",
-    closure: "16:30:00",
-    address: "1348 Ottignies-Louvain-la-Neuve",
-    max: 55,
-    longitude: 4.617058,
-    latitude: 50.669534,
-  },
-];
-
-const renderCallout = (parking, handleReservation) => (
-  <Callout>
-    <View style={styles.calloutContainer}>
-      <Text style={styles.parkingName}>{parking.name}</Text>
-      <Text style={styles.availableSpaces}>Places libres : {parking.max}</Text>
-      <TouchableOpacity
-        style={styles.reserveButton}
-        onPress={() => handleReservation(parking)}
-      >
-        <Text style={styles.reserveButtonText}>Réserver une place</Text>
-      </TouchableOpacity>
-    </View>
-  </Callout>
-);
-
 const GoogleMap = () => {
+  const [parkingData, setParkingData] = useState([]);
+  const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
-  const { selectedParking } = params || {};
+  //const { selectedParking } = params || {};
   const navigation = useNavigation();
 
+  useEffect(() => {
+    fetchParkingData();
+  }, []);
+
+  const fetchParkingData = async () => {
+    try {
+      const response = await fetch(
+        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/parking"
+      );
+      const parkingData = await response.json();
+      setParkingData(parkingData);
+    } catch (error) {
+      console.error("Error fetching parking parkingData:", error);
+    }
+  };
+
+  const renderCallout = (parking) => (
+    <Callout tooltip={true} onPress={() => handleReservation(parking.id, parking.name)}>
+      <View style={styles.calloutContainer}>
+        <Text style={styles.parkingName}>{parking.name}</Text>
+        <Text style={styles.availableSpaces}>Places libres : {parking.max}</Text>
+        <TouchableOpacity
+          style={styles.reserveButton}
+          onPress={() => handleReservation(parking.id, parking.name)}
+        >
+          <Text style={styles.reserveButtonText}>Réserver une place</Text>
+        </TouchableOpacity>
+      </View>
+    </Callout>
+  );
+  
+
   const initialRegion = {
-    latitude: selectedParking?.latitude || data[0].latitude,
-    longitude: selectedParking?.longitude || data[0].longitude,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
+    latitude: 50.668121,
+    longitude: 4.614747,
+    latitudeDelta: 0.001, // Adjust this value for the desired zoom level
+    longitudeDelta: 0.01, // Adjust this value for the desired zoom level
   };
 
   const [showMarkers, setShowMarkers] = useState(true);
@@ -71,19 +65,18 @@ const GoogleMap = () => {
     setShowMarkers(!showMarkers);
   };
 
-  /*const handleReservation = (parking) => {
-    navigation.navigate("Reservation", { parking });
-  };*/
-
-  const handleReservation = (parking) => {
-    navigation.navigate("Reservation", { parkingId: parking.id });
+  const handleReservation = (parkingId,parkingName) => {
+    console.log("Navigating to Reservation with parking:", parkingId);
+    setSelectedParking({ id: parkingId, name: parkingName });
+    //navigation.navigate("Reservation", { id: parkingId });
+    navigation.navigate("Reservation", { selectedParking: { id: parkingId, name: parkingName } });
   };
-  
+
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
         {showMarkers &&
-          data.map((parking) => (
+          parkingData.map((parking) => (
             <Marker
               key={parking.id}
               coordinate={{
@@ -92,21 +85,9 @@ const GoogleMap = () => {
               }}
               title={parking.name}
             >
-              {renderCallout(parking, handleReservation)}
+              {renderCallout(parking)}
             </Marker>
           ))}
-        {selectedParking && showMarkers && (
-          <Marker
-            coordinate={{
-              latitude: selectedParking.latitude,
-              longitude: selectedParking.longitude,
-            }}
-            title={selectedParking.name}
-            pinColor="purple"
-          >
-            {renderCallout(selectedParking, handleReservation)}
-          </Marker>
-        )}
       </MapView>
       <TouchableOpacity
         style={styles.toggleButton}

@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const onSignUpSuccess = () => {
     setIsLoggedIn(true);
@@ -72,9 +72,11 @@ const App = () => {
       {isLoggedIn ? (
         <Tab.Navigator screenOptions={tabScreenOptions}>
           <Tab.Screen name="Accueil" component={HomeScreen} />
-          <Tab.Screen name="Reservation" component={Reservation} />
           <Tab.Screen name="ListParking" component={ListParking} />
           <Tab.Screen name="GoogleMap" component={GoogleMap} />
+          <Tab.Screen name="Reservation" component={Reservation} />
+          
+          
         </Tab.Navigator>
       ) : (
         <Stack.Navigator screenOptions={tabScreenOptions}>

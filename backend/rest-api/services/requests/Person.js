@@ -15,12 +15,10 @@ exports.getPerson = async function getPerson(req, res) {
   }
 };
 
-
-
 //ajouter un user
 
 exports.postPerson = async function postPerson(req, res) {
-  const { first_name, last_name, company, email, hash } = req.body;
+  const { first_name, last_name, company, email, hash, plate } = req.body;
   try {
     await prisma.person.create({
       data: {
@@ -29,9 +27,14 @@ exports.postPerson = async function postPerson(req, res) {
         company: company,
         email: email,
         hash: hash,
+        numberplate: {
+          create: {
+            str: plate,
+          },
+        },
       },
     });
-    res.json({ statusCode: 201});
+    res.json({ statusCode: 201 });
   } catch (err) {
     console.log(err);
     res.statusCode(500);

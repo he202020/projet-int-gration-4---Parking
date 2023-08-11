@@ -19,38 +19,21 @@ getParking()
   });*/
 
 
-const sqlConnection = require("../index");
-const { json } = require("express");
-
-const express = require("express");
-const router = express.Router();
+  const { PrismaClient } = require("@prisma/client");
+  const { request } = require("express");
+  
+  const prisma = new PrismaClient();
 //const fetch = require("node-fetch"); // Pour effectuer la requête POST
 
 //afficher tous les parkings
 
-const getParking = async function (request, response) {
+exports.getParking = async function (request, response) {
   try {
-    const result = await sqlConnection`
-              select * from parking
-          `;
+    const result = await prisma.parking.findMany()
     response.status(200).json(result);
   } catch (error) {
     response.status(400).send(error.message);
   }
 };
 
-/*exports.searchName = async function (request, response) {
-    try {
-        const result = await sqlConnection`
-            select * from parking
-            where parking_name ilike ${'%' + request.params.query + '%'}
-            or parking_address ilike ${'%' + request.params.query + '%'}
-        `;
-        response.status(200).json(result);
-    }
-    catch (error) {
-        response.status(400).send(error.message);
-    }
-};*/
 
-module.exports = { getParking };

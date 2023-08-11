@@ -6,6 +6,7 @@ const NumberCars = require('./routes/StatisticsUsingDay');
 const AvailablePlace = require('./routes/AvailablePlace');
 const Reservation = require ('./routes/Reservation');
 const Person = require ('./routes/Person');
+const NumberPlate = require ('./routes/NumberPlate');
 
 app.use(express.json());
 require('dotenv').config();
@@ -26,4 +27,5 @@ app.use('/NumberCars', NumberCars);
 app.use('/AvailablePlace', AvailablePlace);
 app.use('/Reservation', Reservation);
 app.use('/Person', Person);
+app.use('/NumberPlate', NumberPlate);
 
