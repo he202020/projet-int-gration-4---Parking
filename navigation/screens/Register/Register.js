@@ -8,7 +8,6 @@ import axios from "axios"; // Import Axios
 
 const SignUpScreen = ({ navigation, route }) => {
   const { onSignUpSuccess, isLoggedIn } = route.params || {};
-  // const navigation = useNavigation();
   const [first_name, setfirst_name] = useState("");
   const [last_name, setlast_name] = useState("");
   const [email, setEmail] = useState("");

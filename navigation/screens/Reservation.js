@@ -1,11 +1,12 @@
 import React, { useState,useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Alert } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const ReservationForm = ({ route }) => {
-  //const {id} = route.params;
+  const navigation = useNavigation();
   const [numberplateStr, setnumberplateStr] = useState("");
   const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
   const [date, setDate] = useState("");
@@ -81,6 +82,15 @@ const ReservationForm = ({ route }) => {
       startTime,
       endTime
     );
+    Alert.alert('Alert Title', 'My Alert Msg', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
+    navigation.navigate("HomeScreen");
   };
 
   return (

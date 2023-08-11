@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { FontAwesome5 } from "@expo/vector-icons";
-//import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "./navigation/screens/HomeScreen";
 import ListParking from "./navigation/screens/ListParking";
 import Login from "./navigation/screens/Login/Login";
@@ -11,12 +10,11 @@ import Reservation from "./navigation/screens/Reservation";
 import Register from "./navigation/screens/Register/Register";
 import GoogleMap from "./navigation/screens/GoogleMap";
 import { NavigationContainer } from "@react-navigation/native";
-
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const onSignUpSuccess = () => {
     setIsLoggedIn(true);
@@ -24,38 +22,31 @@ const App = () => {
 
   const renderTabBarIcon = (iconName, focused, color, size) => {
     return (
-      <FontAwesome5
-        name={iconName}
-        color={focused ? "#1ccc5b" : "#eedddd"}
-        size={focused ? 30 : 25}
-      />
+        <FontAwesome5
+            name={iconName}
+            color={focused ? "#1ccc5b" : "#eedddd"}
+            size={focused ? 30 : 25}
+        />
     );
   };
-
   const tabScreenOptions = ({ route }) => ({
     tabBarIcon: ({ focused, color, size }) => {
       let iconName;
       switch (route.name) {
-        case "Accueil":
+        case "HomeScreen":
           iconName = "home";
           break;
         case "GoogleMap":
-          iconName = "map"; // Utilisation de l'icône "map" (carte)
+          iconName = "map";
           break;
         case "ListParking":
-          iconName = "parking"; // Vous pouvez également utiliser "local-parking" pour une icône de parking dans MaterialIcons
+          iconName = "parking";
           break;
         case "Reservation":
           iconName = "car";
           break;
-        case "Login":
-          iconName = "login";
-          break;
-        case "Register":
-          iconName = "login";
-          break;
         default:
-          iconName = "question"; // Utiliser une icône par défaut en cas de route inconnue
+          iconName = "question";
       }
 
       return renderTabBarIcon(iconName, focused, color, size);
@@ -66,29 +57,43 @@ const App = () => {
       backgroundColor: "#151515",
     },
   });
+  const ReservationButton = ({ navigation }) => (
+      <TouchableOpacity onPress={() => navigation.navigate("Reservation")}>
+        <Text style={{ color: "#fff", marginRight: 10 }}>Go to Reservation</Text>
+      </TouchableOpacity>
+  );
 
   return (
-    <NavigationContainer>
-      {isLoggedIn ? (
-        <Tab.Navigator screenOptions={tabScreenOptions}>
-          <Tab.Screen name="Accueil" component={HomeScreen} />
-          <Tab.Screen name="ListParking" component={ListParking} />
-          <Tab.Screen name="GoogleMap" component={GoogleMap} />
-          <Tab.Screen name="Reservation" component={Reservation} />
-          
-          
-        </Tab.Navigator>
-      ) : (
-        <Stack.Navigator screenOptions={tabScreenOptions}>
-          <Stack.Screen
-            name="Register"
-            component={Register}
-            initialParams={{ onSignUpSuccess, isLoggedIn }}
-          />
-          <Stack.Screen name="Login" component={Login} />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+      <NavigationContainer>
+        {isLoggedIn ? (
+            <Stack.Navigator>
+              <Stack.Screen
+                  name="HomeTabs"
+                  component={() => (
+                      <Tab.Navigator screenOptions={tabScreenOptions}>
+                        <Tab.Screen name="HomeScreen" component={HomeScreen} />
+                        <Tab.Screen name="ListParking" component={ListParking} />
+                        <Tab.Screen name="GoogleMap" component={GoogleMap} />
+                      </Tab.Navigator>
+                  )}
+                  options={({ navigation }) => ({
+                    title: "My App",
+                    headerRight: () => <ReservationButton navigation={navigation} />,
+                  })}
+              />
+              <Stack.Screen name="Reservation" component={Reservation} />
+            </Stack.Navigator>
+        ) : (
+            <Stack.Navigator screenOptions={tabScreenOptions}>
+              <Stack.Screen
+                  name="Register"
+                  component={Register}
+                  initialParams={{ onSignUpSuccess, isLoggedIn }}
+              />
+              <Stack.Screen name="Login" component={Login} />
+            </Stack.Navigator>
+        )}
+      </NavigationContainer>
   );
 };
 
