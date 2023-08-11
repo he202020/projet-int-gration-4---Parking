@@ -3,12 +3,11 @@ const { json } = require("express");
 
 const express = require("express");
 const router = express.Router();
-const fetch = require("node-fetch"); // Pour effectuer la requête POST
+//const fetch = require("node-fetch"); // Pour effectuer la requête POST
 
-const app = express();
-const port = 3000; // Port sur lequel le serveur Express écoutera
 
-// In Reservation.js or the respective module file
+
+//ajouter une reservation
 
 const addReservation = async function (request, response) {
   try {
@@ -22,6 +21,7 @@ const addReservation = async function (request, response) {
   }
 };
 
+//afficher toutes les reservations 
 const getReservation = async function (request, response) {
   try {
     const result = await sqlConnection`

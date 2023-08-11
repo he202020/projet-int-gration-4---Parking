@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+//import { MaterialCommunityIcons } from "@expo/vector-icons";
 import HomeScreen from "./navigation/screens/HomeScreen";
 import ListParking from "./navigation/screens/ListParking";
 import Login from "./navigation/screens/Login/Login";

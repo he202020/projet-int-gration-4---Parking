@@ -5,6 +5,7 @@ const geolocationRouter = require('./routes/geolocation');
 const NumberCars = require('./routes/StatisticsUsingDay');
 const AvailablePlace = require('./routes/AvailablePlace');
 const Reservation = require ('./routes/Reservation');
+const Person = require ('./routes/Person');
 
 app.use(express.json());
 require('dotenv').config();
@@ -24,4 +25,5 @@ app.use('/geolocation', geolocationRouter);
 app.use('/NumberCars', NumberCars);
 app.use('/AvailablePlace', AvailablePlace);
 app.use('/Reservation', Reservation);
+app.use('/Person', Person);
 

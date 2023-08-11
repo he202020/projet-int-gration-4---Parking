@@ -22,7 +22,7 @@ model parking {
   closure         DateTime?     @db.Time(6)
   address         String        @db.VarChar
   max             Int
-  nbr_free_spaces Int           @default(0)
+  nbr_free_spaces Int?
   longitude       Float
   latitude        Float
   reservation     reservation[]

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,44 +9,26 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const data = [
-  {
-    id: "1",
-    name: "Magritte",
-    opening: "08:30:00",
-    closure: "18:00:00",
-    address: "Av. du Ciseau 10, 1348 Ottignies-Louvain-la-Neuve",
-    max: 50,
-    longitude: 4.611498,
-    latitude: 50.665886,
-  },
-  {
-    id: "2",
-    name: "Leclercq",
-    opening: "09:00:00",
-    closure: "19:00:00",
-    address: "Bd du S, 1348 Ottignies-Louvain-la-Neuve",
-    max: 60,
-    longitude: 4.612858,
-    latitude: 50.666845,
-  },
-  {
-    id: "3",
-    name: "Wallons",
-    opening: "07:00:00",
-    closure: "16:30:00",
-    address: "1348 Ottignies-Louvain-la-Neuve",
-    max: 55,
-    longitude: 4.617058,
-    latitude: 50.669534,
-  },
-];
-
 const ListParking = () => {
   const navigation = useNavigation();
-  const [parkingData, setParkingData] = useState(data);
-  // Ajoute l'état sélectionnéParking
+  const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
+
+  useEffect(() => {
+    fetchParkingData();
+  }, []);
+
+  const fetchParkingData = async () => {
+    try {
+      const response = await fetch(
+        "https://d5a6-2a02-a03f-635e-3f00-b054-51dd-b92b-cfd.ngrok-free.app/parking"
+      );
+      const data = await response.json();
+      setParkingData(data);
+    } catch (error) {
+      console.error("Error fetching parking data:", error);
+    }
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -61,17 +43,13 @@ const ListParking = () => {
   );
 
   const searchName = (input) => {
-    const searchData = data.filter((item) =>
+    const searchData = parkingData.filter((item) =>
       item.name.toLowerCase().includes(input.toLowerCase())
     );
     setParkingData(searchData);
   };
 
   const GoParking = (parking) => {
-    // Implement the logic to navigate to the parking screen here
-
-    console.log("Aller au parking : ", parking.name);
-    // Définit l'état sélectionnéParking
     setSelectedParking(parking);
     navigation.navigate("GoogleMap", { selectedParking: parking });
   };
@@ -91,7 +69,7 @@ const ListParking = () => {
       <FlatList
         data={parkingData}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );

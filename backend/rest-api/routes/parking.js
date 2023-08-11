@@ -1,10 +1,10 @@
+
 const express = require('express');
 const router = express.Router();
-const parking = require('../services/requests/parking');
-const NumberCars = require('../services/requests/StatisticsUsingDay')
+const Parking = require('../services/requests/Parking');
 
-router.get('/', parking.getParking);
-router.get('/:query', parking.searchParking);
-router.get('/',NumberCars.getNumberCar);
+
+//router.post('/', Reservation.addReservation);
+router.get ('/',Parking.getParking);
 
 module.exports = router;
