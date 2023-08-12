@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
@@ -58,8 +58,19 @@ const ReservationForm = ({ route }) => {
           ? `${heures} heure(s) et ${minutes} minute(s)`
           : `${minutes} minute(s)`;
       // Handle the success case (status code 201) here if needed
-      setSnackbarMessage(
-        `Merci d'avoir réservé une place de parking. Vous avez réservé pour une durée de : ${durationText}`
+      Alert.alert(
+        "Réservation réussie",
+        `Merci d'avoir réservé une place de parking. Vous avez réservé pour une durée de : ${durationText}`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              // Actions à effectuer lorsque l'utilisateur appuie sur OK
+              // Par exemple, retourner à l'écran d'accueil
+              navigation.navigate("HomeScreen");
+            },
+          },
+        ]
       );
       setSnackbarVisible(true);
 
@@ -82,17 +93,8 @@ const ReservationForm = ({ route }) => {
       startTime,
       endTime
     );
-
-    Alert.alert("Notification", "Merci d'avoir réservé une place. Vous avez réservé pour une durée de : ${durationText}", [
-      {
-        text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      { text: "OK", onPress: () => console.log("OK Pressed") },
-    ]);
-
-    navigation.navigate("HomeScreen");
+    
+    //navigation.navigate("HomeScreen");
   };
 
   return (
