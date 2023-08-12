@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
@@ -35,7 +35,7 @@ const ReservationForm = ({ route }) => {
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
 
       const response = await axios.post(
-        "https://812d-2a02-a03f-c09c-b00-34c1-4a16-a27e-e5b3.ngrok-free.app/reservation",
+        "https://9040-178-51-169-222.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer
@@ -82,14 +82,16 @@ const ReservationForm = ({ route }) => {
       startTime,
       endTime
     );
-    Alert.alert('Alert Title', 'My Alert Msg', [
+
+    Alert.alert("Notification", "Merci d'avoir réservé une place. Vous avez réservé pour une durée de : ${durationText}", [
       {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
       },
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
+      { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
+
     navigation.navigate("HomeScreen");
   };
 

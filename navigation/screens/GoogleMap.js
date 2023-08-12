@@ -27,7 +27,7 @@ const GoogleMap = () => {
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/parking"
+        "https://9040-178-51-169-222.ngrok-free.app/parking"
       );
       const parkingData = await response.json();
       setParkingData(parkingData);

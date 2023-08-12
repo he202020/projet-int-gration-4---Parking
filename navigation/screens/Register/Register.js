@@ -27,7 +27,7 @@ const SignUpScreen = ({ navigation, route }) => {
       try {
         const response = await axios
           .post(
-            "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/person",
+            "https://9040-178-51-169-222.ngrok-free.app/person",
             {
               first_name,
               last_name,
@@ -40,7 +40,8 @@ const SignUpScreen = ({ navigation, route }) => {
           )
           .then(() => {
             console.log("Inscription réussie");
-            navigation.navigate("HomeScreen", { userName: `${first_name} ${last_name}` });
+            navigation.navigate("HomeScreen", { userName: first_name });
+
             onSignUpSuccess();
           });
       } catch (error) {
