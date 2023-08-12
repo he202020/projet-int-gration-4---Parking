@@ -67,7 +67,10 @@ const ReservationForm = ({ route }) => {
             onPress: () => {
               // Actions à effectuer lorsque l'utilisateur appuie sur OK
               // Par exemple, retourner à l'écran d'accueil
-              navigation.navigate("HomeScreen");
+              navigation.navigate("HomeScreen", {
+                parkingName: selectedParking ? selectedParking.name : "N/A",
+                reservationDuration: durationText,
+              });
             },
           },
         ]
