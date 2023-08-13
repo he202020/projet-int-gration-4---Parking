@@ -6,7 +6,7 @@ export default function HomeScreen({ route }) {
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.header}>Welcome, {userName}!</Text>
+      <Text style={styles.header}>Bonjour, {userName}!</Text>
       <Text style={styles.subHeader}>Click 'n' Park!</Text>
       {parkingName && (
         <Text style={styles.infoText}>

@@ -6,9 +6,9 @@ import ParkingScreen from "./screens/ParkingScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Map from "./screens/Map";
 import ListParking from "./screens/ListParking";
-import Login from "./screens/Login/Login";
+import Login from "./screens/Login";
 import Reservation from "./screens/Reservation";
-import Register from "./screens/Register/Register";
+import Register from "./screens/Register";
 import GoogleMap from "./screens/GoogleMap";
 import { NavigationContainer } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -20,7 +20,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const Navigatore = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const onSignUpSuccess = () => {
     setIsLoggedIn(true);

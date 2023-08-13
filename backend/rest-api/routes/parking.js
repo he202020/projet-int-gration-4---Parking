@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Parking = require('../services/requests/Parking');
+const Parking = require('../services/requests/parking');
 
 
 //router.post('/', Reservation.addReservation);

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
+    "@react-native-async-storage/async-storage": "^1.19.1",
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-native-masked-view/masked-view": "0.2.9",
     "@react-navigation/bottom-tabs": "^6.5.8",
@@ -23,6 +24,7 @@
     "expo-location": "~16.1.0",
     "expo-status-bar": "~1.6.0",
     "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.1",
     "moment": "^2.29.4",
     "path": "^0.12.7",
     "qs": "^6.11.0",

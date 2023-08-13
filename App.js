@@ -5,16 +5,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { FontAwesome5 } from "@expo/vector-icons";
 import HomeScreen from "./navigation/screens/HomeScreen";
 import ListParking from "./navigation/screens/ListParking";
-import Login from "./navigation/screens/Login/Login";
+import Login from "./navigation/screens/Login";
 import Reservation from "./navigation/screens/Reservation";
-import Register from "./navigation/screens/Register/Register";
+import Register from "./navigation/screens/Register";
 import GoogleMap from "./navigation/screens/GoogleMap";
 import { NavigationContainer } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const onSignUpSuccess = () => {
     setIsLoggedIn(true);
@@ -63,49 +63,52 @@ const App = () => {
       </TouchableOpacity>
   );
 
+
   return (
-      <NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator>
         {isLoggedIn ? (
-            <Stack.Navigator>
-              <Stack.Screen
-                  name="HomeTabs"
-                  component={() => (
-                      <Tab.Navigator screenOptions={tabScreenOptions}>
-                        <Tab.Screen name="HomeScreen" component={HomeScreen} />
-                        <Tab.Screen name="ListParking" component={ListParking} />
-                        <Tab.Screen name="GoogleMap" component={GoogleMap} />
-                      </Tab.Navigator>
-                  )}
-                  options={({ navigation }) => ({
-                    title: "My App",
-                    headerRight: () => <ReservationButton navigation={navigation} />,
-                  })}
-              />
-              <Stack.Screen name="Reservation" component={Reservation} />
-            </Stack.Navigator>
+          <Stack.Screen
+            name="HomeTabs"
+            options={({ navigation }) => ({
+              title: "My App",
+              headerRight: () => <ReservationButton navigation={navigation} />,
+            })}
+          >
+            {props => (
+              <Tab.Navigator screenOptions={tabScreenOptions}>
+                <Tab.Screen
+                  name="HomeScreen"
+                  component={HomeScreen}
+                  initialParams={props.route.params}
+                />
+                <Tab.Screen
+                  name="ListParking"
+                  component={ListParking}
+                  initialParams={props.route.params}
+                />
+                <Tab.Screen
+                  name="GoogleMap"
+                  component={GoogleMap}
+                  initialParams={props.route.params}
+                />
+              </Tab.Navigator>
+            )}
+          </Stack.Screen>
         ) : (
-            <Stack.Navigator screenOptions={tabScreenOptions}>
-              <Stack.Screen
-                  name="Register"
-                  component={Register}
-                  initialParams={{ onSignUpSuccess, isLoggedIn }}
-              />
-              <Stack.Screen name="Login" component={Login} />
-            </Stack.Navigator>
+          <>
+            <Stack.Screen
+              name="Register"
+              initialParams={{ onSignUpSuccess }}
+              component={Register}
+            />
+            <Stack.Screen name="Login" component={Login} />
+          </>
         )}
-      </NavigationContainer>
+        <Stack.Screen name="Reservation" component={Reservation} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  headerStyle: {
-    backgroundColor: "#151515",
-    height: 125,
-  },
-  headerTitleStyle: {
-    color: "#eedddd",
-    fontWeight: "bold",
-  },
-});
 
 export default App;

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import CustomInput from "./CustomInput";
-import CustomButton from "./CustomButton";
+import CustomInput from "./Register/CustomInput";
+import CustomButton from "./Register/CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import HomeScreen from "../HomeScreen";
+import HomeScreen from "./HomeScreen";
 import axios from "axios"; // Import Axios
+
 
 const SignUpScreen = ({ navigation, route }) => {
   const { onSignUpSuccess, isLoggedIn } = route.params || {};
@@ -15,6 +16,7 @@ const SignUpScreen = ({ navigation, route }) => {
   const [hash, setpassword] = useState("");
   const [plate, setplate] = useState("");
   const [gdprAccepted, setGdprAccepted] = useState(false); // State for the checkbox
+  
 
   //SignUp button pressed
   const onSignUpPressed = async () => {
@@ -26,20 +28,17 @@ const SignUpScreen = ({ navigation, route }) => {
     if (gdprAccepted) {
       try {
         const response = await axios
-          .post(
-            "https://9040-178-51-169-222.ngrok-free.app/person",
-            {
-              first_name,
-              last_name,
-              company,
-              email,
-              hash: hash,
-              plate
-              
-            }
-          )
+          .post("https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/person", {
+            first_name,
+            last_name,
+            company,
+            email,
+            hash: hash,
+            plate,
+          })
           .then(() => {
             console.log("Inscription réussie");
+            // Get the navigation object
             navigation.navigate("HomeScreen", { userName: first_name });
 
             onSignUpSuccess();
@@ -50,6 +49,7 @@ const SignUpScreen = ({ navigation, route }) => {
     } else {
       console.log("Vous n'avez pas rempli tous les champs");
     }
+    navigation.navigate("HomeScreen", { userName: first_name });
   };
 
   // Handle checkbox state change
@@ -106,7 +106,6 @@ const SignUpScreen = ({ navigation, route }) => {
       />
       <CustomInput
         placeholder="* Plaque d'immatriculation"
-        
         inputStyle={styles.input}
         value={plate}
         setValue={setplate}

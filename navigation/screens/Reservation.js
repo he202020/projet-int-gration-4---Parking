@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
@@ -15,6 +15,9 @@ const ReservationForm = ({ route }) => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedParking, setSelectedParking] = useState(null);
+
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
     if (route.params && route.params.selectedParking) {
@@ -34,8 +37,29 @@ const ReservationForm = ({ route }) => {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
 
+      // Calculate the difference between end time and current time
+      const currentTime = new Date();
+      const timeDifference = formattedEndTime - currentTime;
+
+      if (timeDifference <= 0) {
+        setSnackbarMessage("End time has already passed.");
+        setSnackbarVisible(true);
+        return;
+      }
+
+      setRemainingTime(timeDifference);
+
+      const id = setInterval(() => {
+        setRemainingTime(prevTime => prevTime - 1000);
+        if (remainingTime <= 0) {
+          clearInterval(intervalId);
+        }
+      }, 1000);
+
+      setIntervalId(id);
+
       const response = await axios.post(
-        "https://9040-178-51-169-222.ngrok-free.app/reservation",
+        "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer
@@ -96,13 +120,23 @@ const ReservationForm = ({ route }) => {
       startTime,
       endTime
     );
-    
+
     //navigation.navigate("HomeScreen");
+  
   };
+  useEffect(() => {
+    if (remainingTime <= 0) {
+      clearInterval(intervalId);
+    }
+  }, [remainingTime, intervalId]);
 
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
+      <Text style={styles.remainingTime}>
+          Remaining Time: {Math.floor(remainingTime / 1000)} seconds
+        </Text>
+
         <Text style={styles.title}>Réserve ta place de parking</Text>
         <TextInput
           label="Plaque d'immatriculation"
