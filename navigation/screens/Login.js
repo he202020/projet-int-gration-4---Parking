@@ -13,8 +13,9 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const SignInScreen = () => {
-  const navigation = useNavigation();
+const SignInScreen = ({navigation,route}) => {
+  //const navigation = useNavigation();
+  const { onSignUpSuccess, isLoggedIn } = route.params || {};
 
   const [email, setEmail] = useState("");
   const [ hash, setPassword ]= useState("");
@@ -46,11 +47,11 @@ const SignInScreen = () => {
       // Faire quelque chose avec le jeton, comme le stocker dans le local storage
       // Redirigez ensuite l'utilisateur vers la page appropriée, par exemple, le tableau de bord.
       await AsyncStorage.setItem('authToken', token);
-      navigation.navigate('HomeScreen');
+      onSignUpSuccess();
     } catch (error) {
       console.error("Erreur :", error);
     }
-    
+    navigation.navigate('HomeScreen');
   };
 
   const onForgotPasswordPressed = () => {

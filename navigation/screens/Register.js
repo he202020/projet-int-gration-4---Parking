@@ -39,7 +39,7 @@ const SignUpScreen = ({ navigation, route }) => {
           .then(() => {
             console.log("Inscription réussie");
             // Get the navigation object
-            navigation.navigate("HomeScreen", { userName: first_name });
+            //navigation.navigate("HomeScreen", { userName: first_name });
 
             onSignUpSuccess();
           });

@@ -102,10 +102,10 @@ const App = () => {
               initialParams={{ onSignUpSuccess }}
               component={Register}
             />
-            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Login"  initialParams={{ onSignUpSuccess }} component={Login} />
           </>
         )}
-        <Stack.Screen name="Reservation" component={Reservation} />
+        <Stack.Screen name="Reservation"  component={Reservation} />
       </Stack.Navigator>
     </NavigationContainer>
   );
