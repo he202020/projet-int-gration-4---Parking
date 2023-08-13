@@ -19,15 +19,14 @@ const SignInScreen = ({navigation,route}) => {
 
   const [email, setEmail] = useState("");
   const [ hash, setPassword ]= useState("");
+  const [first_name, setfirst_name] = useState("");
   const { height } = useWindowDimensions();
 
   const onSignInPressed = async () => {
     console.warn("onSignInPressed()");
-    console.log("Email", email);
-    console.log("Mot de passe", hash);
 
     try {
-      const response = await fetch("https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/person/login", {
+      const response = await fetch("https://0f61-2a02-a03f-c09c-b00-d163-ff2c-5154-a3d6.ngrok-free.app/person/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,10 +42,13 @@ const SignInScreen = ({navigation,route}) => {
 
       const responseData = await response.json();
       const token = responseData.token;
+      const userFirstName = responseData.user.first_name;
 
       // Faire quelque chose avec le jeton, comme le stocker dans le local storage
       // Redirigez ensuite l'utilisateur vers la page appropriée, par exemple, le tableau de bord.
       await AsyncStorage.setItem('authToken', token);
+      await AsyncStorage.setItem('userName', userFirstName);
+
       onSignUpSuccess();
     } catch (error) {
       console.error("Erreur :", error);

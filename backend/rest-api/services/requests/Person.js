@@ -90,7 +90,16 @@ exports.login = async function login(req, res) {
     // Générez un jeton d'authentification si la connexion réussit
     const token = jwt.sign({ userId: user.id }, 'your_secret_key_here', { expiresIn: '1h' }); // Génération du jeton
 
-    res.status(200).json({ token: token });
+    const person = await prisma.person.findUnique({
+      where: {
+        email: email
+      },
+      select: {
+        first_name: true
+      }
+    })
+
+    res.status(200).json({ token: token, user: person });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });
