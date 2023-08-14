@@ -13,7 +13,7 @@ export default function HomeScreen({ route }) {
 
         const fetchAsyncStorageUser = async () => {
           try {
-            const user = await AsyncStorage.getItem('userName');
+            const user = await AsyncStorage.getItem('USER_NAME');
 
             if (isActive) {
               setUserName(user);

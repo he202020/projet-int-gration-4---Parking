@@ -29,7 +29,7 @@ async function userExists(email) {
 //ajouter un user
 
 exports.postPerson = async function postPerson(req, res) {
-  const { first_name, last_name, company, email, hash, plate } = req.body;
+  const { firstName, lastName, company, email, hash, plate } = req.body;
   try {
     /*const isExistingUser = await userExists(email);
     if (isExistingUser) {
@@ -38,8 +38,8 @@ exports.postPerson = async function postPerson(req, res) {
     }*/
     await prisma.person.create({
       data: {
-        first_name: first_name,
-        last_name: last_name,
+        first_name: firstName,
+        last_name: lastName,
         company: company,
         email: email,
         hash: hash,

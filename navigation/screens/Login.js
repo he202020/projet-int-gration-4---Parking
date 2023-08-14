@@ -11,50 +11,21 @@ import CustomButton from "./Register/CustomButton";
 import Register from "./Register";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from "../../security/AuthContext";
 
 
-const SignInScreen = ({navigation,route}) => {
-  //const navigation = useNavigation();
-  const { onSignUpSuccess, isLoggedIn } = route.params || {};
-
+const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [ hash, setPassword ]= useState("");
-  const [first_name, setfirst_name] = useState("");
-  const { height } = useWindowDimensions();
+  const { onLogin } = useAuth();
 
   const onSignInPressed = async () => {
-    console.warn("onSignInPressed()");
-
-    try {
-      const response = await fetch("https://0f61-2a02-a03f-c09c-b00-d163-ff2c-5154-a3d6.ngrok-free.app/person/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, hash: hash }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.log("Erreur de connexion :", errorData.error);
-        return;
-      }
-
-      const responseData = await response.json();
-      const token = responseData.token;
-      const userFirstName = responseData.user.first_name;
-
-      // Faire quelque chose avec le jeton, comme le stocker dans le local storage
-      // Redirigez ensuite l'utilisateur vers la page appropriée, par exemple, le tableau de bord.
-      await AsyncStorage.setItem('authToken', token);
-      await AsyncStorage.setItem('userName', userFirstName);
-
-      onSignUpSuccess();
-    } catch (error) {
-      console.error("Erreur :", error);
+    const result = await onLogin(email, hash);
+    await AsyncStorage.setItem('USER_NAME', result.data.user.stringify)
+    if (result && result.error) {
+      alert("Un problème de login");
     }
-    navigation.navigate('HomeScreen');
-  };
+  }
 
   const onForgotPasswordPressed = () => {
     console.warn("onForgotPasswordPressed()");

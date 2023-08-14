@@ -4,52 +4,38 @@ import CustomInput from "./Register/CustomInput";
 import CustomButton from "./Register/CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import HomeScreen from "./HomeScreen";
-import axios from "axios"; // Import Axios
+import axios from "axios";
+import {useAuth} from "../../security/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import Axios
 
 
 const SignUpScreen = ({ navigation, route }) => {
   const { onSignUpSuccess, isLoggedIn } = route.params || {};
-  const [first_name, setfirst_name] = useState("");
-  const [last_name, setlast_name] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [company, setcompany] = useState("");
-  const [hash, setpassword] = useState("");
-  const [plate, setplate] = useState("");
+  const [company, setCompany] = useState("");
+  const [hash, setPassword] = useState("");
+  const [plate, setPlate] = useState("");
   const [gdprAccepted, setGdprAccepted] = useState(false); // State for the checkbox
-  
+  const { onLogin, onRegister } = useAuth();
+
+  const login = async () => {
+    const result = await onLogin(email, hash);
+    await AsyncStorage.setItem('USER_NAME', result.data.user.stringify)
+    if (result && result.error) {
+      alert("Un problème de login");
+    }
+  };
 
   //SignUp button pressed
   const onSignUpPressed = async () => {
-    console.warn("onSignUpPressed()");
-    if (first_name === "" || last_name === "" || email === "") {
-      Alert.alert("Erreur", "Veuillez remplir tous les champs.");
-      return;
-    }
-    if (gdprAccepted) {
-      try {
-        const response = await axios
-          .post("https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/person", {
-            first_name,
-            last_name,
-            company,
-            email,
-            hash: hash,
-            plate,
-          })
-          .then(() => {
-            console.log("Inscription réussie");
-            // Get the navigation object
-            //navigation.navigate("HomeScreen", { userName: first_name });
-
-            onSignUpSuccess();
-          });
-      } catch (error) {
-        console.error("Erreur lors de la requête:", error);
-      }
+    const result = await onRegister(email, hash, firstName, lastName, company, plate);
+    if (result && result.error) {
+      alert("Un problème de login");
     } else {
-      console.log("Vous n'avez pas rempli tous les champs");
+      login();
     }
-    navigation.navigate("HomeScreen", { userName: first_name });
   };
 
   // Handle checkbox state change
@@ -77,13 +63,13 @@ const SignUpScreen = ({ navigation, route }) => {
       </Text>
       <CustomInput
         placeholder="* Prénom"
-        value={first_name}
-        setValue={setfirst_name}
+        value={firstName}
+        setValue={setFirstName}
       />
       <CustomInput
         placeholder="* Nom"
-        value={last_name}
-        setValue={setlast_name}
+        value={lastName}
+        setValue={setLastName}
       />
       <CustomInput
         placeholder="* Adresse mail"
@@ -94,7 +80,7 @@ const SignUpScreen = ({ navigation, route }) => {
       <CustomInput
         placeholder="* Société"
         value={company}
-        setValue={setcompany}
+        setValue={setCompany}
       />
       {/* <Text style={styles.comment}>Optionnel</Text> */}
       <CustomInput
@@ -102,13 +88,13 @@ const SignUpScreen = ({ navigation, route }) => {
         secureTextEntry={true}
         inputStyle={styles.input}
         value={hash}
-        setValue={setpassword}
+        setValue={setPassword}
       />
       <CustomInput
         placeholder="* Plaque d'immatriculation"
         inputStyle={styles.input}
         value={plate}
-        setValue={setplate}
+        setValue={setPlate}
       />
       <TouchableOpacity
         style={styles.checkboxContainer}
