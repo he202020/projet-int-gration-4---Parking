@@ -4,6 +4,7 @@ import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import CountDown from 'react-native-countdown-component';
 
 const ReservationForm = ({ route }) => {
   const navigation = useNavigation();
@@ -37,7 +38,6 @@ const ReservationForm = ({ route }) => {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
 
-      
       const response = await axios.post(
         "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/reservation",
         {
@@ -61,6 +61,15 @@ const ReservationForm = ({ route }) => {
         heures > 0
           ? `${heures} heure(s) et ${minutes} minute(s)`
           : `${minutes} minute(s)`;
+          
+      const durationMilliseconds = duréetotale * 60 * 1000; // Conversion en millisecondes
+
+      // Mettre à jour le temps restant et démarrer le compte à rebours
+      setRemainingTime(durationMilliseconds);
+      const newIntervalId = setInterval(() => {
+        setRemainingTime((prevRemainingTime) => prevRemainingTime - 1000);
+      }, 1000);
+      setIntervalId(newIntervalId);
       // Handle the success case (status code 201) here if needed
       Alert.alert(
         "Réservation réussie",
@@ -102,7 +111,6 @@ const ReservationForm = ({ route }) => {
     );
 
     //navigation.navigate("HomeScreen");
-  
   };
   useEffect(() => {
     if (remainingTime <= 0) {
@@ -113,7 +121,7 @@ const ReservationForm = ({ route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-      <Text style={styles.remainingTime}>
+        <Text style={styles.remainingTime}>
           Remaining Time: {Math.floor(remainingTime / 1000)} seconds
         </Text>
 
@@ -162,6 +170,11 @@ const ReservationForm = ({ route }) => {
         >
           Réserver
         </Button>
+        <CountDown
+          until={remainingTime / 1000} // Convertissez le temps restant en secondes
+          onFinish={() => clearInterval(intervalId)}
+          size={30}
+        />
       </View>
 
       <Snackbar
