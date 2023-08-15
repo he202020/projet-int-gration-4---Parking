@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import * as Location from 'expo-location';
 import {
   View,
   Text,
@@ -19,9 +19,11 @@ const GoogleMap = () => {
   const { params } = useRoute();
   //const { selectedParking } = params || {};
   const navigation = useNavigation();
+  const [userLocation, setUserLocation] = useState(null); //stocker les coordonnées GPS de l'appareil
 
   useEffect(() => {
     fetchParkingData();
+    getUserLocation();
   }, []);
 
   const fetchParkingData = async () => {
@@ -36,11 +38,28 @@ const GoogleMap = () => {
     }
   };
 
+  const getUserLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.error("L'autorisation d'accéder à la position a été refusée");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    const { latitude, longitude } = location.coords;
+    setUserLocation({ latitude, longitude });
+  };
+
   const renderCallout = (parking) => (
-    <Callout tooltip={true} onPress={() => handleReservation(parking.id, parking.name)}>
+    <Callout
+      tooltip={true}
+      onPress={() => handleReservation(parking.id, parking.name)}
+    >
       <View style={styles.calloutContainer}>
         <Text style={styles.parkingName}>{parking.name}</Text>
-        <Text style={styles.availableSpaces}>Places libres : {parking.nbr_free_spaces}</Text>
+        <Text style={styles.availableSpaces}>
+          Places libres : {parking.nbr_free_spaces}
+        </Text>
         <TouchableOpacity
           style={styles.reserveButton}
           onPress={() => handleReservation(parking.id, parking.name)}
@@ -50,7 +69,6 @@ const GoogleMap = () => {
       </View>
     </Callout>
   );
-  
 
   const initialRegion = {
     latitude: 50.668121,
@@ -65,16 +83,29 @@ const GoogleMap = () => {
     setShowMarkers(!showMarkers);
   };
 
-  const handleReservation = (parkingId,parkingName) => {
+  const handleReservation = (parkingId, parkingName) => {
     console.log("Navigating to Reservation with parking:", parkingId);
     setSelectedParking({ id: parkingId, name: parkingName });
     //navigation.navigate("Reservation", { id: parkingId });
-    navigation.navigate("Reservation", { selectedParking: { id: parkingId, name: parkingName } });
+    navigation.navigate("Reservation", {
+      selectedParking: { id: parkingId, name: parkingName },
+    });
   };
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
+        {userLocation && (
+          <Marker
+            coordinate={{
+              latitude: userLocation.latitude,
+              longitude: userLocation.longitude,
+            }}
+            title="Votre Position" 
+            pinColor="blue" // Couleur du marqueur de localisation utilisateur
+          />
+        )}
+
         {showMarkers &&
           parkingData.map((parking) => (
             <Marker
@@ -154,6 +185,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
+
 });
 
 export default GoogleMap;
