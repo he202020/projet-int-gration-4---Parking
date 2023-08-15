@@ -6,14 +6,29 @@ import GoogleMap from "./screens/GoogleMap";
 import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {FontAwesome5} from "@expo/vector-icons";
+import {StyleSheet} from "react-native";
 const Tab = createBottomTabNavigator();
 
 export function AppScreens() {
+  const {onLogout} = useAuth();
+
   return (
       <Tab.Navigator screenOptions={tabScreenOptions}>
-        <Tab.Screen name="HomeScreen" component={HomeScreen}/>
-        <Tab.Screen name="ListParking" component={ListParking}/>
-        <Tab.Screen name="GoogleMap" component={GoogleMap}/>
+        <Tab.Screen name="HomeScreen" component={HomeScreen} options={{
+          headerRight: () => (
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
+          )
+        }}/>
+        <Tab.Screen name="ListParking" component={ListParking} options={{
+          headerRight: () => (
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
+          )
+        }}/>
+        <Tab.Screen name="GoogleMap" component={GoogleMap} options={{
+          headerRight: () => (
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
+          )
+        }}/>
       </Tab.Navigator>
   );
 }
@@ -56,3 +71,10 @@ const renderTabBarIcon = (iconName, focused, color, size) => {
       />
   );
 };
+
+const styles = StyleSheet.create({
+  logout: {
+    backgroundColor: "orange",
+    color: "white",
+  }
+})

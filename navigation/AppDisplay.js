@@ -18,9 +18,7 @@ export const AppDisplay = () => {
                 {authState?.authenticated ? (
                     <>
                         <Stack.Screen name={"Click 'n' Park"} component={AppScreens} options={{
-                            headerRight: () => (
-                                <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
-                            )
+                            headerShown: false
                         }}/>
                     </>
                 ) : (
@@ -34,11 +32,3 @@ export const AppDisplay = () => {
         </NavigationContainer>
     );
 };
-
-
-const styles = StyleSheet.create({
-    logout: {
-        backgroundColor: "orange",
-        color: "white",
-    }
-})
