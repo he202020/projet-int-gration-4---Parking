@@ -6,7 +6,8 @@ import GoogleMap from "./screens/GoogleMap";
 import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {FontAwesome5} from "@expo/vector-icons";
-import {StyleSheet} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 const Tab = createBottomTabNavigator();
 
 export function AppScreens() {
@@ -16,7 +17,7 @@ export function AppScreens() {
       <Tab.Navigator screenOptions={tabScreenOptions}>
         <Tab.Screen name="HomeScreen" component={HomeScreen} options={{
           headerRight: () => (
-              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
+            <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
           )
         }}/>
         <Tab.Screen name="ListParking" component={ListParking} options={{
@@ -76,5 +77,45 @@ const styles = StyleSheet.create({
   logout: {
     backgroundColor: "orange",
     color: "white",
-  }
+  },
+  Btn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    cursor: 'pointer',
+    position: 'relative',
+    overflow: 'hidden',
+    transitionDuration: 300,
+    shadowColor: 'rgba(0, 0, 0, 0.199)',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    backgroundColor: 'orange',
+  },
+  sign: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transitionDuration: 300,
+    padding: 20,
+  },
+  svg: {
+    width: 17,
+  },
+  textContainer: {
+    position: 'absolute',
+    right: 0,
+    opacity: 0,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    transitionDuration: 300,
+    paddingRight: 10,
+  },
+  text: {
+    color: 'black',
+  },
 })
