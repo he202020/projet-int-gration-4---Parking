@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 import {
   View,
   Text,
@@ -38,9 +38,10 @@ const GoogleMap = () => {
     }
   };
 
+  // Obtenir l'emplacement actuel de l'utilisateur à l'aide du module Location d'Expo
   const getUserLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
+    if (status !== "granted") {
       console.error("L'autorisation d'accéder à la position a été refusée");
       return;
     }
@@ -50,7 +51,7 @@ const GoogleMap = () => {
     setUserLocation({ latitude, longitude });
   };
 
-  const renderCallout = (parking) => (
+  const renderCallout = (parking, distanceToUser) => (
     <Callout
       tooltip={true}
       onPress={() => handleReservation(parking.id, parking.name)}
@@ -60,6 +61,11 @@ const GoogleMap = () => {
         <Text style={styles.availableSpaces}>
           Places libres : {parking.nbr_free_spaces}
         </Text>
+        {distanceToUser && (
+          <Text style={styles.distanceToUser}>
+            Distance : {distanceToUser.toFixed(2)} km
+          </Text>
+        )}
         <TouchableOpacity
           style={styles.reserveButton}
           onPress={() => handleReservation(parking.id, parking.name)}
@@ -92,6 +98,27 @@ const GoogleMap = () => {
     });
   };
 
+  // Calcule la distance entre deux points à l'aide de la formule Haversine
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Rayon de la Terre en kilomètres
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(lat1)) *
+        Math.cos(toRadians(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  };
+
+  // Convertit les degrés en radians
+  const toRadians = (degrees) => {
+    return degrees * (Math.PI / 180);
+  };
+
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
@@ -101,24 +128,35 @@ const GoogleMap = () => {
               latitude: userLocation.latitude,
               longitude: userLocation.longitude,
             }}
-            title="Votre Position" 
-            pinColor="blue" // Couleur du marqueur de localisation utilisateur
+            title="Votre Position"
+            pinColor="blue"
           />
         )}
 
         {showMarkers &&
-          parkingData.map((parking) => (
-            <Marker
-              key={parking.id}
-              coordinate={{
-                latitude: parking.latitude,
-                longitude: parking.longitude,
-              }}
-              title={parking.name}
-            >
-              {renderCallout(parking)}
-            </Marker>
-          ))}
+          parkingData.map((parking) => {
+            const distanceToUser = userLocation
+              ? calculateDistance(
+                  userLocation.latitude,
+                  userLocation.longitude,
+                  parking.latitude,
+                  parking.longitude
+                )
+              : null;
+
+            return (
+              <Marker
+                key={parking.id}
+                coordinate={{
+                  latitude: parking.latitude,
+                  longitude: parking.longitude,
+                }}
+                title={parking.name}
+              >
+                {renderCallout(parking, distanceToUser)}
+              </Marker>
+            );
+          })}
       </MapView>
       <TouchableOpacity
         style={styles.toggleButton}
@@ -185,7 +223,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-
+  distanceToUser: {
+    color: "white",
+  },
 });
 
 export default GoogleMap;
