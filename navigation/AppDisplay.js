@@ -6,6 +6,7 @@ import Register from "./screens/Register";
 import { createStackNavigator } from "@react-navigation/stack";
 import {Button} from "react-native-paper";
 import React from "react";
+import {StyleSheet } from "react-native";
 const Stack = createStackNavigator();
 
 export const AppDisplay = () => {
@@ -18,12 +19,13 @@ export const AppDisplay = () => {
                     <>
                         <Stack.Screen name={"Click 'n' Park"} component={AppScreens} options={{
                             headerRight: () => (
-                                <Button onPress={onLogout} title="Sign out" color="#000"/>
+                                <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
                             )
                         }}/>
                     </>
                 ) : (
                     <>
+                    
                         <Stack.Screen name="Login" component={Login} />
                         <Stack.Screen name="Register" component={Register} />
                     </>
@@ -32,3 +34,11 @@ export const AppDisplay = () => {
         </NavigationContainer>
     );
 };
+
+
+const styles = StyleSheet.create({
+    logout: {
+        backgroundColor: "orange",
+        color: "white",
+    }
+})
