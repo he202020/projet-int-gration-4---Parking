@@ -16,17 +16,17 @@ export function AppScreens() {
       <Tab.Navigator screenOptions={tabScreenOptions}>
         <Tab.Screen name="HomeScreen" component={HomeScreen} options={{
           headerRight: () => (
-              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
           )
         }}/>
         <Tab.Screen name="ListParking" component={ListParking} options={{
           headerRight: () => (
-              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
           )
         }}/>
         <Tab.Screen name="GoogleMap" component={GoogleMap} options={{
           headerRight: () => (
-              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Log out </Button>
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
           )
         }}/>
       </Tab.Navigator>
