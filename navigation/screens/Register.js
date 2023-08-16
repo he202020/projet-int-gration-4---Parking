@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import React,{ useState } from "react";
+import { View, Text, StyleSheet,Image, TouchableOpacity, Alert } from "react-native";
 import CustomInput from "./Register/CustomInput";
 import CustomButton from "./Register/CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -7,7 +7,7 @@ import HomeScreen from "./HomeScreen";
 import axios from "axios";
 import {useAuth} from "../../security/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import Axios
-
+import Clickvideo from "../../assets/Clickvideo.png";
 
 const SignUpScreen = ({ navigation, route }) => {
   const { onSignUpSuccess, isLoggedIn } = route.params || {};
@@ -56,11 +56,10 @@ const SignUpScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.root}>
+      
       <Text style={styles.title}>Inscription</Text>
-      <Text style={styles.comment}>
-        Ceci est une demande, elle sera envoyée à un administrateur afin de
-        vérifier votre admissibilité{" "}
-      </Text>
+      <Image source={Clickvideo} style={styles.logo} />
+
       <CustomInput
         placeholder="* Prénom"
         value={firstName}
@@ -133,25 +132,25 @@ const SignUpScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   logo: {
-    marginTop: 15,
-    height: 300,
-    width: 300,
-    maxHeight: 300,
-    maxWidth: 300,
+    marginTop: 30,
+    marginBottom: 30,
   },
+
   root: {
     padding: 40,
-    paddingBottom: 180,
+    paddingBottom: 130,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#171717",
+
   },
   title: {
     fontSize: 24,
     textAlign: "center",
     color: "white",
-    margin: 10,
+    margin: 5,
+    marginTop : 70,
   },
   comment: {
     marginTop: 10,
