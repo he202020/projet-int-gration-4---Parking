@@ -22,7 +22,7 @@ const ListParking = () => {
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/parking"
+        "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/parking"
       );
       const data = await response.json();
       setParkingData(data);
@@ -35,7 +35,8 @@ const ListParking = () => {
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>
         Parking: {item.name} {"\n\n"}
-        {item.nbr_free_spaces} places libres {"\n\n"}
+        {item.nbr_free_spaces} places libres {"\n\n"} 
+        Adresse : {item.address}  {"\n\n"}
       </Text>
       <TouchableOpacity style={styles.button} onPress={() => GoParking(item)}>
         <Text style={styles.buttonText}>Aller au parking</Text>

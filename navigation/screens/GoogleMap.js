@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import * as Location from "expo-location";
 import {
   View,
   Text,
@@ -13,21 +13,22 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
 
-const GoogleMap = () => {
+const GoogleMap = ({ navigation }) => {
   const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
   //const { selectedParking } = params || {};
-  const navigation = useNavigation();
+  const [userLocation, setUserLocation] = useState(null); //stocker les coordonnées GPS de l'appareil
 
   useEffect(() => {
     fetchParkingData();
+    getUserLocation();
   }, []);
 
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/parking"
+        "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/parking"
       );
       const parkingData = await response.json();
       setParkingData(parkingData);
@@ -36,11 +37,34 @@ const GoogleMap = () => {
     }
   };
 
-  const renderCallout = (parking) => (
-    <Callout tooltip={true} onPress={() => handleReservation(parking.id, parking.name)}>
+  // Obtenir l'emplacement actuel de l'utilisateur à l'aide du module Location d'Expo
+  const getUserLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      console.error("L'autorisation d'accéder à la position a été refusée");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    const { latitude, longitude } = location.coords;
+    setUserLocation({ latitude, longitude });
+  };
+
+  const renderCallout = (parking, distanceToUser) => (
+    <Callout
+      tooltip={true}
+      onPress={() => handleReservation(parking.id, parking.name)}
+    >
       <View style={styles.calloutContainer}>
         <Text style={styles.parkingName}>{parking.name}</Text>
-        <Text style={styles.availableSpaces}>Places libres : {parking.nbr_free_spaces}</Text>
+        <Text style={styles.availableSpaces}>
+          Places libres : {parking.nbr_free_spaces}
+        </Text>
+        {distanceToUser && (
+          <Text style={styles.distanceToUser}>
+            Distance : {distanceToUser.toFixed(2)} km
+          </Text>
+        )}
         <TouchableOpacity
           style={styles.reserveButton}
           onPress={() => handleReservation(parking.id, parking.name)}
@@ -50,7 +74,6 @@ const GoogleMap = () => {
       </View>
     </Callout>
   );
-  
 
   const initialRegion = {
     latitude: 50.668121,
@@ -65,29 +88,74 @@ const GoogleMap = () => {
     setShowMarkers(!showMarkers);
   };
 
-  const handleReservation = (parkingId,parkingName) => {
+  const handleReservation = (parkingId, parkingName) => {
     console.log("Navigating to Reservation with parking:", parkingId);
     setSelectedParking({ id: parkingId, name: parkingName });
     //navigation.navigate("Reservation", { id: parkingId });
-    navigation.navigate("Reservation", { selectedParking: { id: parkingId, name: parkingName } });
+    navigation.navigate("Reservation", {
+      selectedParking: { id: parkingId, name: parkingName },
+    });
+  };
+
+  // Calcule la distance entre deux points à l'aide de la formule Haversine
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Rayon de la Terre en kilomètres
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(lat1)) *
+        Math.cos(toRadians(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  };
+
+  // Convertit les degrés en radians
+  const toRadians = (degrees) => {
+    return degrees * (Math.PI / 180);
   };
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
+        {userLocation && (
+          <Marker
+            coordinate={{
+              latitude: userLocation.latitude,
+              longitude: userLocation.longitude,
+            }}
+            title="Votre Position"
+            pinColor="blue"
+          />
+        )}
+
         {showMarkers &&
-          parkingData.map((parking) => (
-            <Marker
-              key={parking.id}
-              coordinate={{
-                latitude: parking.latitude,
-                longitude: parking.longitude,
-              }}
-              title={parking.name}
-            >
-              {renderCallout(parking)}
-            </Marker>
-          ))}
+          parkingData.map((parking) => {
+            const distanceToUser = userLocation
+              ? calculateDistance(
+                  userLocation.latitude,
+                  userLocation.longitude,
+                  parking.latitude,
+                  parking.longitude
+                )
+              : null;
+
+            return (
+              <Marker
+                key={parking.id}
+                coordinate={{
+                  latitude: parking.latitude,
+                  longitude: parking.longitude,
+                }}
+                title={parking.name}
+              >
+                {renderCallout(parking, distanceToUser)}
+              </Marker>
+            );
+          })}
       </MapView>
       <TouchableOpacity
         style={styles.toggleButton}
@@ -153,6 +221,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     textAlign: "center",
+  },
+  distanceToUser: {
+    color: "white",
   },
 });
 

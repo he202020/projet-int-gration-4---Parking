@@ -1,97 +1,121 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import {useAuth} from "../security/AuthContext";
 import HomeScreen from "./screens/HomeScreen";
-import ParkingScreen from "./screens/ParkingScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Map from "./screens/Map";
+import {Button} from "react-native-paper";
 import ListParking from "./screens/ListParking";
-import Login from "./screens/Login/Login";
-import Reservation from "./screens/Reservation";
-import Register from "./screens/Register/Register";
 import GoogleMap from "./screens/GoogleMap";
-import { NavigationContainer } from "@react-navigation/native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { createStackNavigator } from "@react-navigation/stack";
-import { AntDesign } from "@expo/vector-icons";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import React from "react";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {FontAwesome5} from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
-const Navigatore = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export function AppScreens() {
+  const {onLogout} = useAuth();
 
-  const onSignUpSuccess = () => {
-    setIsLoggedIn(true);
-  };
+  return (
+      <Tab.Navigator screenOptions={tabScreenOptions}>
+        <Tab.Screen name="HomeScreen" component={HomeScreen} options={{
+          headerRight: () => (
+            <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
+          )
+        }}/>
+        <Tab.Screen name="ListParking" component={ListParking} options={{
+          headerRight: () => (
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
+          )
+        }}/>
+        <Tab.Screen name="GoogleMap" component={GoogleMap} options={{
+          headerRight: () => (
+              <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
+          )
+        }}/>
+      </Tab.Navigator>
+  );
+}
 
-  return isLoggedIn ? (
-    
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === "Accueil") {
-            iconName = "home";
-          } else if (route.name === "GoogleMap") {
-            iconName = "map"; // Utilisation de l'icône "map" (carte)
-          } else if (route.name === "ListParking") {
-            iconName = "parking"; // Vous pouvez également utiliser "local-parking" pour une icône de parking dans MaterialIcons
-          } else if (route.name === "Reservation") {
-            iconName = "car";
-          } else if (route.name === "Login") {
-            iconName = "Login";
-          }
-          if (focused) {
-            color = "#1ccc5b";
-            size = 30;
-          } else {
-            color = "#eedddd";
-            size = 25;
-          }
-          return <FontAwesome5 name={iconName} color={color} size={size} />;
-        },
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          height: 60,
-          backgroundColor: "#151515",
-        },
-      })}
-    >
-      <Stack.Screen name="Accueil" component={HomeScreen} options={styles} />
-      <Stack.Screen
-        name="Reservation"
-        component={Reservation}
-        options={styles}
+const tabScreenOptions = ({ route }) => ({
+  tabBarIcon: ({ focused, color, size }) => {
+    let iconName;
+    switch (route.name) {
+      case "HomeScreen":
+        iconName = "home";
+        break;
+      case "GoogleMap":
+        iconName = "map";
+        break;
+      case "ListParking":
+        iconName = "parking";
+        break;
+      case "Reservation":
+        iconName = "car";
+        break;
+      default:
+        iconName = "question";
+    }
+
+    return renderTabBarIcon(iconName, focused, color, size);
+  },
+  tabBarShowLabel: false,
+  tabBarStyle: {
+    height: 60,
+    backgroundColor: "#151515",
+  },
+});
+
+const renderTabBarIcon = (iconName, focused, color, size) => {
+  return (
+      <FontAwesome5
+          name={iconName}
+          color={focused ? "#1ccc5b" : "#eedddd"}
+          size={focused ? 30 : 25}
       />
-      <Stack.Screen
-        name="ListParking"
-        component={ListParking}
-        options={styles}
-      />
-      <Stack.Screen name="GoogleMap" component={GoogleMap} options={styles} />
-    </Tab.Navigator>
-  ) : (
-    <Stack.Navigator
-      
-    >
-      <Stack.Screen name="Register" component={Register} options={styles} initialParams={{ onSignUpSuccess, isLoggedIn }}/>
-      <Stack.Screen name="Login" component={Login} options={styles} />
-    </Stack.Navigator>
-    
   );
 };
 
 const styles = StyleSheet.create({
-  headerStyle: {
-    backgroundColor: "#151515",
-    height: 125,
+  logout: {
+    backgroundColor: "orange",
+    color: "white",
   },
-  headerTitleStyle: {
-    color: "#eedddd",
-    fontWeight: "bold",
+  Btn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: 45,
+    height: 45,
+    borderRadius: 50,
+    cursor: 'pointer',
+    position: 'relative',
+    overflow: 'hidden',
+    transitionDuration: 300,
+    shadowColor: 'rgba(0, 0, 0, 0.199)',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    backgroundColor: 'orange',
   },
-});
-
-export default Navigatore;
+  sign: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transitionDuration: 300,
+    padding: 20,
+  },
+  svg: {
+    width: 17,
+  },
+  textContainer: {
+    position: 'absolute',
+    right: 0,
+    opacity: 0,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    transitionDuration: 300,
+    paddingRight: 10,
+  },
+  text: {
+    color: 'black',
+  },
+})
