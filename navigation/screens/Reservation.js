@@ -5,8 +5,7 @@ import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-const ReservationForm = ({ route }) => {
-  const navigation = useNavigation();
+const ReservationForm = ({ navigation, route }) => {
   const [numberplateStr, setnumberplateStr] = useState("");
   const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
   const [date, setDate] = useState("");

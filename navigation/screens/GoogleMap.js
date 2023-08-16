@@ -13,12 +13,11 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
 
-const GoogleMap = () => {
+const GoogleMap = ({ navigation }) => {
   const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
   //const { selectedParking } = params || {};
-  const navigation = useNavigation();
 
   useEffect(() => {
     fetchParkingData();
@@ -69,7 +68,7 @@ const GoogleMap = () => {
     console.log("Navigating to Reservation with parking:", parkingId);
     setSelectedParking({ id: parkingId, name: parkingName });
     //navigation.navigate("Reservation", { id: parkingId });
-    navigation.navigate("Reservation", { selectedParking: { id: parkingId, name: parkingName } });
+    navigation.navigate('Reservation', { selectedParking: { id: parkingId, name: parkingName } });
   };
 
   return (
