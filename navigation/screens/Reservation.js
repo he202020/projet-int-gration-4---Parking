@@ -1,12 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-const ReservationForm = ({ route }) => {
-  const navigation = useNavigation();
+const ReservationForm = ({ navigation, route }) => {
   const [numberplateStr, setnumberplateStr] = useState("");
   const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
   const [date, setDate] = useState("");
@@ -15,6 +14,9 @@ const ReservationForm = ({ route }) => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedParking, setSelectedParking] = useState(null);
+
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
     if (route.params && route.params.selectedParking) {
@@ -34,8 +36,29 @@ const ReservationForm = ({ route }) => {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
 
+      // Calculate the difference between end time and current time
+      const currentTime = new Date();
+      const timeDifference = formattedEndTime - currentTime;
+
+      if (timeDifference <= 0) {
+        setSnackbarMessage("End time has already passed.");
+        setSnackbarVisible(true);
+        return;
+      }
+
+      setRemainingTime(timeDifference);
+
+      const id = setInterval(() => {
+        setRemainingTime(prevTime => prevTime - 1000);
+        if (remainingTime <= 0) {
+          clearInterval(intervalId);
+        }
+      }, 1000);
+
+      setIntervalId(id);
+
       const response = await axios.post(
-        "https://812d-2a02-a03f-c09c-b00-34c1-4a16-a27e-e5b3.ngrok-free.app/reservation",
+        "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer
@@ -58,8 +81,22 @@ const ReservationForm = ({ route }) => {
           ? `${heures} heure(s) et ${minutes} minute(s)`
           : `${minutes} minute(s)`;
       // Handle the success case (status code 201) here if needed
-      setSnackbarMessage(
-        `Merci d'avoir réservé une place de parking. Vous avez réservé pour une durée de : ${durationText}`
+      Alert.alert(
+        "Réservation réussie",
+        `Merci d'avoir réservé une place de parking. Vous avez réservé pour une durée de : ${durationText}`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              // Actions à effectuer lorsque l'utilisateur appuie sur OK
+              // Par exemple, retourner à l'écran d'accueil
+              navigation.navigate("HomeScreen", {
+                parkingName: selectedParking ? selectedParking.name : "N/A",
+                reservationDuration: durationText,
+              });
+            },
+          },
+        ]
       );
       setSnackbarVisible(true);
 
@@ -82,20 +119,23 @@ const ReservationForm = ({ route }) => {
       startTime,
       endTime
     );
-    Alert.alert('Alert Title', 'My Alert Msg', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
-    navigation.navigate("HomeScreen");
+
+    //navigation.navigate("HomeScreen");
+  
   };
+  useEffect(() => {
+    if (remainingTime <= 0) {
+      clearInterval(intervalId);
+    }
+  }, [remainingTime, intervalId]);
 
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
+      <Text style={styles.remainingTime}>
+          Remaining Time: {Math.floor(remainingTime / 1000)} seconds
+        </Text>
+
         <Text style={styles.title}>Réserve ta place de parking</Text>
         <TextInput
           label="Plaque d'immatriculation"

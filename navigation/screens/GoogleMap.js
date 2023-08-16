@@ -13,12 +13,11 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
 
-const GoogleMap = () => {
+const GoogleMap = ({ navigation }) => {
   const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
   //const { selectedParking } = params || {};
-  const navigation = useNavigation();
 
   useEffect(() => {
     fetchParkingData();
@@ -27,7 +26,7 @@ const GoogleMap = () => {
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/parking"
+        "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/parking"
       );
       const parkingData = await response.json();
       setParkingData(parkingData);
@@ -69,7 +68,7 @@ const GoogleMap = () => {
     console.log("Navigating to Reservation with parking:", parkingId);
     setSelectedParking({ id: parkingId, name: parkingName });
     //navigation.navigate("Reservation", { id: parkingId });
-    navigation.navigate("Reservation", { selectedParking: { id: parkingId, name: parkingName } });
+    navigation.navigate('Reservation', { selectedParking: { id: parkingId, name: parkingName } });
   };
 
   return (

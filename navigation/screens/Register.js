@@ -1,53 +1,40 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import CustomInput from "./CustomInput";
-import CustomButton from "./CustomButton";
+import React,{ useState } from "react";
+import { View, Text, StyleSheet,Image, TouchableOpacity, Alert } from "react-native";
+import CustomInput from "./Register/CustomInput";
+import CustomButton from "./Register/CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import HomeScreen from "../HomeScreen";
-import axios from "axios"; // Import Axios
+import HomeScreen from "./HomeScreen";
+import axios from "axios";
+import {useAuth} from "../../security/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import Axios
+import Clickvideo from "../../assets/Clickvideo.png";
 
 const SignUpScreen = ({ navigation, route }) => {
   const { onSignUpSuccess, isLoggedIn } = route.params || {};
-  const [first_name, setfirst_name] = useState("");
-  const [last_name, setlast_name] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [company, setcompany] = useState("");
-  const [hash, setpassword] = useState("");
-  const [plate, setplate] = useState("");
+  const [company, setCompany] = useState("");
+  const [hash, setPassword] = useState("");
+  const [plate, setPlate] = useState("");
   const [gdprAccepted, setGdprAccepted] = useState(false); // State for the checkbox
+  const { onLogin, onRegister } = useAuth();
+
+  const login = async () => {
+    const result = await onLogin(email, hash);
+    await AsyncStorage.setItem('USER_NAME', result.data.user.stringify)
+    if (result && result.error) {
+      alert("Un problème de login");
+    }
+  };
 
   //SignUp button pressed
   const onSignUpPressed = async () => {
-    console.warn("onSignUpPressed()");
-    if (first_name === "" || last_name === "" || email === "") {
-      Alert.alert("Erreur", "Veuillez remplir tous les champs.");
-      return;
-    }
-    if (gdprAccepted) {
-      try {
-        const response = await axios
-          .post(
-            "https://5bec-2a02-a03f-635e-3f00-1d2d-16ff-5c1f-1f9a.ngrok-free.app/person",
-            {
-              first_name,
-              last_name,
-              company,
-              email,
-              hash: hash,
-              plate
-              
-            }
-          )
-          .then(() => {
-            console.log("Inscription réussie");
-            navigation.navigate("HomeScreen", { userName: `${first_name} ${last_name}` });
-            onSignUpSuccess();
-          });
-      } catch (error) {
-        console.error("Erreur lors de la requête:", error);
-      }
+    const result = await onRegister(email, hash, firstName, lastName, company, plate);
+    if (result && result.error) {
+      alert("Un problème de login");
     } else {
-      console.log("Vous n'avez pas rempli tous les champs");
+      login();
     }
   };
 
@@ -69,20 +56,19 @@ const SignUpScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.root}>
+      
       <Text style={styles.title}>Inscription</Text>
-      <Text style={styles.comment}>
-        Ceci est une demande, elle sera envoyée à un administrateur afin de
-        vérifier votre admissibilité{" "}
-      </Text>
+      <Image source={Clickvideo} style={styles.logo} />
+
       <CustomInput
         placeholder="* Prénom"
-        value={first_name}
-        setValue={setfirst_name}
+        value={firstName}
+        setValue={setFirstName}
       />
       <CustomInput
         placeholder="* Nom"
-        value={last_name}
-        setValue={setlast_name}
+        value={lastName}
+        setValue={setLastName}
       />
       <CustomInput
         placeholder="* Adresse mail"
@@ -93,7 +79,7 @@ const SignUpScreen = ({ navigation, route }) => {
       <CustomInput
         placeholder="* Société"
         value={company}
-        setValue={setcompany}
+        setValue={setCompany}
       />
       {/* <Text style={styles.comment}>Optionnel</Text> */}
       <CustomInput
@@ -101,14 +87,13 @@ const SignUpScreen = ({ navigation, route }) => {
         secureTextEntry={true}
         inputStyle={styles.input}
         value={hash}
-        setValue={setpassword}
+        setValue={setPassword}
       />
       <CustomInput
         placeholder="* Plaque d'immatriculation"
-        
         inputStyle={styles.input}
         value={plate}
-        setValue={setplate}
+        setValue={setPlate}
       />
       <TouchableOpacity
         style={styles.checkboxContainer}
@@ -147,25 +132,25 @@ const SignUpScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   logo: {
-    marginTop: 15,
-    height: 300,
-    width: 300,
-    maxHeight: 300,
-    maxWidth: 300,
+    marginTop: 30,
+    marginBottom: 30,
   },
+
   root: {
     padding: 40,
-    paddingBottom: 180,
+    paddingBottom: 130,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#171717",
+
   },
   title: {
     fontSize: 24,
     textAlign: "center",
     color: "white",
-    margin: 10,
+    margin: 5,
+    marginTop : 70,
   },
   comment: {
     marginTop: 10,
