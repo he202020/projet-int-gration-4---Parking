@@ -4,9 +4,9 @@ import {AppScreens} from "./Navigatore";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import { createStackNavigator } from "@react-navigation/stack";
-import {Button} from "react-native-paper";
 import React from "react";
-import {StyleSheet } from "react-native";
+import Reservation from "./screens/Reservation";
+
 const Stack = createStackNavigator();
 
 export const AppDisplay = () => {
@@ -20,10 +20,10 @@ export const AppDisplay = () => {
                         <Stack.Screen name={"Click 'n' Park"} component={AppScreens} options={{
                             headerShown: false
                         }}/>
+                        <Stack.Screen name={"Reservation"} component={Reservation}></Stack.Screen>
                     </>
                 ) : (
                     <>
-                    
                         <Stack.Screen name="Login" component={Login} />
                         <Stack.Screen name="Register" component={Register} />
                     </>

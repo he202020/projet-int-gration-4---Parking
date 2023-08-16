@@ -7,28 +7,11 @@ export default function HomeScreen({ route }) {
   const { parkingName, reservationDuration } = route.params || {};
   const [userName, setUserName] = useState("");
 
-  useFocusEffect(
-      React.useCallback(() => {
-        let isActive = true;
-
-        const fetchAsyncStorageUser = async () => {
-          try {
-            const user = await AsyncStorage.getItem('USER_NAME');
-
-            if (isActive) {
-              setUserName(user);
-            }
-          } catch (err) {
-            console.log(err);
-          }
-        };
-        fetchAsyncStorageUser().then(() => {
-          return () => {
-            isActive = false;
-          };
-        });
-      }, [])
-  );
+  useFocusEffect(async () => {
+    const userName = await AsyncStorage.getItem('USER_NAME');
+    console.log(userName);
+    setUserName(userName);
+  })
 
   return (
     <View style={styles.screen}>

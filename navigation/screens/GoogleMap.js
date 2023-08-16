@@ -13,12 +13,11 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
 
-const GoogleMap = () => {
+const GoogleMap = ({ navigation }) => {
   const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
   //const { selectedParking } = params || {};
-  const navigation = useNavigation();
   const [userLocation, setUserLocation] = useState(null); //stocker les coordonnées GPS de l'appareil
 
   useEffect(() => {
