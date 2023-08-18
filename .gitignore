@@ -16,4 +16,5 @@ web-build/
 # macOS
 .DS_Store
 backend/rest-api/.env
+package-lock.json
 yarn.lock
