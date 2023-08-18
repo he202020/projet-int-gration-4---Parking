@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Alert,ScrollView } from "react-native";
+import { View, StyleSheet, Text, Alert, ScrollView } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import CalendarPicker from "react-native-calendar-picker";
 
 const ReservationForm = ({ navigation, route }) => {
   const [numberplateStr, setnumberplateStr] = useState("");
   const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -35,7 +36,7 @@ const ReservationForm = ({ navigation, route }) => {
     try {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
-/*
+      /*
       // Calculate the difference between end time and current time
       const currentTime = new Date();
       const timeDifference = formattedEndTime - currentTime;
@@ -49,7 +50,7 @@ const ReservationForm = ({ navigation, route }) => {
       setRemainingTime(timeDifference);
 */
       const id = setInterval(() => {
-        setRemainingTime(prevTime => prevTime - 1000);
+        setRemainingTime((prevTime) => prevTime - 1000);
         if (remainingTime <= 0) {
           clearInterval(intervalId);
         }
@@ -58,7 +59,7 @@ const ReservationForm = ({ navigation, route }) => {
       setIntervalId(id);
 
       const response = await axios.post(
-        "https://4ab2-2a02-a03f-c09c-b00-e08e-768b-b8e8-b6f7.ngrok-free.app/reservation",
+        "https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer
@@ -121,7 +122,6 @@ const ReservationForm = ({ navigation, route }) => {
     );
 
     //navigation.navigate("HomeScreen");
-  
   };
   useEffect(() => {
     if (remainingTime <= 0) {
@@ -131,68 +131,73 @@ const ReservationForm = ({ navigation, route }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-      <Text style={styles.remainingTime}>
-          Remaining Time: {Math.floor(remainingTime / 1000)} seconds
-        </Text>
+      <View style={styles.container}>
+        <View style={styles.formContainer}>
+          <Text style={styles.remainingTime}>
+            Remaining Time: {Math.floor(remainingTime / 1000)} seconds
+          </Text>
 
-        <Text style={styles.title}>Réserve ta place de parking</Text>
-        <TextInput
-          label="Plaque d'immatriculation"
-          value={numberplateStr}
-          onChangeText={(text) => setnumberplateStr(text)}
-          style={styles.input}
-        />
-        <TextInput
-          label="Parking"
-          value={selectedParking ? selectedParking.name : ""}
-          onChangeText={(text) => setParkingId(text)}
-          keyboardType="numeric"
-          style={styles.input}
-        />
-        <TextInput
-          label="Date de réservation"
-          value={date}
-          onChangeText={(text) => setDate(text)}
-          style={styles.input}
-          placeholder="AAAA-MM-JJ"
-        />
-        <TextInput
-          label="Heure de début"
-          value={startTime}
-          onChangeText={(text) => setStartTime(text)}
-          style={styles.input}
-          placeholder="HH:mm"
-        />
-        <TextInput
-          label="Heure de fin"
-          value={endTime}
-          onChangeText={(text) => setEndTime(text)}
-          style={styles.input}
-          placeholder="HH:mm"
-        />
+          <Text style={styles.title}>Réserve ta place de parking</Text>
+          <TextInput
+            label="Plaque d'immatriculation"
+            value={numberplateStr}
+            onChangeText={(text) => setnumberplateStr(text)}
+            style={styles.input}
+          />
+          <TextInput
+            label="Parking"
+            value={selectedParking ? selectedParking.name : ""}
+            onChangeText={(text) => setParkingId(text)}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+          <CalendarPicker
+            onDateChange={(selectedDate) => setDate(selectedDate)}
+            selectedStartDate={date}
+            minDate={new Date()} // Empêche de choisir une date antérieure à la date actuelle
+            // Autres propriétés et styles selon vos besoins
+            textStyle={styles.calendarText}
+            selectedDayStyle={styles.selectedDayStyle}
+            selectedDayTextColor="#fff"
+            todayBackgroundColor="#FFA500"
+            todayTextStyle={styles.todayTextStyle}
+          />
 
-        <Button
-          mode="contained"
-          onPress={handleReservation}
-          style={styles.reservationButton}
-          contentStyle={styles.buttonContent}
-          labelStyle={styles.buttonLabel}
+          <TextInput
+            label="Heure de début"
+            value={startTime}
+            onChangeText={(text) => setStartTime(text)}
+            style={styles.input}
+            placeholder="HH:mm"
+          />
+          <TextInput
+            label="Heure de fin"
+            value={endTime}
+            onChangeText={(text) => setEndTime(text)}
+            style={styles.input}
+            placeholder="HH:mm"
+          />
+
+          <Button
+            mode="contained"
+            onPress={handleReservation}
+            style={styles.reservationButton}
+            contentStyle={styles.buttonContent}
+            labelStyle={styles.buttonLabel}
+          >
+            Réserver
+          </Button>
+        </View>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
         >
-          Réserver
-        </Button>
+          {typeof snackbarMessage === "object"
+            ? snackbarMessage.statusCode
+            : snackbarMessage}
+        </Snackbar>
       </View>
-
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)}
-      >
-        {typeof snackbarMessage === "object"
-          ? snackbarMessage.statusCode
-          : snackbarMessage}
-      </Snackbar>
-    </View>
     </ScrollView>
   );
 };
@@ -203,7 +208,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     alignItems: "center", // Center the content horizontally
     justifyContent: "center", // Center the content vertically
-    
   },
   formContainer: {
     width: "80%", // Set the desired width of the form container
@@ -240,6 +244,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 10,
     color: "black", // Change the text color to black for better visibility
+  },
+  calendarText: {
+    color: 'white', // Texte blanc
+  },
+  selectedDayStyle: {
+    backgroundColor: 'orange', // Jour sélectionné en orange
+  },
+  todayTextStyle: {
+    color: 'white', // Texte des jours actuels en blanc
   },
 });
 
