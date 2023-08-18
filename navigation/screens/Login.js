@@ -35,6 +35,7 @@ const SignInScreen = ({ navigation }) => {
   };
   const onSignUpPressed = (Register) => {
     //console.warn("onForgotPasswordPressed()");
+    navigation.navigate('Register');
   };
 
   return (

@@ -11,6 +11,7 @@ import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import MaskInput from "react-native-mask-input";
 import CalendarPicker from "react-native-calendar-picker";
 
 const ReservationForm = ({ navigation, route }) => {
@@ -144,14 +145,17 @@ const ReservationForm = ({ navigation, route }) => {
           <Text style={styles.remainingTime}>
             Remaining Time: {Math.floor(remainingTime / 1000)} seconds
           </Text>
-
-          <Text style={styles.title}>Réserve ta place de parking</Text>
-          <TextInput
-            label="Plaque d'immatriculation"
+        <Text style={styles.title}>Réserve ta place de parking</Text>
+        <MaskInput
+            placeholderFillCharacter={"X"}
+            style={styles.plaque}
+            maxLength={9}
             value={numberplateStr}
-            onChangeText={(text) => setnumberplateStr(text)}
-            style={styles.input}
-          />
+            onChangeText={(masked, unmasked) => {
+              setnumberplateStr(masked);
+            }}
+            mask={[/\d/, '-', /[A-Z]/, /[A-Z]/, /[A-Z]/, '-', /\d/, /\d/, /\d/]}
+        />
           <TextInput
             label="Parking"
             value={selectedParking ? selectedParking.name : ""}
@@ -265,7 +269,6 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 7,
     backgroundColor: "white",
-    color: "white",
     paddingHorizontal: 15,
     marginBottom: 10,
     color: "black", // Change the text color to black for better visibility
@@ -305,6 +308,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom:10,
     marginBottom:10,
+  },
+  plaque: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 7,
+    backgroundColor: "white",
+    color: "black",
+    paddingHorizontal: 15,
+    padding: 10,
+    marginBottom: 10,
   },
 });
 
