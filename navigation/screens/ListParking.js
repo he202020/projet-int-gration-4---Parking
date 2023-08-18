@@ -22,7 +22,7 @@ const ListParking = () => {
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/parking"
+        "https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app/parking"
       );
       const data = await response.json();
       setParkingData(data);
