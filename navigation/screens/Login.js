@@ -31,17 +31,14 @@ const SignInScreen = ({ navigation }) => {
   };
 
   const onForgotPasswordPressed = () => {
-    console.warn("onForgotPasswordPressed()");
   };
   const onSignUpPressed = (Register) => {
-    console.warn("onSignUpPressed()");
     navigation.navigate("Register", { Register });
   };
 
   return (
     <View style={styles.root}>
-      
-      <Text style={styles.title}>Connexion</Text>
+
       <Image source={Clickvideo} style={styles.logo} />
 
       {/* email */}

@@ -35,7 +35,7 @@ const ReservationForm = ({ navigation, route }) => {
     try {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
-
+/*
       // Calculate the difference between end time and current time
       const currentTime = new Date();
       const timeDifference = formattedEndTime - currentTime;
@@ -47,7 +47,7 @@ const ReservationForm = ({ navigation, route }) => {
       }
 
       setRemainingTime(timeDifference);
-
+*/
       const id = setInterval(() => {
         setRemainingTime(prevTime => prevTime - 1000);
         if (remainingTime <= 0) {
@@ -58,7 +58,7 @@ const ReservationForm = ({ navigation, route }) => {
       setIntervalId(id);
 
       const response = await axios.post(
-        "https://7e6c-2a02-a03f-635e-3f00-dd57-fda7-f5c0-17c5.ngrok-free.app/reservation",
+        "https://4ab2-2a02-a03f-c09c-b00-e08e-768b-b8e8-b6f7.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer

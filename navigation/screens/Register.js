@@ -1,5 +1,5 @@
 import React,{ useState } from "react";
-import { View, Text, StyleSheet,Image, TouchableOpacity, Alert } from "react-native";
+import {View, Text, StyleSheet, Image, TouchableOpacity, Alert, ScrollView} from "react-native";
 import CustomInput from "./Register/CustomInput";
 import CustomButton from "./Register/CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -55,9 +55,9 @@ const SignUpScreen = ({ navigation, route }) => {
   };
 
   return (
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.root}>
-      
-      <Text style={styles.title}>Inscription</Text>
+
       <Image source={Clickvideo} style={styles.logo} />
 
       <CustomInput
@@ -127,18 +127,22 @@ const SignUpScreen = ({ navigation, route }) => {
         type="SECONDARY"
       />
     </View>
+</ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1, // This allows the content to grow and enable scrolling
+  },
   logo: {
     marginTop: 30,
     marginBottom: 30,
   },
 
   root: {
-    padding: 40,
-    paddingBottom: 130,
+    padding: 25,
+    paddingBottom: 10,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
