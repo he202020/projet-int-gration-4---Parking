@@ -4,6 +4,7 @@ import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import MaskInput from "react-native-mask-input";
 
 const ReservationForm = ({ navigation, route }) => {
   const [numberplateStr, setnumberplateStr] = useState("");
@@ -138,11 +139,15 @@ const ReservationForm = ({ navigation, route }) => {
         </Text>
 
         <Text style={styles.title}>Réserve ta place de parking</Text>
-        <TextInput
-          label="Plaque d'immatriculation"
-          value={numberplateStr}
-          onChangeText={(text) => setnumberplateStr(text)}
-          style={styles.input}
+        <MaskInput
+            placeholderFillCharacter={"X"}
+            style={styles.plaque}
+            maxLength={9}
+            value={numberplateStr}
+            onChangeText={(masked, unmasked) => {
+              setnumberplateStr(masked);
+            }}
+            mask={[/\d/, '-', /[A-Z]/, /[A-Z]/, /[A-Z]/, '-', /\d/, /\d/, /\d/]}
         />
         <TextInput
           label="Parking"
@@ -236,10 +241,20 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 7,
     backgroundColor: "white",
-    color: "white",
     paddingHorizontal: 15,
     marginBottom: 10,
     color: "black", // Change the text color to black for better visibility
+  },
+  plaque: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 7,
+    backgroundColor: "white",
+    color: "black",
+    paddingHorizontal: 15,
+    padding: 10,
+    marginBottom: 10,
   },
 });
 

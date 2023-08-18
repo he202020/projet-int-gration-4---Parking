@@ -5646,6 +5646,11 @@ react-native-maps@^1.7.1:
   dependencies:
     "@types/geojson" "^7946.0.10"
 
+react-native-mask-input@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.npmjs.org/react-native-mask-input/-/react-native-mask-input-1.2.3.tgz"
+  integrity sha512-RWx+gc1EaBslJWR6dsvGdILJ5XvnvZuyEsgJaH9uAMukB3Z9eOlxra1E7Ovck8NSMVcYWpBB/lzojO4LwqqXgA==
+
 react-native-modal-datetime-picker@^17.0.0:
   version "17.0.0"
   resolved "https://registry.npmjs.org/react-native-modal-datetime-picker/-/react-native-modal-datetime-picker-17.0.0.tgz"
