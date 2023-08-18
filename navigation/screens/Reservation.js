@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Alert,ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-import DatePicker from 'react-native-datepicker';
-
+import CalendarPicker from "react-native-calendar-picker";
 
 const ReservationForm = ({ navigation, route }) => {
   const [numberplateStr, setnumberplateStr] = useState("");
   const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedParking, setSelectedParking] = useState(null);
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
   const [remainingTime, setRemainingTime] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
@@ -37,7 +44,7 @@ const ReservationForm = ({ navigation, route }) => {
     try {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
-/*
+      /*
       // Calculate the difference between end time and current time
       const currentTime = new Date();
       const timeDifference = formattedEndTime - currentTime;
@@ -51,7 +58,7 @@ const ReservationForm = ({ navigation, route }) => {
       setRemainingTime(timeDifference);
 */
       const id = setInterval(() => {
-        setRemainingTime(prevTime => prevTime - 1000);
+        setRemainingTime((prevTime) => prevTime - 1000);
         if (remainingTime <= 0) {
           clearInterval(intervalId);
         }
@@ -123,7 +130,6 @@ const ReservationForm = ({ navigation, route }) => {
     );
 
     //navigation.navigate("HomeScreen");
-  
   };
   useEffect(() => {
     if (remainingTime <= 0) {
@@ -133,68 +139,87 @@ const ReservationForm = ({ navigation, route }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-      <Text style={styles.remainingTime}>
-          Remaining Time: {Math.floor(remainingTime / 1000)} seconds
-        </Text>
+      <View style={styles.container}>
+        <View style={styles.formContainer}>
+          <Text style={styles.remainingTime}>
+            Remaining Time: {Math.floor(remainingTime / 1000)} seconds
+          </Text>
 
-        <Text style={styles.title}>Réserve ta place de parking</Text>
-        <TextInput
-          label="Plaque d'immatriculation"
-          value={numberplateStr}
-          onChangeText={(text) => setnumberplateStr(text)}
-          style={styles.input}
-        />
-        <TextInput
-          label="Parking"
-          value={selectedParking ? selectedParking.name : ""}
-          onChangeText={(text) => setParkingId(text)}
-          keyboardType="numeric"
-          style={styles.input}
-        />
-        <TextInput
-          label="Date de réservation"
-          value={date}
-          onChangeText={(text) => setDate(text)}
-          style={styles.input}
-          placeholder="AAAA-MM-JJ"
-        />
-        <TextInput
-          label="Heure de début"
-          value={startTime}
-          onChangeText={(text) => setStartTime(text)}
-          style={styles.input}
-          placeholder="HH:mm"
-        />
-        <TextInput
-          label="Heure de fin"
-          value={endTime}
-          onChangeText={(text) => setEndTime(text)}
-          style={styles.input}
-          placeholder="HH:mm"
-        />
+          <Text style={styles.title}>Réserve ta place de parking</Text>
+          <TextInput
+            label="Plaque d'immatriculation"
+            value={numberplateStr}
+            onChangeText={(text) => setnumberplateStr(text)}
+            style={styles.input}
+          />
+          <TextInput
+            label="Parking"
+            value={selectedParking ? selectedParking.name : ""}
+            onChangeText={(text) => setParkingId(text)}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+          <TouchableOpacity
+            style={styles.datePickerButton}
+            onPress={() => setDatePickerVisible(true)}
+          >
+            <Text style={styles.datePickerButtonText}>
+              {date ? date.format("YYYY-MM-DD") : "Sélectionner une date"}
+            </Text>
+          </TouchableOpacity>
 
-        <Button
-          mode="contained"
-          onPress={handleReservation}
-          style={styles.reservationButton}
-          contentStyle={styles.buttonContent}
-          labelStyle={styles.buttonLabel}
+          {isDatePickerVisible && (
+            <CalendarPicker
+              onDateChange={(selectedDate) => {
+                setDate(selectedDate);
+                setDatePickerVisible(false); // Ferme le calendrier après la sélection
+              }}
+              selectedStartDate={date}
+              minDate={new Date()} // Empêche de choisir une date antérieure à la date actuelle
+              // Autres propriétés et styles selon vos besoins
+              textStyle={styles.calendarText}
+              selectedDayStyle={styles.selectedDayStyle}
+              selectedDayTextColor="#fff"
+              todayBackgroundColor="#FFA500"
+              todayTextStyle={styles.todayTextStyle}
+            />
+          )}
+
+          <TextInput
+            label="Heure de début"
+            value={startTime}
+            onChangeText={(text) => setStartTime(text)}
+            style={styles.input}
+            placeholder="HH:mm"
+          />
+          <TextInput
+            label="Heure de fin"
+            value={endTime}
+            onChangeText={(text) => setEndTime(text)}
+            style={styles.input}
+            placeholder="HH:mm"
+          />
+
+          <Button
+            mode="contained"
+            onPress={handleReservation}
+            style={styles.reservationButton}
+            contentStyle={styles.buttonContent}
+            labelStyle={styles.buttonLabel}
+          >
+            Réserver
+          </Button>
+        </View>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
         >
-          Réserver
-        </Button>
+          {typeof snackbarMessage === "object"
+            ? snackbarMessage.statusCode
+            : snackbarMessage}
+        </Snackbar>
       </View>
-
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)}
-      >
-        {typeof snackbarMessage === "object"
-          ? snackbarMessage.statusCode
-          : snackbarMessage}
-      </Snackbar>
-    </View>
     </ScrollView>
   );
 };
@@ -205,11 +230,13 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     alignItems: "center", // Center the content horizontally
     justifyContent: "center", // Center the content vertically
-    
   },
   formContainer: {
-    width: "80%", // Set the desired width of the form container
+    width: "90%", // Set the desired width of the form container
     marginTop: -90, // Adjust the negative marginTop value to move the form higher
+  
+    alignSelf: "flex-start", // Align the form elements to the left
+    marginLeft: 20, // Add a small left margin for better alignment
   },
   title: {
     fontSize: 24,
@@ -242,6 +269,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 10,
     color: "black", // Change the text color to black for better visibility
+    width: "100%", 
+    
+  },
+
+  calendarText: {
+    color: "white", // Texte blanc
+    
+  },
+  selectedDayStyle: {
+    backgroundColor: "orange", // Jour sélectionné en orange
+  },
+  todayTextStyle: {
+    color: "white", // Texte des jours actuels en blanc
+
+  },
+  datePickerButton: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 7,
+    backgroundColor: "white",
+    color: "white",
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    color: "black", // Change the text color to black for better visibility
+    width: "100%", 
+    paddingTop:20,
+    width: '100%', // Occupe la même largeur que les autres champs
+    flexDirection: 'row', // Aligne le texte à gauche
+    justifyContent: 'flex-start', // Aligne le texte à gauche
+  },
+  datePickerButtonText: {
+    color: 'black',
+    textAlign: 'center',
+    paddingBottom:10,
+    marginBottom:10,
   },
 });
 
