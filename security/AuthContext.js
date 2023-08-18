@@ -3,7 +3,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 const TOKEN_KEY = 'my_jwt';
-const API_URL = 'https://4ab2-2a02-a03f-c09c-b00-e08e-768b-b8e8-b6f7.ngrok-free.app';
+const API_URL = 'https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app';
 const AuthContext = createContext({});
 
 export const useAuth = () => {

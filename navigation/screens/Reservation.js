@@ -4,6 +4,8 @@ import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import DatePicker from 'react-native-datepicker';
+
 
 const ReservationForm = ({ navigation, route }) => {
   const [numberplateStr, setnumberplateStr] = useState("");
@@ -58,7 +60,7 @@ const ReservationForm = ({ navigation, route }) => {
       setIntervalId(id);
 
       const response = await axios.post(
-        "https://4ab2-2a02-a03f-c09c-b00-e08e-768b-b8e8-b6f7.ngrok-free.app/reservation",
+        "https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer
