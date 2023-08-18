@@ -17,6 +17,4 @@ web-build/
 .DS_Store
 backend/rest-api/.env
 package-lock.json
-package.json
-.gitignore
 yarn.lock
