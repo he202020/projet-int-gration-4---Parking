@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Alert, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
@@ -15,6 +22,7 @@ const ReservationForm = ({ navigation, route }) => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedParking, setSelectedParking] = useState(null);
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
   const [remainingTime, setRemainingTime] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
@@ -151,17 +159,31 @@ const ReservationForm = ({ navigation, route }) => {
             keyboardType="numeric"
             style={styles.input}
           />
-          <CalendarPicker
-            onDateChange={(selectedDate) => setDate(selectedDate)}
-            selectedStartDate={date}
-            minDate={new Date()} // Empêche de choisir une date antérieure à la date actuelle
-            // Autres propriétés et styles selon vos besoins
-            textStyle={styles.calendarText}
-            selectedDayStyle={styles.selectedDayStyle}
-            selectedDayTextColor="#fff"
-            todayBackgroundColor="#FFA500"
-            todayTextStyle={styles.todayTextStyle}
-          />
+          <TouchableOpacity
+            style={styles.datePickerButton}
+            onPress={() => setDatePickerVisible(true)}
+          >
+            <Text style={styles.datePickerButtonText}>
+              {date ? date.format("YYYY-MM-DD") : "Sélectionner une date"}
+            </Text>
+          </TouchableOpacity>
+
+          {isDatePickerVisible && (
+            <CalendarPicker
+              onDateChange={(selectedDate) => {
+                setDate(selectedDate);
+                setDatePickerVisible(false); // Ferme le calendrier après la sélection
+              }}
+              selectedStartDate={date}
+              minDate={new Date()} // Empêche de choisir une date antérieure à la date actuelle
+              // Autres propriétés et styles selon vos besoins
+              textStyle={styles.calendarText}
+              selectedDayStyle={styles.selectedDayStyle}
+              selectedDayTextColor="#fff"
+              todayBackgroundColor="#FFA500"
+              todayTextStyle={styles.todayTextStyle}
+            />
+          )}
 
           <TextInput
             label="Heure de début"
@@ -210,8 +232,11 @@ const styles = StyleSheet.create({
     justifyContent: "center", // Center the content vertically
   },
   formContainer: {
-    width: "80%", // Set the desired width of the form container
+    width: "90%", // Set the desired width of the form container
     marginTop: -90, // Adjust the negative marginTop value to move the form higher
+  
+    alignSelf: "flex-start", // Align the form elements to the left
+    marginLeft: 20, // Add a small left margin for better alignment
   },
   title: {
     fontSize: 24,
@@ -244,15 +269,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 10,
     color: "black", // Change the text color to black for better visibility
+    width: "100%", 
+    
   },
+
   calendarText: {
-    color: 'white', // Texte blanc
+    color: "white", // Texte blanc
+    
   },
   selectedDayStyle: {
-    backgroundColor: 'orange', // Jour sélectionné en orange
+    backgroundColor: "orange", // Jour sélectionné en orange
   },
   todayTextStyle: {
-    color: 'white', // Texte des jours actuels en blanc
+    color: "white", // Texte des jours actuels en blanc
+
+  },
+  datePickerButton: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 7,
+    backgroundColor: "white",
+    color: "white",
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    color: "black", // Change the text color to black for better visibility
+    width: "100%", 
+    paddingTop:20,
+    width: '100%', // Occupe la même largeur que les autres champs
+    flexDirection: 'row', // Aligne le texte à gauche
+    justifyContent: 'flex-start', // Aligne le texte à gauche
+  },
+  datePickerButtonText: {
+    color: 'black',
+    textAlign: 'center',
+    paddingBottom:10,
+    marginBottom:10,
   },
 });
 
