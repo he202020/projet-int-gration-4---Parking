@@ -55,77 +55,77 @@ const SignUpScreen = ({ navigation, route }) => {
   };
 
   return (
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-    <View style={styles.root}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.root}>
+          
+          <Image source={Clickvideo} style={styles.logo} />
 
-      <Image source={Clickvideo} style={styles.logo} />
+          <CustomInput
+            placeholder="* Prénom"
+            value={firstName}
+            setValue={setFirstName}
+          />
+          <CustomInput
+            placeholder="* Nom"
+            value={lastName}
+            setValue={setLastName}
+          />
+          <CustomInput
+            placeholder="* Adresse mail"
+            value={email}
+            setValue={setEmail}
+          />
 
-      <CustomInput
-        placeholder="* Prénom"
-        value={firstName}
-        setValue={setFirstName}
-      />
-      <CustomInput
-        placeholder="* Nom"
-        value={lastName}
-        setValue={setLastName}
-      />
-      <CustomInput
-        placeholder="* Adresse mail"
-        value={email}
-        setValue={setEmail}
-      />
+          <CustomInput
+            placeholder="* Société"
+            value={company}
+            setValue={setCompany}
+          />
+          {/* <Text style={styles.comment}>Optionnel</Text> */}
+          <CustomInput
+            placeholder="* Mot de passe"
+            secureTextEntry={true}
+            inputStyle={styles.input}
+            value={hash}
+            setValue={setPassword}
+          />
+          <CustomInput
+            placeholder="* Plaque d'immatriculation"
+            inputStyle={styles.input}
+            value={plate}
+            setValue={setPlate}
+          />
+          <TouchableOpacity
+            style={styles.checkboxContainer}
+            onPress={toggleGdprCheckbox}
+          >
+            <View style={styles.checkbox}>
+              {gdprAccepted ? <View style={styles.checkboxInner} /> : null}
+            </View>
+            <Text style={styles.checkboxLabel}>
+              En créant un compte, vous acceptez les{" "}
+              <Text style={styles.hyperlink} onPress={onTermsOfUsePressed}>
+                Termes et Conditions d'utilisation{" "}
+              </Text>
+              ainsi que la{" "}
+              <Text style={styles.hyperlink} onPress={onPrivacyPressed}>
+                Politique de Confidentialité{" "}
+              </Text>
+              de l'entreprise
+            </Text>
+          </TouchableOpacity>
+          <CustomButton
+            text="S'inscrire"
+            onPress={onSignUpPressed}
+            type="PRIMARY"
+          />
 
-      <CustomInput
-        placeholder="* Société"
-        value={company}
-        setValue={setCompany}
-      />
-      {/* <Text style={styles.comment}>Optionnel</Text> */}
-      <CustomInput
-        placeholder="* Mot de passe"
-        secureTextEntry={true}
-        inputStyle={styles.input}
-        value={hash}
-        setValue={setPassword}
-      />
-      <CustomInput
-        placeholder="* Plaque d'immatriculation"
-        inputStyle={styles.input}
-        value={plate}
-        setValue={setPlate}
-      />
-      <TouchableOpacity
-        style={styles.checkboxContainer}
-        onPress={toggleGdprCheckbox}
-      >
-        <View style={styles.checkbox}>
-          {gdprAccepted ? <View style={styles.checkboxInner} /> : null}
-        </View>
-        <Text style={styles.checkboxLabel}>
-          En créant un compte, vous acceptez les{" "}
-          <Text style={styles.hyperlink} onPress={onTermsOfUsePressed}>
-            Termes et Conditions d'utilisation{" "}
-          </Text>
-          ainsi que la{" "}
-          <Text style={styles.hyperlink} onPress={onPrivacyPressed}>
-            Politique de Confidentialité{" "}
-          </Text>
-          de l'entreprise
-        </Text>
-      </TouchableOpacity>
-      <CustomButton
-        text="S'inscrire"
-        onPress={onSignUpPressed}
-        type="PRIMARY"
-      />
-
-      <CustomButton
-        style={styles.already}
-        text="Déjà un compte ?"
-        onPress={handleLogin}
-        type="SECONDARY"
-      />
+          <CustomButton
+            style={styles.already}
+            text="Déjà un compte ?"
+            onPress={handleLogin}
+            type="SECONDARY"
+          />
     </View>
 </ScrollView>
   );
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
 
   root: {
     padding: 25,
+    paddingTop:20,
     paddingBottom: 10,
     flex: 1,
     justifyContent: "center",

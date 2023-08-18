@@ -5,6 +5,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   Image,
+  ScrollView,
   Video,
 } from "react-native";
 import CustomInput from "./Register/CustomInput";
@@ -33,53 +34,54 @@ const SignInScreen = ({ navigation }) => {
   const onForgotPasswordPressed = () => {
   };
   const onSignUpPressed = (Register) => {
-    navigation.navigate("Register", { Register });
+    //console.warn("onForgotPasswordPressed()");
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.root}>
+        <Image source={Clickvideo} style={styles.logo} />
 
-      <Image source={Clickvideo} style={styles.logo} />
+        {/* email */}
+        <CustomInput placeholder="Email" value={email} setValue={setEmail} />
 
-      {/* email */}
-      <CustomInput placeholder="Email" value={email} setValue={setEmail} />
+        {/* PASSWORD */}
+        <CustomInput
+          placeholder="Mot de passe"
+          value={hash}
+          setValue={setPassword}
+          secureTextEntry={true}
+        />
 
-      {/* PASSWORD */}
-      <CustomInput
-        placeholder="Mot de passe"
-        value={hash}
-        setValue={setPassword}
-        secureTextEntry={true}
-      />
+        {/* Sign In button */}
+        <CustomButton
+          text="S'identifier"
+          onPress={onSignInPressed}
+          type="PRIMARY"
+        />
 
-      {/* Sign In button */}
-      <CustomButton
-        text="S'identifier"
-        onPress={onSignInPressed}
-        type="PRIMARY"
-      />
+        {/* FORGOT PASSWORD BUTTON */}
+        <CustomButton
+          text="Mot de passe oublié?"
+          onPress={onForgotPasswordPressed}
+          type="TERTIARY"
+        />
 
-      {/* FORGOT PASSWORD BUTTON */}
-      <CustomButton
-        text="Mot de passe oublié?"
-        onPress={onForgotPasswordPressed}
-        type="TERTIARY"
-      />
-
-      {/* CREATE AN ACCOUNT */}
-      <CustomButton
-        text="Pas encore de compte ?"
-        onPress={onSignUpPressed}
-        type="SECONDARY"
-      />
-    </View>
+        {/* CREATE AN ACCOUNT */}
+        <CustomButton
+          text="Pas encore de compte ?"
+          onPress={onSignUpPressed}
+          type="SECONDARY"
+        />
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   logo: {
     marginTop: 50,
-    marginBottom:30,
+    marginBottom: 30,
   },
   root: {
     alignItems: "center",
@@ -88,16 +90,17 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     textAlign: "center",
     backgroundColor: "black",
-    
+  },
+  scrollContainer: {
+    flexGrow: 1, // This allows the content to grow and enable scrolling
   },
   title: {
     fontSize: 24,
     textAlign: "center",
     color: "white",
     margin: 10,
-    marginBottom:-20,
+    marginBottom: -20,
   },
-
 });
 
 export default SignInScreen;

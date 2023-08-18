@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import { View, StyleSheet, Text, Alert,ScrollView } from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
@@ -130,6 +130,7 @@ const ReservationForm = ({ navigation, route }) => {
   }, [remainingTime, intervalId]);
 
   return (
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
       <View style={styles.formContainer}>
       <Text style={styles.remainingTime}>
@@ -192,6 +193,7 @@ const ReservationForm = ({ navigation, route }) => {
           : snackbarMessage}
       </Snackbar>
     </View>
+    </ScrollView>
   );
 };
 
@@ -201,10 +203,11 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     alignItems: "center", // Center the content horizontally
     justifyContent: "center", // Center the content vertically
+    
   },
   formContainer: {
     width: "80%", // Set the desired width of the form container
-    marginTop: -95, // Adjust the negative marginTop value to move the form higher
+    marginTop: -90, // Adjust the negative marginTop value to move the form higher
   },
   title: {
     fontSize: 24,
@@ -212,7 +215,6 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 40,
   },
-
   reservationButton: {
     backgroundColor: "orange",
     marginTop: 20,
@@ -220,6 +222,9 @@ const styles = StyleSheet.create({
   buttonContent: {
     paddingHorizontal: 8,
     paddingVertical: 6,
+  },
+  scrollContainer: {
+    flexGrow: 1, // This allows the content to grow and enable scrolling
   },
   buttonLabel: {
     color: "white",
