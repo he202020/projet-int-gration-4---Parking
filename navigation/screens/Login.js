@@ -22,20 +22,28 @@ const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [hash, setPassword] = useState("");
   const { onLogin } = useAuth();
-
+  // SignInScreen.js
   const onSignInPressed = async () => {
     const result = await onLogin(email, hash);
-    await AsyncStorage.setItem("USER_NAME", result.data.user.stringify);
     if (result && result.error) {
       alert("Un problème de login");
+    } else if (result && result.data && result.data.user) {
+      const { first_name } = result.data.user;
+      if (first_name) {
+        await AsyncStorage.setItem("USER_NAME", first_name);
+        navigation.navigate("HomeScreen", { userName: first_name }); // Pass userName as a route param
+      } else {
+        alert(
+          "Le nom d'utilisateur est manquant dans les données de l'utilisateur."
+        );
+      }
     }
   };
 
-  const onForgotPasswordPressed = () => {
-  };
+  const onForgotPasswordPressed = () => {};
   const onSignUpPressed = (Register) => {
     //console.warn("onForgotPasswordPressed()");
-    navigation.navigate('Register');
+    navigation.navigate("Register");
   };
 
   return (

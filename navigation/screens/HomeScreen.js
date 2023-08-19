@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
@@ -6,24 +6,24 @@ import { useFocusEffect } from "@react-navigation/native";
 export default function HomeScreen({ route }) {
   const { parkingName, reservationDuration } = route.params || {};
   const [userName, setUserName] = useState("");
+  const { userName: routeUserName } = route.params || {};
 
 
+   useFocusEffect(
+    React.useCallback(() => {
+      async function fetchUserName() {
+        const storedUserName = await AsyncStorage.getItem('USER_NAME');
+        setUserName(storedUserName || routeUserName || "");
+      }
 
-  useFocusEffect(
-      React.useCallback(() => {
-        const aFun = async () => {
-          const userName = await AsyncStorage.getItem('USER_NAME');
-          console.log(userName);
-          setUserName(userName);
-        }
-        aFun();
-      }, [])
+      fetchUserName();
+    }, [routeUserName])
   );
   const aFun = async () => {
-    const userName = await AsyncStorage.getItem('USER_NAME');
+    const userName = await AsyncStorage.getItem("USER_NAME");
     console.log(userName);
     setUserName(userName);
-  }
+  };
 
   return (
     <View style={styles.screen}>
@@ -68,4 +68,3 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
-
