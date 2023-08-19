@@ -8,13 +8,14 @@ import {
   Platform,
 } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
-
-const GoogleMap = ({ navigation }) => {
+const GoogleMap = ({ navigation, route }) => {
   const [parkingData, setParkingData] = useState([]);
+  const { selectedParkingId } = route.params || {};
   const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
   //const { selectedParking } = params || {};
@@ -23,6 +24,7 @@ const GoogleMap = ({ navigation }) => {
   useEffect(() => {
     fetchParkingData();
     getUserLocation();
+    setSelectedParking(selectedParkingId);
   }, []);
 
   const fetchParkingData = async () => {
@@ -36,6 +38,11 @@ const GoogleMap = ({ navigation }) => {
       console.error("Error fetching parking parkingData:", error);
     }
   };
+  useEffect(() => {
+    fetchParkingData();
+    getUserLocation();
+    setSelectedParking(selectedParkingId);
+  }, []);
 
   // Obtenir l'emplacement actuel de l'utilisateur à l'aide du module Location d'Expo
   const getUserLocation = async () => {
@@ -134,6 +141,7 @@ const GoogleMap = ({ navigation }) => {
 
         {showMarkers &&
           parkingData.map((parking) => {
+            const isSelected = parking.id === selectedParking; // Check if this marker is selected
             const distanceToUser = userLocation
               ? calculateDistance(
                   userLocation.latitude,
@@ -142,7 +150,6 @@ const GoogleMap = ({ navigation }) => {
                   parking.longitude
                 )
               : null;
-
             return (
               <Marker
                 key={parking.id}
@@ -151,6 +158,7 @@ const GoogleMap = ({ navigation }) => {
                   longitude: parking.longitude,
                 }}
                 title={parking.name}
+                pinColor={isSelected ? "green" : "red"} // Change pin color based on selection
               >
                 {renderCallout(parking, distanceToUser)}
               </Marker>

@@ -7,17 +7,15 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import ngrok from "./ngrok";
 
 const ListParking = () => {
   const navigation = useNavigation();
   const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
+  const [searchInput, setSearchInput] = useState("")
 
-  useEffect(() => {
-    fetchParkingData();
-  }, []);
 
   const fetchParkingData = async () => {
     try {
@@ -30,6 +28,12 @@ const ListParking = () => {
       console.error("Error fetching parking data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchParkingData();
+  }, []);
+
+
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -53,8 +57,17 @@ const ListParking = () => {
 
   const GoParking = (parking) => {
     setSelectedParking(parking);
-    navigation.navigate("GoogleMap", { selectedParking: parking });
+    navigation.navigate("GoogleMap", { 
+      selectedParking: parking,  
+      selectedParkingId: parking.id, 
+    });
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setSearchInput(""); // Reset search input
+      fetchParkingData(); // Fetch parking data when screen gains focus
+    }, []));
 
   return (
     <View style={styles.container}>
