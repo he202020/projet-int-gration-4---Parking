@@ -29,7 +29,7 @@ const SignUpScreen = ({ navigation, route }) => {
       const { first_name } = result.data.user;
       if (first_name) {
         await AsyncStorage.setItem("USER_NAME", first_name);
-        navigation.navigate("HomeScreen", { userName: first_name }); // Pass userName as a route param
+        navigation.navigate("Acceuil", { userName: first_name }); // Pass userName as a route param
       } else {
         alert(
           "Le nom d'utilisateur est manquant dans les données de l'utilisateur."
@@ -54,7 +54,7 @@ const SignUpScreen = ({ navigation, route }) => {
   };
 
   const handleLogin = (Login) => {
-    navigation.navigate("Login");
+    navigation.navigate("Connexion");
   };
   //Hyperlinks
   const onTermsOfUsePressed = () => {

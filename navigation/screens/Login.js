@@ -31,7 +31,7 @@ const SignInScreen = ({ navigation }) => {
       const { first_name } = result.data.user;
       if (first_name) {
         await AsyncStorage.setItem("USER_NAME", first_name);
-        navigation.navigate("HomeScreen", { userName: first_name }); // Pass userName as a route param
+        navigation.navigate("Acceuil", { userName: first_name }); // Pass userName as a route param
       } else {
         alert(
           "Le nom d'utilisateur est manquant dans les données de l'utilisateur."
@@ -40,10 +40,11 @@ const SignInScreen = ({ navigation }) => {
     }
   };
 
-  const onForgotPasswordPressed = () => {};
+  
+
   const onSignUpPressed = (Register) => {
     //console.warn("onForgotPasswordPressed()");
-    navigation.navigate("Register");
+    navigation.navigate("Inscription");
   };
 
   return (
@@ -69,12 +70,7 @@ const SignInScreen = ({ navigation }) => {
           type="PRIMARY"
         />
 
-        {/* FORGOT PASSWORD BUTTON */}
-        <CustomButton
-          text="Mot de passe oublié?"
-          onPress={onForgotPasswordPressed}
-          type="TERTIARY"
-        />
+
 
         {/* CREATE AN ACCOUNT */}
         <CustomButton
@@ -95,8 +91,8 @@ const styles = StyleSheet.create({
   root: {
     alignItems: "center",
     padding: 40,
-    paddingBottom: 250,
-    paddingTop: 60,
+    paddingBottom: 290,
+    paddingTop: 70,
     textAlign: "center",
     backgroundColor: "black",
   },

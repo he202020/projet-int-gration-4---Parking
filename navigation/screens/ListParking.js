@@ -57,7 +57,7 @@ const ListParking = () => {
 
   const GoParking = (parking) => {
     setSelectedParking(parking);
-    navigation.navigate("GoogleMap", { 
+    navigation.navigate("Map", { 
       selectedParking: parking,  
       selectedParkingId: parking.id, 
     });
