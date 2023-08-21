@@ -61,7 +61,7 @@ export default function HomeScreen({ route }) {
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.header}>Bonjour, {idperson}!</Text>
+      <Text style={styles.header}>Bonjour, {userName}!</Text>
       <Text style={styles.subHeader}>Click 'n' Park!</Text>
       <TextInput
         placeholder="Entrez une nouvelle plaque"
