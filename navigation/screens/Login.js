@@ -32,12 +32,11 @@ const SignInScreen = ({ navigation }) => {
       alert("Un problème de login");
     } else if (result && result.data && result.data.user) {
 
-      const {id, first_name, str} = result.data.user;
+      const {id, first_name, numberplate } = result.data.user;
 
       if (first_name) {
         await AsyncStorage.setItem("USER_NAME", first_name);
-        navigation.navigate("Acceuil", { userName: first_name,  idperson: id, numberplate : str }); // Pass userName and ID as a route param
-        console.log(first_name,id,str);
+        navigation.navigate("Acceuil", { userName: first_name,  idperson: id, numberplate : numberplate }); // Pass userName and ID as a route param
       } else {
         alert(
           "Le nom d'utilisateur est manquant dans les données de l'utilisateur."

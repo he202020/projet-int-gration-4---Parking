@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import DropDownPicker from 'react-native-dropdown-picker';
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,8 +21,9 @@ export default function HomeScreen({ route }) {
   const { userName: routeUserName } = route.params || {};
 
   const [newPlate, setNewPlate] = useState("");
-  const [data, setData] = useState([]);
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [items, setItems] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -37,13 +39,15 @@ export default function HomeScreen({ route }) {
 
   useEffect(() => {
     if (Array.isArray(numberplate)) {
-      const formattedData = numberplate.map((plate) => ({
-        value: plate.str,
-      }));
-      setData(formattedData);
+      const data = numberplate.map((obj) => {
+        return {
+          label: obj.str,
+          value: obj.str
+        }
+      })
+      setItems(data);
     }
   }, [numberplate]);
-  console.log("number plate " + numberplate);
 
   const addPlate = async () => {
     try {
@@ -87,30 +91,13 @@ export default function HomeScreen({ route }) {
       <TouchableOpacity onPress={addPlate}>
         <Text style={styles.buttonText}>Ajouter la plaque</Text>
       </TouchableOpacity>
-      <Dropdown
-        style={styles.dropdown}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
-        data={data}
-        search
-        maxHeight={300}
-        valueField="value"
-        placeholder="Select item"
-        searchPlaceholder="Search..."
-        value={value}
-        onChange={(item) => {
-          setValue(item.value);
-        }}
-        renderLeftIcon={() => (
-          <AntDesign
-            style={styles.icon}
-            color="green"
-            name="Safety"
-            size={20}
-          />
-        )}
+      <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
       />
       {parkingName && (
         <Text style={styles.infoText}>
