@@ -23,9 +23,18 @@ const SignUpScreen = ({ navigation, route }) => {
 
   const login = async () => {
     const result = await onLogin(email, hash);
-    await AsyncStorage.setItem('USER_NAME', result.data.user.stringify)
     if (result && result.error) {
       alert("Un problème de login");
+    } else if (result && result.data && result.data.user) {
+      const { first_name } = result.data.user;
+      if (first_name) {
+        await AsyncStorage.setItem("USER_NAME", first_name);
+        navigation.navigate("Acceuil", { userName: first_name }); // Pass userName as a route param
+      } else {
+        alert(
+          "Le nom d'utilisateur est manquant dans les données de l'utilisateur."
+        );
+      }
     }
   };
 
@@ -45,7 +54,7 @@ const SignUpScreen = ({ navigation, route }) => {
   };
 
   const handleLogin = (Login) => {
-    navigation.navigate("Login");
+    navigation.navigate("Connexion");
   };
   //Hyperlinks
   const onTermsOfUsePressed = () => {

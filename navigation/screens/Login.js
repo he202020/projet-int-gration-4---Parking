@@ -22,20 +22,35 @@ const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [hash, setPassword] = useState("");
   const { onLogin } = useAuth();
+  
 
   const onSignInPressed = async () => {
+
     const result = await onLogin(email, hash);
-    await AsyncStorage.setItem("USER_NAME", result.data.user.stringify);
+
     if (result && result.error) {
       alert("Un problème de login");
+    } else if (result && result.data && result.data.user) {
+
+      const {id, first_name, numberplate} = result.data.user;
+
+      if (first_name) {
+        await AsyncStorage.setItem("USER_NAME", first_name);
+        navigation.navigate("Acceuil", { userName: first_name,  idperson: id, numberplate : numberplate }); // Pass userName and ID as a route param
+        console.log(first_name,id)
+      } else {
+        alert(
+          "Le nom d'utilisateur est manquant dans les données de l'utilisateur."
+        );
+      }
     }
   };
 
-  const onForgotPasswordPressed = () => {
-  };
+  
+
   const onSignUpPressed = (Register) => {
     //console.warn("onForgotPasswordPressed()");
-    navigation.navigate('Register');
+    navigation.navigate("Inscription");
   };
 
   return (
@@ -61,12 +76,7 @@ const SignInScreen = ({ navigation }) => {
           type="PRIMARY"
         />
 
-        {/* FORGOT PASSWORD BUTTON */}
-        <CustomButton
-          text="Mot de passe oublié?"
-          onPress={onForgotPasswordPressed}
-          type="TERTIARY"
-        />
+
 
         {/* CREATE AN ACCOUNT */}
         <CustomButton
@@ -87,8 +97,8 @@ const styles = StyleSheet.create({
   root: {
     alignItems: "center",
     padding: 40,
-    paddingBottom: 250,
-    paddingTop: 60,
+    paddingBottom: 290,
+    paddingTop: 70,
     textAlign: "center",
     backgroundColor: "black",
   },
