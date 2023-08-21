@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,18 +6,22 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 //import { addNumberPlate } from '../../backend/rest-api/services/requests/NumberPlate';
 
 export default function HomeScreen({ route }) {
-  const { parkingName, reservationDuration,idperson, numberplate} = route.params || {};
+  const { parkingName, reservationDuration, idperson, numberplate } =
+    route.params || {};
   const [userName, setUserName] = useState("");
   const { userName: routeUserName } = route.params || {};
 
-
   const [newPlate, setNewPlate] = useState("");
+  const [data, setData] = useState([]);
+  const [value, setValue] = useState(null);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -25,28 +29,38 @@ export default function HomeScreen({ route }) {
         const storedUserName = await AsyncStorage.getItem("USER_NAME");
 
         setUserName(storedUserName || routeUserName || "");
-
       }
 
       fetchUserName();
     }, [routeUserName])
   );
 
+  useEffect(() => {
+    if (Array.isArray(numberplate)) {
+      const formattedData = numberplate.map((plate) => ({
+        value: plate.str,
+      }));
+      setData(formattedData);
+    }
+  }, [numberplate]);
+  console.log("number plate " + numberplate);
 
   const addPlate = async () => {
     try {
-      const response = await fetch("https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app/numberPlate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          str: newPlate, 
-          person_id:parseInt(idperson)
-         }),
-        
-      });
-      console.log(newPlate,idperson);
+      const response = await fetch(
+        "https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app/numberPlate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            str: newPlate,
+            person_id: parseInt(idperson),
+          }),
+        }
+      );
+      console.log(newPlate, idperson);
 
       if (response.status === 201) {
         console.log("Plaque ajoutée avec succès");
@@ -73,7 +87,31 @@ export default function HomeScreen({ route }) {
       <TouchableOpacity onPress={addPlate}>
         <Text style={styles.buttonText}>Ajouter la plaque</Text>
       </TouchableOpacity>
-
+      <Dropdown
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        data={data}
+        search
+        maxHeight={300}
+        valueField="value"
+        placeholder="Select item"
+        searchPlaceholder="Search..."
+        value={value}
+        onChange={(item) => {
+          setValue(item.value);
+        }}
+        renderLeftIcon={() => (
+          <AntDesign
+            style={styles.icon}
+            color="green"
+            name="Safety"
+            size={20}
+          />
+        )}
+      />
       {parkingName && (
         <Text style={styles.infoText}>
           Vous avez réservé le parking : {parkingName}
@@ -111,18 +149,39 @@ const styles = StyleSheet.create({
     color: "#eedddd",
     fontSize: 16,
     marginBottom: 8,
-    
-    
   },
   input: {
-    backgroundColor:"white",
+    backgroundColor: "white",
     width: "80%",
     height: 40,
     borderColor: "white",
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
-    borderRadius:15,
+    borderRadius: 15,
   },
   buttonText: { color: "white", fontWeight: "bold" },
+  dropdown: {
+    margin: 16,
+    height: 50,
+    borderBottomColor: "gray",
+    borderBottomWidth: 0.5,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 200,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
 });

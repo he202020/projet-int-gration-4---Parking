@@ -97,9 +97,13 @@ exports.login = async function login(req, res) {
       select: {
         first_name: true,
         id :true,
-        numberplate : true
-      }
-    })
+        numberplate: {
+          select: {
+            str: true,
+          },
+        }
+      }}
+    )
 
     res.status(200).json({ token: token, user: person });
   } catch (err) {
