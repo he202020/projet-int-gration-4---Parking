@@ -12,7 +12,7 @@ import { useFocusEffect } from "@react-navigation/native";
 //import { addNumberPlate } from '../../backend/rest-api/services/requests/NumberPlate';
 
 export default function HomeScreen({ route }) {
-  const { parkingName, reservationDuration,idperson} = route.params || {};
+  const { parkingName, reservationDuration,idperson, numberplate} = route.params || {};
   const [userName, setUserName] = useState("");
   const { userName: routeUserName } = route.params || {};
 

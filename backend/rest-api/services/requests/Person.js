@@ -96,7 +96,8 @@ exports.login = async function login(req, res) {
       },
       select: {
         first_name: true,
-        id :true
+        id :true,
+        numberplate : true
       }
     })
 
