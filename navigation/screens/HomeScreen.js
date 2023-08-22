@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -68,7 +69,11 @@ export default function HomeScreen({ route }) {
 
       if (response.status === 201) {
         console.log("Plaque ajoutée avec succès");
-        // Effectuez des actions supplémentaires ici si nécessaire
+         // Update the items state with the new plate
+        const newItem = { label: newPlate, value: newPlate };
+        setItems((prevItems) => [...prevItems, newItem]); // Add the new plate to the existing items
+        setValue(newPlate); // Select the new plate in the dropdown
+        
       } else {
         console.error("Erreur lors de l'ajout de la plaque");
       }
@@ -82,6 +87,15 @@ export default function HomeScreen({ route }) {
       <Text style={styles.header}>Bonjour, {userName}!</Text>
       <Text style={styles.subHeader}>Click 'n' Park!</Text>
 
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        placeholder="Voici vos plaques"
+      />
 
       <MaskInput
         placeholderFillCharacter={"X"}
@@ -97,14 +111,7 @@ export default function HomeScreen({ route }) {
       <TouchableOpacity onPress={addPlate}>
         <Text style={styles.buttonText}>Ajouter la plaque</Text>
       </TouchableOpacity>
-      <DropDownPicker
-        open={open}
-        value={value}
-        items={items}
-        setOpen={setOpen}
-        setValue={setValue}
-        setItems={setItems}
-      />
+
       {parkingName && (
         <Text style={styles.infoText}>
           Vous avez réservé le parking : {parkingName}
@@ -187,5 +194,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     padding: 10,
     marginBottom: 10,
+  },
+  item: {
+    color: "white",
+    padding: 10,
+    fontSize: 15,
+    height: 35,
+  },
+  plaqueactuelle: {
+    color: "orange",
   },
 });
