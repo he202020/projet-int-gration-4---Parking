@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import DropDownPicker from 'react-native-dropdown-picker';
+import DropDownPicker from "react-native-dropdown-picker";
 import AntDesign from "@expo/vector-icons/AntDesign";
-
+import MaskInput from "react-native-mask-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 //import { addNumberPlate } from '../../backend/rest-api/services/requests/NumberPlate';
@@ -19,7 +19,7 @@ export default function HomeScreen({ route }) {
     route.params || {};
   const [userName, setUserName] = useState("");
   const { userName: routeUserName } = route.params || {};
-
+  const [numberplateStr, setnumberplateStr] = useState("");
   const [newPlate, setNewPlate] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -42,9 +42,9 @@ export default function HomeScreen({ route }) {
       const data = numberplate.map((obj) => {
         return {
           label: obj.str,
-          value: obj.str
-        }
-      })
+          value: obj.str,
+        };
+      });
       setItems(data);
     }
   }, [numberplate]);
@@ -81,23 +81,29 @@ export default function HomeScreen({ route }) {
     <View style={styles.screen}>
       <Text style={styles.header}>Bonjour, {userName}!</Text>
       <Text style={styles.subHeader}>Click 'n' Park!</Text>
-      <TextInput
-        placeholder="Entrez une nouvelle plaque"
+
+
+      <MaskInput
+        placeholderFillCharacter={"X"}
+        style={styles.plaque}
+        maxLength={9}
         value={newPlate}
-        onChangeText={(text) => setNewPlate(text)}
-        style={styles.input}
+        onChangeText={(masked, unmasked) => {
+          setNewPlate(masked);
+        }}
+        mask={[/\d/, "-", /[A-Z]/, /[A-Z]/, /[A-Z]/, "-", /\d/, /\d/, /\d/]}
       />
 
       <TouchableOpacity onPress={addPlate}>
         <Text style={styles.buttonText}>Ajouter la plaque</Text>
       </TouchableOpacity>
       <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
       />
       {parkingName && (
         <Text style={styles.infoText}>
@@ -170,5 +176,16 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  plaque: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 7,
+    backgroundColor: "white",
+    color: "black",
+    paddingHorizontal: 15,
+    padding: 10,
+    marginBottom: 10,
   },
 });

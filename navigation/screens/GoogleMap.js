@@ -95,13 +95,15 @@ const GoogleMap = ({ navigation, route }) => {
     setShowMarkers(!showMarkers);
   };
 
-  const handleReservation = (parkingId, parkingName) => {
+  const handleReservation = (parkingId, parkingName,numberplate) => {
+    
     console.log("Navigating to Reservation with parking:", parkingId);
     setSelectedParking({ id: parkingId, name: parkingName });
     //navigation.navigate("Reservation", { id: parkingId });
     navigation.navigate("Reservation", {
-      selectedParking: { id: parkingId, name: parkingName },
+      selectedParking: { id: parkingId, name: parkingName,numberplate : numberplate  },
     });
+    console.log(parkingId,parkingName , numberplate );
   };
 
   // Calcule la distance entre deux points à l'aide de la formule Haversine
