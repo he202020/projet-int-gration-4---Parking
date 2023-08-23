@@ -13,11 +13,7 @@ web-build/
 
 # macOS
 .DS_Store
-backend/rest-api/.env
 ./package-lock.json
 ./yarn.lock
-package-lock.json
-package.json
 backend/rest-api/package-lock.json
-backend/rest-api/package.json
-.gitignore
+backend/rest-api/yarn.lock

@@ -15,17 +15,17 @@ export function AppScreens() {
 
   return (
       <Tab.Navigator screenOptions={tabScreenOptions}>
-        <Tab.Screen name="HomeScreen" component={HomeScreen} options={{
+        <Tab.Screen name="Acceuil" component={HomeScreen} options={{
           headerRight: () => (
             <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
           )
         }}/>
-        <Tab.Screen name="ListParking" component={ListParking} options={{
+        <Tab.Screen name="Parkings" component={ListParking} options={{
           headerRight: () => (
               <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
           )
         }}/>
-        <Tab.Screen name="GoogleMap" component={GoogleMap} options={{
+        <Tab.Screen name="Map" component={GoogleMap} options={{
           headerRight: () => (
               <Button style={styles.logout} onPress={onLogout} title="Sign out"> Déconnexion </Button>
           )
@@ -38,13 +38,13 @@ const tabScreenOptions = ({ route }) => ({
   tabBarIcon: ({ focused, color, size }) => {
     let iconName;
     switch (route.name) {
-      case "HomeScreen":
+      case "Acceuil":
         iconName = "home";
         break;
-      case "GoogleMap":
+      case "Map":
         iconName = "map";
         break;
-      case "ListParking":
+      case "Parkings":
         iconName = "parking";
         break;
       case "Reservation":

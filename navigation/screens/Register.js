@@ -1,5 +1,5 @@
 import React,{ useState } from "react";
-import { View, Text, StyleSheet,Image, TouchableOpacity, Alert, ScrollView} from "react-native";
+import {View, Text, StyleSheet, Image, TouchableOpacity, Alert, ScrollView} from "react-native";
 import CustomInput from "./Register/CustomInput";
 import CustomButton from "./Register/CustomButton";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -8,6 +8,7 @@ import axios from "axios";
 import {useAuth} from "../../security/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import Axios
 import Clickvideo from "../../assets/Clickvideo.png";
+import MaskInput from "react-native-mask-input";
 
 const SignUpScreen = ({ navigation, route }) => {
   const { onSignUpSuccess, isLoggedIn } = route.params || {};
@@ -22,9 +23,18 @@ const SignUpScreen = ({ navigation, route }) => {
 
   const login = async () => {
     const result = await onLogin(email, hash);
-    await AsyncStorage.setItem('USER_NAME', result.data.user.stringify)
     if (result && result.error) {
       alert("Un problème de login");
+    } else if (result && result.data && result.data.user) {
+      const { first_name } = result.data.user;
+      if (first_name) {
+        await AsyncStorage.setItem("USER_NAME", first_name);
+        navigation.navigate("Acceuil", { userName: first_name }); // Pass userName as a route param
+      } else {
+        alert(
+          "Le nom d'utilisateur est manquant dans les données de l'utilisateur."
+        );
+      }
     }
   };
 
@@ -44,7 +54,7 @@ const SignUpScreen = ({ navigation, route }) => {
   };
 
   const handleLogin = (Login) => {
-    navigation.navigate("Login");
+    navigation.navigate("Connexion");
   };
   //Hyperlinks
   const onTermsOfUsePressed = () => {
@@ -89,11 +99,15 @@ const SignUpScreen = ({ navigation, route }) => {
             value={hash}
             setValue={setPassword}
           />
-          <CustomInput
-            placeholder="* Plaque d'immatriculation"
-            inputStyle={styles.input}
-            value={plate}
-            setValue={setPlate}
+          <MaskInput
+              placeholderFillCharacter={"X"}
+              style={styles.plaque}
+              maxLength={9}
+              value={plate}
+              onChangeText={(masked, unmasked) => {
+                setPlate(masked);
+              }}
+              mask={[/\d/, '-', /[A-Z]/, /[A-Z]/, /[A-Z]/, '-', /\d/, /\d/, /\d/]}
           />
           <TouchableOpacity
             style={styles.checkboxContainer}
@@ -126,12 +140,15 @@ const SignUpScreen = ({ navigation, route }) => {
             onPress={handleLogin}
             type="SECONDARY"
           />
-        </View>
-      </ScrollView>
+    </View>
+</ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1, // This allows the content to grow and enable scrolling
+  },
   logo: {
     marginTop: 30,
     marginBottom: 30,
@@ -179,9 +196,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
   },
-  scrollContainer: {
-    flexGrow: 1, // This allows the content to grow and enable scrolling
-  },
   checkbox: {
     width: 20,
     height: 20,
@@ -206,6 +220,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textDecorationLine: "underline",
     marginTop: 15,
+  },
+  plaque: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 7,
+    backgroundColor: "white",
+    color: "black",
+    paddingHorizontal: 126,
+    padding: 10,
+    marginBottom: 10,
   },
 });
 

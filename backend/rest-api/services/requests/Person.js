@@ -91,7 +91,9 @@ exports.login = async function login(req, res) {
         email: email
       },
       select: {
-        first_name: true
+        first_name: true,
+        id :true,
+        numberplate : true
       }
     })
 
