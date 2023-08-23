@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = 'my_jwt';
-const API_URL = 'https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app';
+const USER_DATA = 'USER_DATA';
+const API_URL = 'https://2295-2a02-a03f-c09c-b00-8149-d6c1-f0a3-7361.ngrok-free.app';
 const AuthContext = createContext({});
 
 export const useAuth = () => {
@@ -42,18 +44,17 @@ export const AuthProvider = ({children}) => {
     const login = async (email, hash) => {
         try {
             const result = await axios.post(`${API_URL}/person/login`, { email, hash });
-            console.log("The token is: ", result.data.token, "for ", result.data.user);
+            console.log("The token is: ", result.data.token, "for ", result.data.user.first_name);
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.token}`;
+            await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
+            await AsyncStorage.setItem(USER_DATA, JSON.stringify(result.data));
 
             setAuthState({
                 token: result.data.token,
                 authenticated: true,
             });
 
-            axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.token}`;
-
-            await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
-
-            console.log(authState.authenticated)
             return result;
         } catch (err) {
             return err;
@@ -62,6 +63,7 @@ export const AuthProvider = ({children}) => {
 
     const logout = async () => {
         await SecureStore.deleteItemAsync(TOKEN_KEY);
+        await AsyncStorage.removeItem(USER_DATA);
 
         axios.defaults.headers.common['Authorization'] = '';
 

@@ -13,6 +13,8 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import MaskInput from "react-native-mask-input";
 import CalendarPicker from "react-native-calendar-picker";
+import DropDownPicker from "react-native-dropdown-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ReservationForm = ({ navigation, route }) => {
   const [numberplateStr, setnumberplateStr] = useState("");
@@ -27,6 +29,38 @@ const ReservationForm = ({ navigation, route }) => {
 
   const [remainingTime, setRemainingTime] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [fetching, setFetching] = useState(true);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const cachedData = await AsyncStorage.getItem("USER_DATA");
+
+        if (cachedData !== null && fetching === true) {
+          setUserData(JSON.parse(cachedData));
+          setFetching(false)
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData().then(() => {
+      if (userData) {
+        const plates = userData.user.numberplate.map((obj) => {
+          return {
+            label: obj.str,
+            value: obj.str,
+          };
+        });
+        setItems(plates);
+      }
+    });
+  });
 
   useEffect(() => {
     if (route.params && route.params.selectedParking) {
@@ -68,7 +102,7 @@ const ReservationForm = ({ navigation, route }) => {
       setIntervalId(id);
 
       const response = await axios.post(
-        "https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app/reservation",
+        "https://393f-2a02-a03f-635e-3f00-a8f4-5ba9-aaea-502e.ngrok-free.app/reservation",
         {
           numberplateStr: numberplateStr,
           parking_id: parseInt(parkingId), // Convert to integer
@@ -146,16 +180,15 @@ const ReservationForm = ({ navigation, route }) => {
             Remaining Time: {Math.floor(remainingTime / 1000)} seconds
           </Text>
         <Text style={styles.title}>Réserve ta place de parking</Text>
-        <MaskInput
-            placeholderFillCharacter={"X"}
-            style={styles.plaque}
-            maxLength={9}
-            value={numberplateStr}
-            onChangeText={(masked, unmasked) => {
-              setnumberplateStr(masked);
-            }}
-            mask={[/\d/, '-', /[A-Z]/, /[A-Z]/, /[A-Z]/, '-', /\d/, /\d/, /\d/]}
-        />
+          <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              placeholder="Voici vos plaques"
+          />
           <TextInput
             label="Parking"
             value={selectedParking ? selectedParking.name : ""}
@@ -293,11 +326,9 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderRadius: 7,
     backgroundColor: "white",
-    color: "white",
     paddingHorizontal: 20,
     marginBottom: 10,
     color: "black", // Change the text color to black for better visibility
-    width: "100%", 
     paddingTop:20,
     width: '100%', // Occupe la même largeur que les autres champs
     flexDirection: 'row', // Aligne le texte à gauche

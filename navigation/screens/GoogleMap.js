@@ -13,7 +13,9 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios"; // Import axios
 import Reservation from "./Reservation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const GoogleMap = ({ navigation, route }) => {
+  const { numberplate } = route.params || {};
   const [parkingData, setParkingData] = useState([]);
   const { selectedParkingId } = route.params || {};
   const [selectedParking, setSelectedParking] = useState(null);
@@ -30,7 +32,7 @@ const GoogleMap = ({ navigation, route }) => {
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://5410-2a02-a03f-635e-3f00-f8a1-5fc9-9c7f-d3dd.ngrok-free.app/parking"
+        "https://2295-2a02-a03f-c09c-b00-8149-d6c1-f0a3-7361.ngrok-free.app/parking"
       );
       const parkingData = await response.json();
       setParkingData(parkingData);
@@ -96,12 +98,14 @@ const GoogleMap = ({ navigation, route }) => {
   };
 
   const handleReservation = (parkingId, parkingName) => {
+    
     console.log("Navigating to Reservation with parking:", parkingId);
     setSelectedParking({ id: parkingId, name: parkingName });
     //navigation.navigate("Reservation", { id: parkingId });
     navigation.navigate("Reservation", {
       selectedParking: { id: parkingId, name: parkingName },
     });
+    console.log(parkingId,parkingName  );
   };
 
   // Calcule la distance entre deux points à l'aide de la formule Haversine
