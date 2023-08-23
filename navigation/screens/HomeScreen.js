@@ -46,7 +46,7 @@ export default function HomeScreen({ route }) {
     getData().then(() => {
       if (userData && fetching === true) {
         setUserName(userData.user.first_name);
-        setUserId(userData.user.id)
+        setUserId(userData.user.id);
         const plates = userData.user.numberplate.map((obj) => {
           return {
             label: obj.str,
@@ -57,6 +57,8 @@ export default function HomeScreen({ route }) {
         setFetching(false);
       }
     });
+
+   
   });
 
   const addPlate = async () => {

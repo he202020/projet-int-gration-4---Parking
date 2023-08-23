@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Alert,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import {View,StyleSheet,Text,Alert,ScrollView,TouchableOpacity,} from "react-native";
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
@@ -144,7 +137,7 @@ const ReservationForm = ({ navigation, route }) => {
     }
     console.log(
       handleReservation,
-      numberplateStr,
+      value,
       parkingId,
       date,
       startTime,

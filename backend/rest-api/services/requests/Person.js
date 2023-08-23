@@ -1,7 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
-const { request } = require("express");
 
+const { request } = require("express");
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+
 
 //get tous les users
 exports.getPerson = async function getPerson(req, res) {
@@ -12,7 +13,7 @@ exports.getPerson = async function getPerson(req, res) {
     res.json({ data: allPerson });
   } catch (err) {
     console.log(err);
-    res.statusCode(500);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -32,11 +33,6 @@ async function userExists(email) {
 exports.postPerson = async function postPerson(req, res) {
   const { firstName, lastName, company, email, hash, plate } = req.body;
   try {
-    /*const isExistingUser = await userExists(email);
-    if (isExistingUser) {
-      res.status(400).json({ error: "User already exists" });
-      return;
-    }*/
     await prisma.person.create({
       data: {
         first_name: firstName,
@@ -55,7 +51,7 @@ exports.postPerson = async function postPerson(req, res) {
     res.json({ statusCode: 201 });
   } catch (err) {
     console.log(err);
-    res.statusCode(500);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
