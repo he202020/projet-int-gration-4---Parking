@@ -70,7 +70,6 @@ describe("getPerson", () => {
   });*/
 });
 
-
 describe("postPerson", () => {
   it("ajoute un utilisateur avec succès", async () => {
     const mockCreate = jest.fn();
@@ -112,8 +111,4 @@ describe("postPerson", () => {
     });
     expect(mockRes.json).toHaveBeenCalledWith({ statusCode: 201 });
   });
-
-
-
 });
-
