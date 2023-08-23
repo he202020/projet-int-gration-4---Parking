@@ -14,13 +14,14 @@ import MaskInput from "react-native-mask-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import {tr} from "date-fns/locale";
+import axios from "axios";
 //import { addNumberPlate } from '../../backend/rest-api/services/requests/NumberPlate';
 
 export default function HomeScreen({ route }) {
   const { parkingName, reservationDuration, idperson, numberplate } =
     route.params || {};
   const [userName, setUserName] = useState("");
-  const [UserID,setUserID] = useState("");
+  const [userId, setUserId] = useState("");
   const { userName: routeUserName } = route.params || {};
   const [numberplateStr, setnumberplateStr] = useState("");
   const [newPlate, setNewPlate] = useState("");
@@ -37,16 +38,15 @@ export default function HomeScreen({ route }) {
 
         if (cachedData !== null && fetching === true) {
           setUserData(JSON.parse(cachedData));
-          setFetching(false)
         }
       } catch (error) {
         console.error(error);
       }
     };
     getData().then(() => {
-      if (userData) {
+      if (userData && fetching === true) {
         setUserName(userData.user.first_name);
-        setUserID(userData.user.id);
+        setUserId(userData.user.id);
         const plates = userData.user.numberplate.map((obj) => {
           return {
             label: obj.str,
@@ -54,6 +54,7 @@ export default function HomeScreen({ route }) {
           };
         });
         setItems(plates);
+        setFetching(false);
       }
     });
 
@@ -62,28 +63,23 @@ export default function HomeScreen({ route }) {
 
   const addPlate = async () => {
     try {
-      const response = await fetch(
-        "https://d925-2a02-a03f-635e-3f00-3cc7-b60f-e557-54e1.ngrok-free.app/numberPlate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            str: newPlate,
-            person_id: parseInt(UserID),
-          }),
-        }
-      );
-      console.log(newPlate, UserID);
+        const response = await axios.post(
+            "https://4db5-2a02-a03f-c09c-b00-64e2-9c33-1e3c-42fd.ngrok-free.app/numberPlate",
+            {
+                str: newPlate,
+                person_id: parseInt(userId),
+            }
+        );
+      console.log(newPlate, userId);
 
-      if (response.status === 201) {
+      if (true) {
         console.log("Plaque ajoutée avec succès");
          // Update the items state with the new plate
         const newItem = { label: newPlate, value: newPlate };
         setItems((prevItems) => [...prevItems, newItem]); // Add the new plate to the existing items
         setValue(newPlate); // Select the new plate in the dropdown
-        
+        await updateAsyncStorage(newPlate);
+
       } else {
         console.error("Erreur lors de l'ajout de la plaque");
       }
@@ -91,6 +87,11 @@ export default function HomeScreen({ route }) {
       console.error("Erreur lors de la communication avec le serveur", error);
     }
   };
+
+  const updateAsyncStorage = async (plateToAdd) => {
+      userData.user.numberplate.push({str: plateToAdd});
+      await AsyncStorage.setItem("USER_DATA", JSON.stringify(userData));
+  }
 
   return (
     <View style={styles.screen}>

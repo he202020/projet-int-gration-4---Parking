@@ -30,10 +30,9 @@ getParking()
 exports.getParking = async function (request, response) {
   try {
     const result = await prisma.parking.findMany()
+    prisma.$disconnect();
     response.status(200).json(result);
   } catch (error) {
     response.status(400).send(error.message);
   }
 };
-
-

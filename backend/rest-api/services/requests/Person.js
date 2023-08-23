@@ -9,6 +9,7 @@ exports.getPerson = async function getPerson(req, res) {
   try {
     const allPerson = await prisma.person.findMany();
     console.log(allPerson);
+    prisma.$disconnect();
     res.json({ data: allPerson });
   } catch (err) {
     console.log(err);
@@ -46,6 +47,7 @@ exports.postPerson = async function postPerson(req, res) {
         },
       },
     });
+    prisma.$disconnect();
     res.json({ statusCode: 201 });
   } catch (err) {
     console.log(err);
@@ -53,21 +55,22 @@ exports.postPerson = async function postPerson(req, res) {
   }
 };
 
-const jwt = require('jsonwebtoken'); 
+const jwt = require('jsonwebtoken');
+const {verify} = require("jsonwebtoken");
+const {verifyPassword} = require("./auth");
 
 //verifie les infos de connexion
 async function authenticateUser(email, hash) {
-  const user = await prisma.person.findUnique({
+  const password = await prisma.person.findUnique({
     where: {
       email: email,
     },
+    select: {
+      hash: true
+    }
   });
-
-  if (!user || user.hash !== hash) {
-    return null; // Les informations de connexion sont incorrectes
-  }
-
-  return user;
+  prisma.$disconnect();
+  return verifyPassword(hash, password.hash);
 }
 
 //login
@@ -84,7 +87,7 @@ exports.login = async function login(req, res) {
     }
 
     // Générez un jeton d'authentification si la connexion réussit
-    const token = jwt.sign({ userId: user.id }, 'your_secret_key_here', { expiresIn: '1h' }); // Génération du jeton
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' }); // Génération du jeton
 
     const person = await prisma.person.findUnique({
       where: {
@@ -98,9 +101,8 @@ exports.login = async function login(req, res) {
             str: true,
           },
         }
-      }}
-    )
-
+      }});
+    prisma.$disconnect();
     res.status(200).json({ token: token, user: person });
   } catch (err) {
     console.log(err);

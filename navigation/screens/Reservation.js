@@ -3,7 +3,7 @@ import {View,StyleSheet,Text,Alert,ScrollView,TouchableOpacity,} from "react-nat
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import MaskInput from "react-native-mask-input";
 import CalendarPicker from "react-native-calendar-picker";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -36,14 +36,13 @@ const ReservationForm = ({ navigation, route }) => {
 
         if (cachedData !== null && fetching === true) {
           setUserData(JSON.parse(cachedData));
-          setFetching(false)
         }
       } catch (error) {
         console.error(error);
       }
     };
     getData().then(() => {
-      if (userData) {
+      if (userData && fetching === true) {
         const plates = userData.user.numberplate.map((obj) => {
           return {
             label: obj.str,
@@ -51,6 +50,7 @@ const ReservationForm = ({ navigation, route }) => {
           };
         });
         setItems(plates);
+        setFetching(false);
       }
     });
   });
@@ -72,19 +72,6 @@ const ReservationForm = ({ navigation, route }) => {
     try {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
-      /*
-      // Calculate the difference between end time and current time
-      const currentTime = new Date();
-      const timeDifference = formattedEndTime - currentTime;
-
-      if (timeDifference <= 0) {
-        setSnackbarMessage("End time has already passed.");
-        setSnackbarVisible(true);
-        return;
-      }
-
-      setRemainingTime(timeDifference);
-*/
       const id = setInterval(() => {
         setRemainingTime((prevTime) => prevTime - 1000);
         if (remainingTime <= 0) {
@@ -95,7 +82,7 @@ const ReservationForm = ({ navigation, route }) => {
       setIntervalId(id);
 
       const response = await axios.post(
-        "https://d925-2a02-a03f-635e-3f00-3cc7-b60f-e557-54e1.ngrok-free.app/reservation",
+        "https://4db5-2a02-a03f-c09c-b00-64e2-9c33-1e3c-42fd.ngrok-free.app/reservation",
         {
           numberplateStr: value,
           parking_id: parseInt(parkingId), // Convert to integer
