@@ -13,6 +13,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import MaskInput from "react-native-mask-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+import {tr} from "date-fns/locale";
 //import { addNumberPlate } from '../../backend/rest-api/services/requests/NumberPlate';
 
 export default function HomeScreen({ route }) {
@@ -25,30 +26,35 @@ export default function HomeScreen({ route }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      async function fetchUserName() {
-        const storedUserName = await AsyncStorage.getItem("USER_NAME");
-
-        setUserName(storedUserName || routeUserName || "");
-      }
-
-      fetchUserName();
-    }, [routeUserName])
-  );
+  const [userData, setUserData] = useState(null);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    if (Array.isArray(numberplate)) {
-      const data = numberplate.map((obj) => {
-        return {
-          label: obj.str,
-          value: obj.str,
-        };
-      });
-      setItems(data);
-    }
-  }, [numberplate]);
+    const getData = async () => {
+      try {
+        const cachedData = await AsyncStorage.getItem("USER_DATA");
+
+        if (cachedData !== null && fetching === true) {
+          setUserData(JSON.parse(cachedData));
+          setFetching(false)
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData().then(() => {
+      if (userData) {
+        setUserName(userData.user.first_name);
+        const plates = userData.user.numberplate.map((obj) => {
+          return {
+            label: obj.str,
+            value: obj.str,
+          };
+        });
+        setItems(plates);
+      }
+    });
+  });
 
   const addPlate = async () => {
     try {
