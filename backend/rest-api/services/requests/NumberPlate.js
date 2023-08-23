@@ -8,6 +8,7 @@ exports.getNumberPlate = async function getNumberPlate(req, res) {
   try {
     const allNumberPlate = await prisma.numberplate.findMany();
     console.log(allNumberPlate);
+    prisma.$disconnect();
     res.json({ data: allNumberPlate });
   } catch (err) {
     console.log(err);
@@ -37,7 +38,7 @@ exports.addNumberPlate = async function addNumberPlate(req, res) {
       },
     });
     //console.log(str, id);
-
+    prisma.$disconnect();
     res.status(201).json({
       data: newNumberPlate,
       message: "Plaque d'immatriculation ajoutée avec succès.",

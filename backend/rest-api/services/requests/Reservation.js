@@ -63,7 +63,7 @@ exports.addReservation = async function addReservation(req, res) {
           id: parking_id,
         },
       });
-
+      prisma.$disconnect();
       res.status(201).json({ statusCode: 201 });
     } else {
       res.status(400).json({ error: 'No available spots in the parking' });
@@ -77,7 +77,8 @@ exports.addReservation = async function addReservation(req, res) {
 //afficher toutes les reservations
 exports.getReservation = async function (request, response) {
   try {
-    const result = await prisma.reservation.findMany()
+    const result = await prisma.reservation.findMany();
+    prisma.$disconnect();
     response.status(200).json(result);
   } catch (error) {
     response.status(400).send(error.message);

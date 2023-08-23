@@ -21,30 +21,27 @@ const GoogleMap = ({ navigation, route }) => {
   const [selectedParking, setSelectedParking] = useState(null);
   const { params } = useRoute();
   //const { selectedParking } = params || {};
-  const [userLocation, setUserLocation] = useState(null); //stocker les coordonnées GPS de l'appareil
+  const [userLocation, setUserLocation] = useState(null); //stocker les coordonnées GPS de l'appareil`
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    fetchParkingData();
+    if (fetching === true){
+      fetchParkingData().then(setFetching(false));
+    }
     getUserLocation();
     setSelectedParking(selectedParkingId);
   }, []);
 
   const fetchParkingData = async () => {
     try {
-      const response = await fetch(
+      const response = await axios.get(
         "https://4db5-2a02-a03f-c09c-b00-64e2-9c33-1e3c-42fd.ngrok-free.app/parking"
       );
-      const parkingData = await response.json();
-      setParkingData(parkingData);
+      setParkingData(response.data);
     } catch (error) {
       console.error("Error fetching parking parkingData:", error);
     }
   };
-  useEffect(() => {
-    fetchParkingData();
-    getUserLocation();
-    setSelectedParking(selectedParkingId);
-  }, []);
 
   // Obtenir l'emplacement actuel de l'utilisateur à l'aide du module Location d'Expo
   const getUserLocation = async () => {

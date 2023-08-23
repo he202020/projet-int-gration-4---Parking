@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import ngrok from "./ngrok";
+import axios from "axios";
 
 const ListParking = () => {
   const navigation = useNavigation();
@@ -20,18 +21,17 @@ const ListParking = () => {
 
   const fetchParkingData = async () => {
     try {
-      const response = await fetch(
+      const response = await axios.get(
         "https://4db5-2a02-a03f-c09c-b00-64e2-9c33-1e3c-42fd.ngrok-free.app/parking"
       );
-      const data = await response.json();
-      setParkingData(data);
+      setParkingData(response.data);
     } catch (error) {
       console.error("Error fetching parking data:", error);
     }
   };
 
   useEffect(() => {
-    if (fetching === false){
+    if (fetching === true){
       fetchParkingData().then(setFetching(false));
     }
   }, []);
@@ -65,12 +65,6 @@ const ListParking = () => {
       selectedParkingId: parking.id, 
     });
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setSearchInput(""); // Reset search input
-      fetchParkingData(); // Fetch parking data when screen gains focus
-    }, []));
 
   return (
     <View style={styles.container}>
