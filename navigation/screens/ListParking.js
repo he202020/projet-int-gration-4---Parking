@@ -14,13 +14,14 @@ const ListParking = () => {
   const navigation = useNavigation();
   const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState("");
+  const [fetching, setFetching] = useState(true);
 
 
   const fetchParkingData = async () => {
     try {
       const response = await fetch(
-        "https://2295-2a02-a03f-c09c-b00-8149-d6c1-f0a3-7361.ngrok-free.app/parking"
+        "https://4db5-2a02-a03f-c09c-b00-64e2-9c33-1e3c-42fd.ngrok-free.app/parking"
       );
       const data = await response.json();
       setParkingData(data);
@@ -30,7 +31,9 @@ const ListParking = () => {
   };
 
   useEffect(() => {
-    fetchParkingData();
+    if (fetching === false){
+      fetchParkingData().then(setFetching(false));
+    }
   }, []);
 
 

@@ -10,7 +10,7 @@ import {
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import MaskInput from "react-native-mask-input";
 import CalendarPicker from "react-native-calendar-picker";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -43,14 +43,13 @@ const ReservationForm = ({ navigation, route }) => {
 
         if (cachedData !== null && fetching === true) {
           setUserData(JSON.parse(cachedData));
-          setFetching(false)
         }
       } catch (error) {
         console.error(error);
       }
     };
     getData().then(() => {
-      if (userData) {
+      if (userData && fetching === true) {
         const plates = userData.user.numberplate.map((obj) => {
           return {
             label: obj.str,
@@ -58,6 +57,7 @@ const ReservationForm = ({ navigation, route }) => {
           };
         });
         setItems(plates);
+        setFetching(false);
       }
     });
   });
@@ -104,7 +104,7 @@ const ReservationForm = ({ navigation, route }) => {
       const response = await axios.post(
         "https://393f-2a02-a03f-635e-3f00-a8f4-5ba9-aaea-502e.ngrok-free.app/reservation",
         {
-          numberplateStr: numberplateStr,
+          numberplateStr: value,
           parking_id: parseInt(parkingId), // Convert to integer
           day: new Date(date),
           //start_time: startTime,
