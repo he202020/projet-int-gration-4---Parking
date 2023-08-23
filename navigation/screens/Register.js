@@ -34,8 +34,29 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
-  //SignUp button pressed
+// SignUp button pressed
   const onSignUpPressed = async () => {
+    // Check if email is valid
+    if (!email.includes('@') || !email.includes('.')) {
+      alert("Veuillez fournir une adresse e-mail valide.");
+      return;
+    }
+
+    // Check if password is valid
+    if (!/(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\/\\\-="'])/.test(hash)) {
+      alert("Le mot de passe doit contenir au moins une majuscule et un caractère spécial.");
+      return;
+    }
+
+    if (plate === "") {
+      alert("Veuillez fournir une plaque");
+      return;
+    }
+    if (plate.length !== 9) {
+      alert("Veuillez fournir une plaque valide");
+      return;
+    }
+
     const result = await onRegister(email, hash, firstName, lastName, company, plate);
     if (result && result.error) {
       alert("Un problème de login");

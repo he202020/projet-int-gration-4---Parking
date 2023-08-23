@@ -27,22 +27,31 @@ exports.addNumberPlate = async function addNumberPlate(req, res) {
         .json({ error: "Plaque d'immatriculation manquante dans la requête." });
     }
 
-    const newNumberPlate = await prisma.numberplate.create({
-      data: {
-        str: str, // plate => input utilisateur
-        person: {
-          connect: {
-            id: person_id, // userId => l'id du user qui doit être reçu dans la request
+    const numberPlate = await prisma.numberplate.findUnique({
+      where: {
+        str: str
+      }
+    });
+    if (numberPlate) {
+      res.status(200).json({ message: "Plaque déjà existante"});
+      prisma.$disconnect();
+    } else {
+      const newNumberPlate = await prisma.numberplate.create({
+        data: {
+          str: str, // plate => input utilisateur
+          person: {
+            connect: {
+              id: person_id, // userId => l'id du user qui doit être reçu dans la request
+            },
           },
         },
-      },
-    });
-    //console.log(str, id);
-    prisma.$disconnect();
-    res.status(201).json({
-      data: newNumberPlate,
-      message: "Plaque d'immatriculation ajoutée avec succès.",
-    });
+      });
+      prisma.$disconnect();
+      res.status(201).json({
+        data: newNumberPlate,
+        message: "Plaque d'immatriculation ajoutée avec succès.",
+      });
+    }
   } catch (err) {
     console.error(err);
 

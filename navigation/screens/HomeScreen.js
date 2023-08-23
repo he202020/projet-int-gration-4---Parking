@@ -4,6 +4,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import MaskInput from "react-native-mask-input";
@@ -63,6 +64,10 @@ export default function HomeScreen({ route }) {
         );
       console.log(newPlate, userId);
 
+      if (response.status === 200) {
+        Alert.alert("Attention", "Plaque déjà existante");
+      }
+
       if (response.status === 201) {
         console.log("Plaque ajoutée avec succès");
          // Update the items state with the new plate
@@ -72,7 +77,7 @@ export default function HomeScreen({ route }) {
         await updateAsyncStorage(newPlate);
 
       } else {
-        console.error("Erreur lors de l'ajout de la plaque");
+        console.log("Erreur lors de l'ajout de la plaque");
       }
     } catch (error) {
       console.error("Erreur lors de la communication avec le serveur", error);
