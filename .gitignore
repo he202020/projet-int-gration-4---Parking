@@ -18,5 +18,4 @@ web-build/
 backend/rest-api/package-lock.json
 backend/rest-api/yarn.lock
 yarn.lock
-package.json
 package-lock.json
