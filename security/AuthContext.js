@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = 'my_jwt';
 const USER_DATA = 'USER_DATA';
-const API_URL = 'https://2295-2a02-a03f-c09c-b00-8149-d6c1-f0a3-7361.ngrok-free.app';
+const API_URL = 'https://d925-2a02-a03f-635e-3f00-3cc7-b60f-e557-54e1.ngrok-free.app';
 const AuthContext = createContext({});
 
 export const useAuth = () => {

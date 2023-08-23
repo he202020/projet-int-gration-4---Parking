@@ -20,6 +20,7 @@ export default function HomeScreen({ route }) {
   const { parkingName, reservationDuration, idperson, numberplate } =
     route.params || {};
   const [userName, setUserName] = useState("");
+  const [UserID,setUserID] = useState("");
   const { userName: routeUserName } = route.params || {};
   const [numberplateStr, setnumberplateStr] = useState("");
   const [newPlate, setNewPlate] = useState("");
@@ -45,6 +46,7 @@ export default function HomeScreen({ route }) {
     getData().then(() => {
       if (userData) {
         setUserName(userData.user.first_name);
+        setUserID(userData.user.id);
         const plates = userData.user.numberplate.map((obj) => {
           return {
             label: obj.str,
@@ -54,12 +56,14 @@ export default function HomeScreen({ route }) {
         setItems(plates);
       }
     });
+
+   
   });
 
   const addPlate = async () => {
     try {
       const response = await fetch(
-        "https://393f-2a02-a03f-635e-3f00-a8f4-5ba9-aaea-502e.ngrok-free.app/numberPlate",
+        "https://d925-2a02-a03f-635e-3f00-3cc7-b60f-e557-54e1.ngrok-free.app/numberPlate",
         {
           method: "POST",
           headers: {
@@ -67,11 +71,11 @@ export default function HomeScreen({ route }) {
           },
           body: JSON.stringify({
             str: newPlate,
-            person_id: parseInt(idperson),
+            person_id: parseInt(UserID),
           }),
         }
       );
-      console.log(newPlate, idperson);
+      console.log(newPlate, UserID);
 
       if (response.status === 201) {
         console.log("Plaque ajoutée avec succès");

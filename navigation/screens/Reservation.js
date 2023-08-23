@@ -102,9 +102,9 @@ const ReservationForm = ({ navigation, route }) => {
       setIntervalId(id);
 
       const response = await axios.post(
-        "https://393f-2a02-a03f-635e-3f00-a8f4-5ba9-aaea-502e.ngrok-free.app/reservation",
+        "https://d925-2a02-a03f-635e-3f00-3cc7-b60f-e557-54e1.ngrok-free.app/reservation",
         {
-          numberplateStr: numberplateStr,
+          numberplateStr: value,
           parking_id: parseInt(parkingId), // Convert to integer
           day: new Date(date),
           //start_time: startTime,
@@ -157,7 +157,7 @@ const ReservationForm = ({ navigation, route }) => {
     }
     console.log(
       handleReservation,
-      numberplateStr,
+      value,
       parkingId,
       date,
       startTime,

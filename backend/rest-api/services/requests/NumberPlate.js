@@ -11,7 +11,7 @@ exports.getNumberPlate = async function getNumberPlate(req, res) {
     res.json({ data: allNumberPlate });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
