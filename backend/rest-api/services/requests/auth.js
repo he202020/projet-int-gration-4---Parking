@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 exports.authenticate = async function (req, res, next) {
     let token;

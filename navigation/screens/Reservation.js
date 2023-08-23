@@ -79,19 +79,6 @@ const ReservationForm = ({ navigation, route }) => {
     try {
       const formattedStartTime = moment(startTime, "HH:mm").toDate();
       const formattedEndTime = moment(endTime, "HH:mm").toDate();
-      /*
-      // Calculate the difference between end time and current time
-      const currentTime = new Date();
-      const timeDifference = formattedEndTime - currentTime;
-
-      if (timeDifference <= 0) {
-        setSnackbarMessage("End time has already passed.");
-        setSnackbarVisible(true);
-        return;
-      }
-
-      setRemainingTime(timeDifference);
-*/
       const id = setInterval(() => {
         setRemainingTime((prevTime) => prevTime - 1000);
         if (remainingTime <= 0) {
@@ -102,7 +89,7 @@ const ReservationForm = ({ navigation, route }) => {
       setIntervalId(id);
 
       const response = await axios.post(
-        "https://393f-2a02-a03f-635e-3f00-a8f4-5ba9-aaea-502e.ngrok-free.app/reservation",
+        "https://4db5-2a02-a03f-c09c-b00-64e2-9c33-1e3c-42fd.ngrok-free.app/reservation",
         {
           numberplateStr: value,
           parking_id: parseInt(parkingId), // Convert to integer
