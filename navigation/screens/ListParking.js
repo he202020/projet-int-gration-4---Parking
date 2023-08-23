@@ -7,15 +7,13 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import ngrok from "./ngrok";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 const ListParking = () => {
   const navigation = useNavigation();
   const [parkingData, setParkingData] = useState([]);
   const [selectedParking, setSelectedParking] = useState(null);
-  const [searchInput, setSearchInput] = useState("");
   const [fetching, setFetching] = useState(true);
 
 

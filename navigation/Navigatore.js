@@ -6,8 +6,7 @@ import GoogleMap from "./screens/GoogleMap";
 import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {FontAwesome5} from "@expo/vector-icons";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import { StyleSheet } from 'react-native';
 const Tab = createBottomTabNavigator();
 
 export function AppScreens() {
@@ -63,7 +62,7 @@ const tabScreenOptions = ({ route }) => ({
   },
 });
 
-const renderTabBarIcon = (iconName, focused, color, size) => {
+const renderTabBarIcon = (iconName, focused) => {
   return (
       <FontAwesome5
           name={iconName}

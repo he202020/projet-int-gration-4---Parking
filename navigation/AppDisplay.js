@@ -10,7 +10,7 @@ import Reservation from "./screens/Reservation";
 const Stack = createStackNavigator();
 
 export const AppDisplay = () => {
-    const { authState, onLogout } = useAuth();
+    const { authState } = useAuth();
 
     return (
         <NavigationContainer>

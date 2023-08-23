@@ -1,17 +1,13 @@
 import React,{ useState } from "react";
-import {View, Text, StyleSheet, Image, TouchableOpacity, Alert, ScrollView} from "react-native";
+import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from "react-native";
 import CustomInput from "./Register/CustomInput";
 import CustomButton from "./Register/CustomButton";
-import { useRoute, useNavigation } from "@react-navigation/native";
-import HomeScreen from "./HomeScreen";
-import axios from "axios";
 import {useAuth} from "../../security/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import Axios
 import Clickvideo from "../../assets/Clickvideo.png";
 import MaskInput from "react-native-mask-input";
 
-const SignUpScreen = ({ navigation, route }) => {
-  const { onSignUpSuccess, isLoggedIn } = route.params || {};
+const SignUpScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -53,7 +49,7 @@ const SignUpScreen = ({ navigation, route }) => {
     setGdprAccepted((prev) => !prev);
   };
 
-  const handleLogin = (Login) => {
+  const handleLogin = () => {
     navigation.navigate("Connexion");
   };
   //Hyperlinks
@@ -104,7 +100,7 @@ const SignUpScreen = ({ navigation, route }) => {
               style={styles.plaque}
               maxLength={9}
               value={plate}
-              onChangeText={(masked, unmasked) => {
+              onChangeText={(masked) => {
                 setPlate(masked);
               }}
               mask={[/\d/, '-', /[A-Z]/, /[A-Z]/, /[A-Z]/, '-', /\d/, /\d/, /\d/]}

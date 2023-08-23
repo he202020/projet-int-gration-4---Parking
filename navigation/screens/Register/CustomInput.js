@@ -1,6 +1,5 @@
 import React from "react";
-import {View, Text, TextInput, StyleSheet } from 'react-native';
-import { shouldUseActivityState } from "react-native-screens";
+import {View, TextInput, StyleSheet } from 'react-native';
 
 const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
     return (

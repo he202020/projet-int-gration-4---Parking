@@ -3,27 +3,18 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
-  FlatList,
 } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
 import DropDownPicker from "react-native-dropdown-picker";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import MaskInput from "react-native-mask-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
-import {tr} from "date-fns/locale";
 import axios from "axios";
-//import { addNumberPlate } from '../../backend/rest-api/services/requests/NumberPlate';
 
 export default function HomeScreen({ route }) {
-  const { parkingName, reservationDuration, idperson, numberplate } =
+  const { parkingName, reservationDuration } =
     route.params || {};
   const [userName, setUserName] = useState("");
   const [userId, setUserId] = useState("");
-  const { userName: routeUserName } = route.params || {};
-  const [numberplateStr, setnumberplateStr] = useState("");
   const [newPlate, setNewPlate] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -72,7 +63,7 @@ export default function HomeScreen({ route }) {
         );
       console.log(newPlate, userId);
 
-      if (true) {
+      if (response.status === 201) {
         console.log("Plaque ajoutée avec succès");
          // Update the items state with the new plate
         const newItem = { label: newPlate, value: newPlate };
@@ -113,7 +104,7 @@ export default function HomeScreen({ route }) {
         style={styles.plaque}
         maxLength={9}
         value={newPlate}
-        onChangeText={(masked, unmasked) => {
+        onChangeText={(masked) => {
           setNewPlate(masked);
         }}
         mask={[/\d/, "-", /[A-Z]/, /[A-Z]/, /[A-Z]/, "-", /\d/, /\d/, /\d/]}

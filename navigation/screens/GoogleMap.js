@@ -1,26 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import * as Location from "expo-location";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
-import MapView, { Marker, Callout } from "react-native-maps";
-import { useRoute } from "@react-navigation/native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-
+import {StyleSheet, Text, TouchableOpacity, View,} from "react-native";
+import MapView, {Callout, Marker} from "react-native-maps";
 import axios from "axios"; // Import axios
-import Reservation from "./Reservation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const GoogleMap = ({ navigation, route }) => {
-  const { numberplate } = route.params || {};
   const [parkingData, setParkingData] = useState([]);
   const { selectedParkingId } = route.params || {};
   const [selectedParking, setSelectedParking] = useState(null);
-  const { params } = useRoute();
-  //const { selectedParking } = params || {};
   const [userLocation, setUserLocation] = useState(null); //stocker les coordonnées GPS de l'appareil`
   const [fetching, setFetching] = useState(true);
 
@@ -117,8 +104,7 @@ const GoogleMap = ({ navigation, route }) => {
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance;
+    return R * c;
   };
 
   // Convertit les degrés en radians

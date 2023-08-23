@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
-  useWindowDimensions,
   Image,
   ScrollView,
-  Video,
 } from "react-native";
 import CustomInput from "./Register/CustomInput";
 import CustomButton from "./Register/CustomButton";
-import Register from "./Register";
-import { useRoute, useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../security/AuthContext";
-import logo2 from "../../assets/logo2.png";
-import logo3 from "../../assets/logo3.png";
 import Clickvideo from "../../assets/Clickvideo.png";
 
 const SignInScreen = ({ navigation }) => {
@@ -33,10 +25,7 @@ const SignInScreen = ({ navigation }) => {
     }
   };
 
-  
-
-  const onSignUpPressed = (Register) => {
-    //console.warn("onForgotPasswordPressed()");
+  const onSignUpPressed = () => {
     navigation.navigate("Inscription");
   };
 

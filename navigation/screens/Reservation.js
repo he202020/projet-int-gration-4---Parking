@@ -3,14 +3,11 @@ import {View,StyleSheet,Text,Alert,ScrollView,TouchableOpacity,} from "react-nat
 import { TextInput, Button, Snackbar } from "react-native-paper";
 import moment from "moment"; // Import de Moment.js
 import axios from "axios";
-import {useFocusEffect, useNavigation} from "@react-navigation/native";
-import MaskInput from "react-native-mask-input";
 import CalendarPicker from "react-native-calendar-picker";
 import DropDownPicker from "react-native-dropdown-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ReservationForm = ({ navigation, route }) => {
-  const [numberplateStr, setnumberplateStr] = useState("");
   const [parkingId, setParkingId] = useState(null); // Utilisez null pour indiquer que l'ID n'a pas encore été saisi
   const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState("");
@@ -28,6 +25,7 @@ const ReservationForm = ({ navigation, route }) => {
   const [items, setItems] = useState([]);
   const [userData, setUserData] = useState(null);
   const [fetching, setFetching] = useState(true);
+  DropDownPicker.setListMode("SCROLLVIEW");
 
   useEffect(() => {
     const getData = async () => {
@@ -81,7 +79,7 @@ const ReservationForm = ({ navigation, route }) => {
 
       setIntervalId(id);
 
-      const response = await axios.post(
+      await axios.post(
         "https://4db5-2a02-a03f-c09c-b00-64e2-9c33-1e3c-42fd.ngrok-free.app/reservation",
         {
           numberplateStr: value,
@@ -93,12 +91,12 @@ const ReservationForm = ({ navigation, route }) => {
           end_time: addTwoHoursToTime(formattedEndTime),
         }
       );
-      const duréetotale = moment(formattedEndTime).diff(
+      const dureetotale = moment(formattedEndTime).diff(
         formattedStartTime,
         "minutes"
       );
-      const heures = Math.floor(duréetotale / 60);
-      const minutes = duréetotale % 60;
+      const heures = Math.floor(dureetotale / 60);
+      const minutes = dureetotale % 60;
 
       const durationText =
         heures > 0
@@ -124,12 +122,6 @@ const ReservationForm = ({ navigation, route }) => {
       );
       setSnackbarVisible(true);
 
-      // Clear form fields after successful reservation
-      setnumberplateStr("");
-      setParkingId("");
-      setDate("");
-      setStartTime("");
-      setEndTime("");
     } catch (error) {
       // Handle the error case (status code 400) here if needed
       setSnackbarMessage(error.message);
